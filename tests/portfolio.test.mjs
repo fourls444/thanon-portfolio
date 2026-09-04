@@ -24,6 +24,15 @@ test("GitHub Pages deployment uses the repository base path", async () => {
   assert.match(workflow, /actions\/deploy-pages/);
 });
 
+test("GitHub Pages workflow uses the current Node runtime action versions", async () => {
+  const workflow = await read(".github/workflows/deploy.yml");
+
+  assert.match(workflow, /actions\/checkout@v6/);
+  assert.match(workflow, /actions\/setup-node@v6/);
+  assert.match(workflow, /node-version:\s*24/);
+  assert.match(workflow, /actions\/upload-pages-artifact@v4/);
+});
+
 test("the V1 build keeps project data ready without rendering a projects section", async () => {
   const projects = await read("src/data/projects.ts");
   const page = await read("src/pages/index.astro");
