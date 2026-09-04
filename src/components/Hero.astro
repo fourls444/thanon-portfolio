@@ -1,0 +1,37 @@
+---
+import HeroBackground from "./react/HeroBackground";
+import { profile } from "../data/profile";
+---
+
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <HeroBackground client:load />
+
+  <div class="hero-content shell">
+    <div class="hero-kicker hero-reveal" style="--delay: 0ms">
+      <span class="status-dot"></span>
+      Computer Science · Software Development
+    </div>
+
+    <h1 id="hero-title" class="hero-title" aria-label="Hi, I'm Thanon. Software Developer.">
+      <span class="hero-reveal" style="--delay: 80ms">Hi, I'm {profile.name}.</span>
+      <span class="hero-reveal hero-title-accent" style="--delay: 160ms">Software Developer</span>
+    </h1>
+
+    <p class="hero-copy hero-reveal" style="--delay: 240ms">
+      Focused on modern web development. I enjoy building clean, responsive,
+      and interactive digital experiences.
+    </p>
+
+    <div class="hero-actions hero-reveal" style="--delay: 320ms">
+      <a class="button button-primary" href="#about">About me <span aria-hidden="true">↘</span></a>
+      <a class="button button-ghost" href={profile.github} target="_blank" rel="noreferrer">
+        GitHub <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </div>
+
+  <a class="scroll-indicator" href="#about" aria-label="Scroll to About section">
+    <span>Scroll to explore</span>
+    <i aria-hidden="true"></i>
+  </a>
+</section>
