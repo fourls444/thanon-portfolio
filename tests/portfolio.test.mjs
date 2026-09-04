@@ -33,6 +33,16 @@ test("GitHub Pages workflow uses the current Node runtime action versions", asyn
   assert.match(workflow, /actions\/upload-pages-artifact@v4/);
 });
 
+test("the npm lockfile includes Linux WASM peer dependencies", async () => {
+  const packageJson = JSON.parse(await read("package.json"));
+  const lockfile = JSON.parse(await read("package-lock.json"));
+
+  assert.equal(packageJson.devDependencies["@emnapi/core"], "^1.11.3");
+  assert.equal(packageJson.devDependencies["@emnapi/runtime"], "^1.11.3");
+  assert.equal(lockfile.packages["node_modules/@emnapi/core"].version, "1.11.3");
+  assert.equal(lockfile.packages["node_modules/@emnapi/runtime"].version, "1.11.3");
+});
+
 test("the V1 build keeps project data ready without rendering a projects section", async () => {
   const projects = await read("src/data/projects.ts");
   const page = await read("src/pages/index.astro");
