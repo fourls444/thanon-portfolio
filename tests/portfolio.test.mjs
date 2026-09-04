@@ -91,7 +91,7 @@ test("portfolio metadata and public contact details are current", async () => {
   assert.match(profile, /\bname\s*:\s*["']Thanon Macharoen["']/);
   assert.match(profile, /\bemail\s*:\s*["']thanon\.macharoen@gmail\.com["']/);
   assert.match(profile, /\bgithub\s*:\s*["']https:\/\/github\.com\/fourls444["']/);
-  assert.match(profile, /\blinkedin\s*:\s*["']https:\/\/www\.linkedin\.com\/in\/thanon-macharoen["']/);
+  assert.match(profile, /\blinkedin\s*:\s*["']https:\/\/www\.linkedin\.com\/in\/thanon-macharoen\/["']/);
 });
 
 test("Thai-first bilingual content uses a persistent accessible switch", async () => {
