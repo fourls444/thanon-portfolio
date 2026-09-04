@@ -215,24 +215,28 @@ test("Midnight Cobalt palette contains no violet accent", async () => {
 test("mobile navigation remains useful without JavaScript and enhances when JavaScript loads", async () => {
   const css = await read("src/styles/global.css");
   const navbar = await read("src/components/Navbar.astro");
+  const firstMedia = css.search(/@media\b/i);
+  const baseCss = css.slice(0, firstMedia === -1 ? undefined : firstMedia);
   const mobileStart = css.search(/@media\s*\(\s*max-width\s*:\s*720px\s*\)/i);
   const nextMedia = css.indexOf("\n@media", mobileStart + 1);
   const mobileCss = css.slice(mobileStart, nextMedia === -1 ? undefined : nextMedia);
-  const declarationsFor = (selector) => {
+  const declarationsFor = (source, selector) => {
     const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return mobileCss.match(new RegExp(`(?:^|})\\s*${escapedSelector}\\s*\\{([^}]*)\\}`, "m"))?.[1] ?? "";
+    return source.match(new RegExp(`(?:^|})\\s*${escapedSelector}\\s*\\{([^}]*)\\}`, "m"))?.[1] ?? "";
   };
 
   assert.ok(mobileStart >= 0, "mobile navigation rules should exist at the 720px breakpoint");
   assert.match(css, /\.menu-toggle\s*\{[^}]*display\s*:\s*none\b[^}]*}/i);
-  assert.match(declarationsFor(".nav-links"), /flex-wrap\s*:\s*wrap\b/i);
-  assert.doesNotMatch(declarationsFor(".nav-links"), /position\s*:\s*absolute|visibility\s*:\s*hidden|opacity\s*:\s*0\b/i);
-  assert.match(declarationsFor(".js .menu-toggle"), /display\s*:\s*block\b/i);
-  assert.match(declarationsFor(".js .nav-links"), /position\s*:\s*absolute/i);
-  assert.match(declarationsFor(".js .nav-links"), /visibility\s*:\s*hidden/i);
-  assert.match(declarationsFor(".js .nav-links"), /opacity\s*:\s*0\b/i);
-  assert.match(declarationsFor(".js .nav-links.is-open"), /visibility\s*:\s*visible/i);
-  assert.match(declarationsFor(".js .nav-links.is-open"), /opacity\s*:\s*1\b/i);
+  assert.match(declarationsFor(baseCss, ".language-switch"), /display\s*:\s*none\b/i);
+  assert.match(declarationsFor(baseCss, ".js .language-switch"), /display\s*:\s*inline-flex\b/i);
+  assert.match(declarationsFor(mobileCss, ".nav-links"), /flex-wrap\s*:\s*wrap\b/i);
+  assert.doesNotMatch(declarationsFor(mobileCss, ".nav-links"), /position\s*:\s*absolute|visibility\s*:\s*hidden|opacity\s*:\s*0\b/i);
+  assert.match(declarationsFor(mobileCss, ".js .menu-toggle"), /display\s*:\s*block\b/i);
+  assert.match(declarationsFor(mobileCss, ".js .nav-links"), /position\s*:\s*absolute/i);
+  assert.match(declarationsFor(mobileCss, ".js .nav-links"), /visibility\s*:\s*hidden/i);
+  assert.match(declarationsFor(mobileCss, ".js .nav-links"), /opacity\s*:\s*0\b/i);
+  assert.match(declarationsFor(mobileCss, ".js .nav-links.is-open"), /visibility\s*:\s*visible/i);
+  assert.match(declarationsFor(mobileCss, ".js .nav-links.is-open"), /opacity\s*:\s*1\b/i);
   assert.match(navbar, /links\.map\([\s\S]*href=\{link\.href\}[\s\S]*data-lang-content=["']th["']/i);
 });
 

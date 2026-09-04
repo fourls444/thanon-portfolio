@@ -202,11 +202,15 @@ html[data-language="th"] [data-lang-content="en"] {
 }
 
 .language-switch {
-  display: inline-flex;
+  display: none;
   padding: 3px;
   border: 1px solid var(--line-strong);
   border-radius: 999px;
   background: oklch(0.965 0.012 245 / 0.04);
+}
+
+.js .language-switch {
+  display: inline-flex;
 }
 
 .language-switch button {
@@ -1034,10 +1038,6 @@ html[lang="th"] .contact-card h2 {
     justify-content: center;
     gap: 0 16px;
     padding-bottom: 8px;
-  }
-
-  .language-switch {
-    display: none;
   }
 
   .js .navbar {
