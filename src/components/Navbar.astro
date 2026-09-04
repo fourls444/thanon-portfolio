@@ -1,15 +1,28 @@
 ---
+import { content } from "../data/content";
+
 const links = [
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
-  { label: "Education", href: "#education" },
-  { label: "Contact", href: "#contact" },
-];
+  { key: "about", href: "#about" },
+  { key: "skills", href: "#skills" },
+  { key: "education", href: "#education" },
+  { key: "contact", href: "#contact" },
+] as const;
 ---
 
 <header class="site-header" data-header>
-  <nav class="navbar shell" aria-label="Primary navigation">
-    <a class="wordmark" href="#top" aria-label="Thanon — back to top">
+  <nav
+    class="navbar shell"
+    aria-label="เมนูหลัก"
+    data-label-th="เมนูหลัก"
+    data-label-en="Primary navigation"
+  >
+    <a
+      class="wordmark"
+      href="#top"
+      aria-label="Thanon กลับด้านบน"
+      data-label-th="Thanon กลับด้านบน"
+      data-label-en="Thanon back to top"
+    >
       <span>T</span> THANON
     </a>
 
@@ -18,14 +31,36 @@ const links = [
       type="button"
       aria-expanded="false"
       aria-controls="primary-menu"
-      aria-label="Open navigation menu"
+      aria-label={content.th.controls.menuOpen}
+      data-label-th={content.th.controls.menuOpen}
+      data-label-en={content.en.controls.menuOpen}
+      data-open-th={content.th.controls.menuOpen}
+      data-open-en={content.en.controls.menuOpen}
+      data-close-th={content.th.controls.menuClose}
+      data-close-en={content.en.controls.menuClose}
       data-menu-toggle
     >
       <span></span><span></span>
     </button>
 
     <div class="nav-links" id="primary-menu" data-menu>
-      {links.map((link) => <a href={link.href}>{link.label}</a>)}
+      {
+        links.map((link) => (
+          <a href={link.href}>
+            <span class="lang-inline" data-lang-content="th">{content.th.nav[link.key]}</span>
+            <span class="lang-inline" data-lang-content="en">{content.en.nav[link.key]}</span>
+          </a>
+        ))
+      }
+      <div
+        class="language-switch"
+        role="group"
+        aria-label="เลือกภาษา / Choose language"
+        data-language-switch
+      >
+        <button type="button" data-language="th" aria-pressed="true">TH</button>
+        <button type="button" data-language="en" aria-pressed="false">EN</button>
+      </div>
     </div>
   </nav>
 </header>
@@ -35,16 +70,63 @@ const links = [
   const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
   const menu = document.querySelector<HTMLElement>("[data-menu]");
 
+  const updateTranslatedLabels = (language: "th" | "en") => {
+    document.querySelectorAll<HTMLElement>("[data-label-th][data-label-en]").forEach((element) => {
+      element.setAttribute("aria-label", language === "en" ? element.dataset.labelEn! : element.dataset.labelTh!);
+    });
+  };
+
+  const setLanguage = (language: string, persist = false) => {
+    if (language !== "th" && language !== "en") return;
+
+    document.documentElement.dataset.language = language;
+    document.documentElement.lang = language;
+    document.querySelectorAll<HTMLButtonElement>("[data-language]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.language === language));
+    });
+    updateTranslatedLabels(language);
+
+    if (persist) {
+      try {
+        localStorage.setItem("portfolio-language", language);
+      } catch {
+        // The selected language still applies when storage is unavailable.
+      }
+    }
+  };
+
+  document.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+    const button = event.target.closest<HTMLButtonElement>("[data-language]");
+    if (!button) return;
+    setLanguage(button.dataset.language ?? "", true);
+  });
+
+  let initialLanguage = "th";
+  try {
+    initialLanguage = localStorage.getItem("portfolio-language") === "en" ? "en" : "th";
+  } catch {
+    initialLanguage = "th";
+  }
+  setLanguage(initialLanguage);
+
+  const setMenuLabelState = (state: "open" | "close") => {
+    if (!toggle) return;
+    toggle.dataset.labelTh = toggle.dataset[`${state}Th` as "openTh" | "closeTh"] ?? "";
+    toggle.dataset.labelEn = toggle.dataset[`${state}En` as "openEn" | "closeEn"] ?? "";
+    updateTranslatedLabels(document.documentElement.dataset.language === "en" ? "en" : "th");
+  };
+
   const closeMenu = () => {
     toggle?.setAttribute("aria-expanded", "false");
-    toggle?.setAttribute("aria-label", "Open navigation menu");
+    setMenuLabelState("open");
     menu?.classList.remove("is-open");
   };
 
   toggle?.addEventListener("click", () => {
     const isOpen = toggle.getAttribute("aria-expanded") === "true";
     toggle.setAttribute("aria-expanded", String(!isOpen));
-    toggle.setAttribute("aria-label", isOpen ? "Open navigation menu" : "Close navigation menu");
+    setMenuLabelState(isOpen ? "open" : "close");
     menu?.classList.toggle("is-open", !isOpen);
   });
 
@@ -57,6 +139,14 @@ const links = [
   });
 
   const updateHeader = () => header?.classList.toggle("is-scrolled", window.scrollY > 20);
+  let scrollFrame = 0;
+  const requestHeaderUpdate = () => {
+    if (scrollFrame) return;
+    scrollFrame = window.requestAnimationFrame(() => {
+      updateHeader();
+      scrollFrame = 0;
+    });
+  };
   updateHeader();
-  window.addEventListener("scroll", updateHeader, { passive: true });
+  window.addEventListener("scroll", requestHeaderUpdate, { passive: true });
 </script>

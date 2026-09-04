@@ -67,6 +67,26 @@ button {
   outline-offset: 4px;
 }
 
+[data-lang-content="en"] {
+  display: none;
+}
+
+.lang-inline[data-lang-content="th"] {
+  display: contents;
+}
+
+html[data-language="en"] [data-lang-content="th"] {
+  display: none;
+}
+
+html[data-language="en"] .lang-inline[data-lang-content="en"] {
+  display: contents;
+}
+
+html[data-language="th"] [data-lang-content="en"] {
+  display: none;
+}
+
 .shell {
   width: var(--shell);
   margin-inline: auto;
@@ -170,6 +190,40 @@ button {
 .nav-links a:hover::after {
   transform: scaleX(1);
   transform-origin: left;
+}
+
+.language-switch {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.language-switch button {
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0 9px;
+  cursor: pointer;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+
+.language-switch button[aria-pressed="true"] {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 0 18px rgba(37, 99, 235, 0.35);
+}
+
+.language-switch button:focus-visible {
+  outline-color: #60a5fa;
+  outline-offset: 2px;
 }
 
 .menu-toggle {
@@ -907,6 +961,7 @@ button {
     position: absolute;
     inset: 68px 0 auto;
     display: grid;
+    gap: 8px;
     padding: 16px;
     border-bottom: 1px solid var(--line);
     background: rgba(9, 10, 15, 0.97);
@@ -924,6 +979,16 @@ button {
 
   .nav-links a {
     justify-content: center;
+  }
+
+  .language-switch {
+    width: min(100%, 240px);
+    justify-self: center;
+  }
+
+  .language-switch button {
+    min-width: 50%;
+    min-height: 44px;
   }
 
   .hero-content {

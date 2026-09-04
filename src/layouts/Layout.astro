@@ -1,5 +1,6 @@
 ---
 import CursorGlow from "../components/react/CursorGlow";
+import { content } from "../data/content";
 import "../styles/global.css";
 
 type Props = {
@@ -8,31 +9,62 @@ type Props = {
 };
 
 const {
-  title = "Thanon — Software Developer",
+  title = "Thanon Portfolio",
   description = "Portfolio of Thanon, a Computer Science student and software developer focused on modern web experiences.",
 } = Astro.props;
+
+const baseUrl = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const faviconHref = `${baseUrl}favicon.svg`;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="th" data-language="th">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#090a0f" />
+    <meta name="theme-color" content="#06101f" />
     <meta name="generator" content={Astro.generator} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <link rel="icon" type="image/svg+xml" href={faviconHref} />
     <title>{title}</title>
-    <script is:inline>document.documentElement.classList.add("js");</script>
+    <script is:inline>
+      document.documentElement.classList.add("js");
+      let language = "th";
+      try {
+        if (localStorage.getItem("portfolio-language") === "en") language = "en";
+      } catch {
+        language = "th";
+      }
+      document.documentElement.dataset.language = language;
+      document.documentElement.lang = language;
+    </script>
   </head>
   <body>
-    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <a class="skip-link" href="#main-content">
+      <span class="lang-inline" data-lang-content="th">ข้ามไปยังเนื้อหาหลัก</span>
+      <span class="lang-inline" data-lang-content="en">Skip to main content</span>
+    </a>
     <CursorGlow client:load />
-    <button class="motion-control" type="button" aria-pressed="false" data-motion-toggle>
-      Pause motion
+    <button
+      class="motion-control"
+      type="button"
+      aria-pressed="false"
+      aria-label={content.th.controls.pause}
+      data-label-th={content.th.controls.pause}
+      data-label-en={content.en.controls.pause}
+      data-pause-th={content.th.controls.pause}
+      data-pause-en={content.en.controls.pause}
+      data-play-th={content.th.controls.play}
+      data-play-en={content.en.controls.play}
+      data-motion-toggle
+    >
+      <span class="lang-inline" data-lang-content="th">{content.th.controls.pause}</span>
+      <span class="lang-inline" data-lang-content="en">{content.en.controls.pause}</span>
     </button>
     <slot />
 
@@ -45,7 +77,15 @@ const {
       motionToggle?.addEventListener("click", () => {
         const paused = document.documentElement.classList.toggle("motion-paused");
         motionToggle.setAttribute("aria-pressed", String(paused));
-        motionToggle.textContent = paused ? "Play motion" : "Pause motion";
+        const state = paused ? "play" : "pause";
+        const thaiLabel = motionToggle.dataset[`${state}Th` as "pauseTh" | "playTh"] ?? "";
+        const englishLabel = motionToggle.dataset[`${state}En` as "pauseEn" | "playEn"] ?? "";
+        motionToggle.dataset.labelTh = thaiLabel;
+        motionToggle.dataset.labelEn = englishLabel;
+        motionToggle.querySelector<HTMLElement>('[data-lang-content="th"]')!.textContent = thaiLabel;
+        motionToggle.querySelector<HTMLElement>('[data-lang-content="en"]')!.textContent = englishLabel;
+        const language = document.documentElement.dataset.language === "en" ? "en" : "th";
+        motionToggle.setAttribute("aria-label", language === "en" ? englishLabel : thaiLabel);
       });
 
       if (!reduceMotion) {
