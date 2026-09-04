@@ -1,17 +1,70 @@
 ---
-import TechMarquee from "./react/TechMarquee";
+import { techGroups } from "../data/tech";
+
+const allTech = techGroups.flatMap((group) => group.items.map((item) => item.name));
 ---
 
 <section class="section tech-section" id="skills" aria-labelledby="skills-title">
   <div class="shell">
     <div class="section-heading section-heading-row reveal">
       <div>
-        <span class="section-index">02 / Tech Stack</span>
-        <h2 id="skills-title">Tools I build with.</h2>
+        <span class="section-index" data-lang-content="th">02 / เทคโนโลยี</span>
+        <span class="section-index" data-lang-content="en">02 / Tech Stack</span>
+        <h2 id="skills-title">
+          <span data-lang-content="th">เครื่องมือที่ใช้สร้างงาน</span>
+          <span data-lang-content="en">Tools I build with.</span>
+        </h2>
       </div>
-      <p>A practical toolkit shaped by web, mobile, backend, and data projects.</p>
+      <p data-lang-content="th">เครื่องมือที่คัดสรรจากงานเว็บ โมบาย แบ็กเอนด์ และข้อมูล</p>
+      <p data-lang-content="en">A practical toolkit shaped by web, mobile, backend, and data projects.</p>
     </div>
 
-    <TechMarquee client:visible />
+    <div class="tech-visual">
+      <div class="tech-grid">
+        {techGroups.map((group) => (
+          <article class="tech-card">
+            <header class="tech-card-heading">
+              <h3>
+                <span data-lang-content="th">{group.title.th}</span>
+                <span data-lang-content="en">{group.title.en}</span>
+              </h3>
+              <span class="tech-count" aria-hidden="true">{String(group.items.length).padStart(2, "0")}</span>
+            </header>
+            <ul>
+              {group.items.map((item) => {
+                const iconSrc = item.icon
+                  ? `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}${item.icon.replace(/^\//, "")}`
+                  : undefined;
+
+                return (
+                  <li class:list={["tech-item", { "tech-item--text": !item.icon }]}>
+                    {iconSrc && (
+                      <img
+                        class="tech-icon"
+                        src={iconSrc}
+                        alt=""
+                        width="40"
+                        height="40"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    )}
+                    <span>{item.name}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </article>
+        ))}
+      </div>
+
+      <div class="marquee-shell" aria-hidden="true">
+        <div class="marquee-track">
+          {[...allTech, ...allTech].map((item) => (
+            <span>{item}<i></i></span>
+          ))}
+        </div>
+      </div>
+    </div>
   </div>
 </section>
