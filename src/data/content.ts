@@ -136,7 +136,7 @@ export const content = {
     skills: {
       label: "02 / Tech Stack",
       title: "Tools I build with.",
-      copy: "A practical toolkit shaped by web, mobile, backend, and data projects.",
+      copy: "A practical toolkit shaped by web, mobile, backend, data, and Java projects.",
     },
     education: {
       label: "03 / Education & Activities",
