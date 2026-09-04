@@ -79,6 +79,10 @@ html[data-language="en"] [data-lang-content="th"] {
   display: none;
 }
 
+html[data-language="en"] [data-lang-content="en"]:not(.lang-inline) {
+  display: block;
+}
+
 html[data-language="en"] .lang-inline[data-lang-content="en"] {
   display: contents;
 }
@@ -834,6 +838,17 @@ html[data-language="th"] [data-lang-content="en"] {
   color: var(--muted);
   font-size: 0.85rem;
   transition: color 180ms ease;
+}
+
+.contact-secondary-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-top: 14px;
+}
+
+.contact-secondary-links .text-link {
+  margin-top: 0;
 }
 
 .text-link:hover {

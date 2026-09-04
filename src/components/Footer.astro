@@ -1,11 +1,26 @@
 ---
+import { content } from "../data/content";
+
 const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
   <div class="shell footer-inner">
     <a class="wordmark wordmark-small" href="#top"><span>T</span> THANON</a>
-    <p>Designed & built with Astro · {year}</p>
-    <a href="#top">Back to top ↑</a>
+    <p>
+      <span class="lang-inline" data-lang-content="th">{content.th.footer.built}</span>
+      <span class="lang-inline" data-lang-content="en">{content.en.footer.built}</span>
+      · {year}
+    </p>
+    <a
+      href="#top"
+      aria-label={content.th.footer.top}
+      data-label-th={content.th.footer.top}
+      data-label-en={content.en.footer.top}
+    >
+      <span class="lang-inline" data-lang-content="th">{content.th.footer.top}</span>
+      <span class="lang-inline" data-lang-content="en">{content.en.footer.top}</span>
+      ↑
+    </a>
   </div>
 </footer>

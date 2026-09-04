@@ -1,4 +1,5 @@
 ---
+import { content } from "../data/content";
 import { techGroups } from "../data/tech";
 
 const allTech = techGroups.flatMap((group) => group.items.map((item) => item.name));
@@ -8,15 +9,15 @@ const allTech = techGroups.flatMap((group) => group.items.map((item) => item.nam
   <div class="shell">
     <div class="section-heading section-heading-row reveal">
       <div>
-        <span class="section-index" data-lang-content="th">02 / เทคโนโลยี</span>
-        <span class="section-index" data-lang-content="en">02 / Tech Stack</span>
+        <span class="section-index" data-lang-content="th">{content.th.skills.label}</span>
+        <span class="section-index" data-lang-content="en">{content.en.skills.label}</span>
         <h2 id="skills-title">
-          <span data-lang-content="th">เครื่องมือที่ใช้สร้างงาน</span>
-          <span data-lang-content="en">Tools I build with.</span>
+          <span data-lang-content="th">{content.th.skills.title}</span>
+          <span data-lang-content="en">{content.en.skills.title}</span>
         </h2>
       </div>
-      <p data-lang-content="th">เครื่องมือที่คัดสรรจากงานเว็บ โมบาย แบ็กเอนด์ และข้อมูล</p>
-      <p data-lang-content="en">A practical toolkit shaped by web, mobile, backend, and data projects.</p>
+      <p data-lang-content="th">{content.th.skills.copy}</p>
+      <p data-lang-content="en">{content.en.skills.copy}</p>
     </div>
 
     <div class="tech-visual">

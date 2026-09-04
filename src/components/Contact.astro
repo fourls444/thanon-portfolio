@@ -1,24 +1,63 @@
 ---
+import { content } from "../data/content";
 import { profile } from "../data/profile";
 ---
 
 <section class="section contact-section" id="contact" aria-labelledby="contact-title">
   <div class="shell contact-card reveal">
-    <span class="section-index">04 / Contact</span>
+    <span class="section-index" data-lang-content="th">{content.th.contact.label}</span>
+    <span class="section-index" data-lang-content="en">{content.en.contact.label}</span>
     <div class="contact-grid">
       <div>
-        <p class="contact-eyebrow">Have an idea or opportunity?</p>
-        <h2 id="contact-title">Let's build something<br /><em>meaningful.</em></h2>
+        <p class="contact-eyebrow">
+          <span class="lang-inline" data-lang-content="th">{content.th.contact.eyebrow}</span>
+          <span class="lang-inline" data-lang-content="en">{content.en.contact.eyebrow}</span>
+        </p>
+        <h2 id="contact-title">
+          <span data-lang-content="th">
+            {content.th.contact.title.split("\n").map((line, index, lines) => (
+              <>{line}{index < lines.length - 1 && <br />}</>
+            ))}
+          </span>
+          <span data-lang-content="en">
+            {content.en.contact.title.split("\n").map((line, index, lines) => (
+              <>{line}{index < lines.length - 1 && <br />}</>
+            ))}
+          </span>
+        </h2>
       </div>
       <div class="contact-action">
         <p>
-          I'm always open to learning, collaborating, and talking about useful
-          digital products.
+          <span class="lang-inline" data-lang-content="th">{content.th.contact.copy}</span>
+          <span class="lang-inline" data-lang-content="en">{content.en.contact.copy}</span>
         </p>
         <a class="contact-link" href={`mailto:${profile.email}`}>
-          Get in touch <span aria-hidden="true">↗</span>
+          <span>
+            <span class="lang-inline" data-lang-content="th">{content.th.contact.cta}</span>
+            <span class="lang-inline" data-lang-content="en">{content.en.contact.cta}</span>
+          </span>
+          <span aria-hidden="true">↗</span>
         </a>
-        <a class="text-link" href={profile.github} target="_blank" rel="noreferrer">GitHub ↗</a>
+        <div class="contact-secondary-links">
+          <a
+            class="text-link"
+            href={profile.github}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="GitHub เปิดในแท็บใหม่"
+            data-label-th="GitHub เปิดในแท็บใหม่"
+            data-label-en="GitHub, opens in a new tab"
+          >GitHub ↗</a>
+          <a
+            class="text-link"
+            href={profile.linkedin}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="LinkedIn เปิดในแท็บใหม่"
+            data-label-th="LinkedIn เปิดในแท็บใหม่"
+            data-label-en="LinkedIn, opens in a new tab"
+          >LinkedIn ↗</a>
+        </div>
       </div>
     </div>
   </div>

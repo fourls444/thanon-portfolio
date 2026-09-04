@@ -1,21 +1,54 @@
+---
+import { content } from "../data/content";
+
+const experience = [
+  { th: "เว็บ", en: "Web" },
+  { th: "โมบาย", en: "Mobile" },
+  { th: "แบ็กเอนด์", en: "Backend" },
+  { th: "ข้อมูล", en: "Data" },
+];
+---
+
 <section class="section about-section" id="about" aria-labelledby="about-title">
   <div class="shell about-layout">
     <div class="section-heading reveal">
-      <span class="section-index">01 / About</span>
-      <h2 id="about-title">Curious by nature.<br />Practical by design.</h2>
+      <span class="section-index" data-lang-content="th">{content.th.about.label}</span>
+      <span class="section-index" data-lang-content="en">{content.en.about.label}</span>
+      <h2 id="about-title">
+        <span data-lang-content="th">
+          {content.th.about.title.split("\n").map((line, index, lines) => (
+            <>{line}{index < lines.length - 1 && <br />}</>
+          ))}
+        </span>
+        <span data-lang-content="en">
+          {content.en.about.title.split("\n").map((line, index, lines) => (
+            <>{line}{index < lines.length - 1 && <br />}</>
+          ))}
+        </span>
+      </h2>
     </div>
 
     <div class="about-content reveal reveal-delay">
       <p class="about-lead">
-        I'm a Computer Science student at Rangsit University with a growing focus
-        on web and software development.
+        <span class="lang-inline" data-lang-content="th">{content.th.about.lead}</span>
+        <span class="lang-inline" data-lang-content="en">{content.en.about.lead}</span>
       </p>
       <p>
-        I like turning ideas into dependable digital products—exploring the whole
-        path from interface and mobile experiences to backend systems and data.
+        <span class="lang-inline" data-lang-content="th">{content.th.about.body}</span>
+        <span class="lang-inline" data-lang-content="en">{content.en.about.body}</span>
       </p>
-      <div class="experience-strip" aria-label="Areas of experience">
-        <span>Web</span><span>Mobile</span><span>Backend</span><span>Data</span>
+      <div
+        class="experience-strip"
+        aria-label="ด้านประสบการณ์"
+        data-label-th="ด้านประสบการณ์"
+        data-label-en="Areas of experience"
+      >
+        {experience.map((item) => (
+          <span>
+            <span class="lang-inline" data-lang-content="th">{item.th}</span>
+            <span class="lang-inline" data-lang-content="en">{item.en}</span>
+          </span>
+        ))}
       </div>
     </div>
   </div>

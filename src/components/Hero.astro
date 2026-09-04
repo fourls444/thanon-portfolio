@@ -1,6 +1,16 @@
 ---
 import HeroBackground from "./HeroBackground.astro";
+import { content } from "../data/content";
 import { profile } from "../data/profile";
+
+const greeting = {
+  th: content.th.hero.greeting.replace("Thanon", profile.shortName),
+  en: content.en.hero.greeting.replace("Thanon", profile.shortName),
+};
+const heroLabel = {
+  th: `${greeting.th} ${content.th.hero.role}`,
+  en: `${greeting.en} ${content.en.hero.role}`,
+};
 ---
 
 <section class="hero" id="top" aria-labelledby="hero-title">
@@ -9,29 +19,55 @@ import { profile } from "../data/profile";
   <div class="hero-content shell">
     <div class="hero-kicker hero-reveal" style="--delay: 0ms">
       <span class="status-dot"></span>
-      Computer Science · Software Development
+      <span class="lang-inline" data-lang-content="th">{content.th.hero.kicker}</span>
+      <span class="lang-inline" data-lang-content="en">{content.en.hero.kicker}</span>
     </div>
 
-    <h1 id="hero-title" class="hero-title" aria-label="Hi, I'm Thanon. Software Developer.">
-      <span class="hero-reveal" style="--delay: 80ms">Hi, I'm {profile.name}.</span>
-      <span class="hero-reveal hero-title-accent" style="--delay: 160ms">Software Developer</span>
+    <h1
+      id="hero-title"
+      class="hero-title"
+      aria-label={heroLabel.th}
+      data-label-th={heroLabel.th}
+      data-label-en={heroLabel.en}
+    >
+      <span class="hero-reveal" style="--delay: 80ms">
+        <span class="lang-inline" data-lang-content="th">{greeting.th}</span>
+        <span class="lang-inline" data-lang-content="en">{greeting.en}</span>
+      </span>
+      <span class="hero-reveal hero-title-accent" style="--delay: 160ms">
+        <span class="lang-inline" data-lang-content="th">{content.th.hero.role}</span>
+        <span class="lang-inline" data-lang-content="en">{content.en.hero.role}</span>
+      </span>
     </h1>
 
     <p class="hero-copy hero-reveal" style="--delay: 240ms">
-      Focused on modern web development. I enjoy building clean, responsive,
-      and interactive digital experiences.
+      <span class="lang-inline" data-lang-content="th">{content.th.hero.copy}</span>
+      <span class="lang-inline" data-lang-content="en">{content.en.hero.copy}</span>
     </p>
 
     <div class="hero-actions hero-reveal" style="--delay: 320ms">
-      <a class="button button-primary" href="#about">About me <span aria-hidden="true">↘</span></a>
+      <a class="button button-primary" href="#about">
+        <span class="lang-inline" data-lang-content="th">{content.th.hero.aboutCta}</span>
+        <span class="lang-inline" data-lang-content="en">{content.en.hero.aboutCta}</span>
+        <span aria-hidden="true">↘</span>
+      </a>
       <a class="button button-ghost" href={profile.github} target="_blank" rel="noreferrer">
         GitHub <span aria-hidden="true">↗</span>
       </a>
     </div>
   </div>
 
-  <a class="scroll-indicator" href="#about" aria-label="Scroll to About section">
-    <span>Scroll to explore</span>
+  <a
+    class="scroll-indicator"
+    href="#about"
+    aria-label={content.th.hero.explore}
+    data-label-th={content.th.hero.explore}
+    data-label-en={content.en.hero.explore}
+  >
+    <span>
+      <span class="lang-inline" data-lang-content="th">{content.th.hero.explore}</span>
+      <span class="lang-inline" data-lang-content="en">{content.en.hero.explore}</span>
+    </span>
     <i aria-hidden="true"></i>
   </a>
 </section>
