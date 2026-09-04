@@ -131,8 +131,10 @@ test("technology cards use local WebP brand assets", async () => {
   const techStack = await read("src/components/TechStack.astro");
   const tech = await read("src/data/tech.ts");
   const technologySources = `${techStack}\n${tech}`;
-  const iconFields = [...tech.matchAll(/\bicon\s*:/g)];
-  const iconDeclarations = [...tech.matchAll(/\bicon\s*:\s*(["'`])([^"'`]+)\1/g)];
+  const iconFields = [...tech.matchAll(/(?:\bicon|["']icon["'])\s*:/g)];
+  const iconDeclarations = [
+    ...tech.matchAll(/(?:\bicon|["']icon["'])\s*:\s*(["'`])([^"'`]+)\1/g),
+  ];
 
   assert.ok(iconFields.length > 0, "technology metadata should declare icon paths");
   assert.equal(iconDeclarations.length, iconFields.length, "every icon should be a static path literal");
@@ -159,7 +161,7 @@ test("technology cards use local WebP brand assets", async () => {
   const itemName = itemMapping[1];
   const derivedIcon = techStack.match(
     new RegExp(
-      String.raw`\b(?:const|let)\s+([A-Za-z_$][\w$]*icon[A-Za-z0-9_$]*)\s*=[^;\n]*\b${itemName}\.icon\b`,
+      String.raw`\b(?:const|let)\s+([A-Za-z_$][\w$]*)\s*=[^;\n]*\b${itemName}\.icon\b`,
       "i",
     ),
   )?.[1];
