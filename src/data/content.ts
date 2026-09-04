@@ -67,13 +67,13 @@ export const content = {
       kicker: "วิทยาการคอมพิวเตอร์ · การพัฒนาซอฟต์แวร์",
       greeting: "สวัสดี ผม Thanon",
       role: "นักพัฒนาซอฟต์แวร์",
-      copy: "มุ่งเน้นการพัฒนาเว็บสมัยใหม่ ผมชอบสร้างประสบการณ์ดิจิทัลที่สะอาดตา รองรับทุกหน้าจอ และลื่นไหล",
+      copy: "มุ่งเน้นการพัฒนาเว็บสมัยใหม่ ผมชอบสร้างประสบการณ์ดิจิทัลที่สะอาด รองรับทุกหน้าจอ และโต้ตอบได้อย่างเป็นธรรมชาติ",
       aboutCta: "รู้จักผมมากขึ้น",
       explore: "เลื่อนเพื่อสำรวจ",
     },
     about: {
       label: "01 / เกี่ยวกับ",
-      title: "ช่างสงสัยโดยธรรมชาติ ลงมือทำอย่างมีแบบแผน",
+      title: "ช่างสงสัยโดยธรรมชาติ\nออกแบบเพื่อใช้งานจริง",
       lead: "ผมเป็นนักศึกษาวิทยาการคอมพิวเตอร์ที่ Rangsit University และกำลังมุ่งพัฒนาทักษะด้านเว็บและซอฟต์แวร์",
       body: "ผมชอบเปลี่ยนไอเดียให้เป็นผลิตภัณฑ์ดิจิทัลที่ใช้งานได้จริง ครอบคลุมทั้งส่วนติดต่อผู้ใช้ แอปมือถือ ระบบเบื้องหลัง และข้อมูล",
     },
@@ -97,7 +97,7 @@ export const content = {
     contact: {
       label: "04 / ติดต่อ",
       eyebrow: "มีไอเดียหรือโอกาสที่อยากพูดคุยไหม",
-      title: "มาสร้างสิ่งที่มีความหมายไปด้วยกัน",
+      title: "มาสร้างสิ่งที่\nมีความหมายไปด้วยกัน",
       copy: "ผมยินดีเสมอที่จะเรียนรู้ ร่วมงาน และพูดคุยเกี่ยวกับผลิตภัณฑ์ดิจิทัลที่เป็นประโยชน์",
       cta: "ติดต่อผม",
     },
@@ -129,7 +129,7 @@ export const content = {
     },
     about: {
       label: "01 / About",
-      title: "Curious by nature. Practical by design.",
+      title: "Curious by nature\nPractical by design",
       lead: "I'm a Computer Science student at Rangsit University with a growing focus on web and software development.",
       body: "I like turning ideas into dependable digital products, exploring the whole path from interfaces and mobile experiences to backend systems and data.",
     },
@@ -153,7 +153,7 @@ export const content = {
     contact: {
       label: "04 / Contact",
       eyebrow: "Have an idea or opportunity?",
-      title: "Let's build something meaningful.",
+      title: "Let's build something\nmeaningful",
       copy: "I'm always open to learning, collaborating, and talking about useful digital products.",
       cta: "Get in touch",
     },

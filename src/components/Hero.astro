@@ -51,7 +51,15 @@ const heroLabel = {
         <span class="lang-inline" data-lang-content="en">{content.en.hero.aboutCta}</span>
         <span aria-hidden="true">↘</span>
       </a>
-      <a class="button button-ghost" href={profile.github} target="_blank" rel="noreferrer">
+      <a
+        class="button button-ghost"
+        href={profile.github}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="GitHub เปิดในแท็บใหม่"
+        data-label-th="GitHub เปิดในแท็บใหม่"
+        data-label-en="GitHub, opens in a new tab"
+      >
         GitHub <span aria-hidden="true">↗</span>
       </a>
     </div>
