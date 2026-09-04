@@ -1,6 +1,5 @@
 ---
 import CursorGlow from "../components/CursorGlow.astro";
-import { content } from "../data/content";
 import "../styles/global.css";
 
 type Props = {
@@ -9,7 +8,7 @@ type Props = {
 };
 
 const {
-  title = "Thanon Portfolio",
+  title = "Portfolio Thanon",
   description = "Portfolio of Thanon, a Computer Science student and software developer focused on modern web experiences.",
 } = Astro.props;
 
@@ -20,7 +19,7 @@ const faviconHref = `${baseUrl}favicon.svg`;
 ---
 
 <!doctype html>
-<html lang="th" data-language="th">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
@@ -30,41 +29,16 @@ const faviconHref = `${baseUrl}favicon.svg`;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://raw.githubusercontent.com" />
     <link rel="icon" type="image/svg+xml" href={faviconHref} />
     <title>{title}</title>
-    <script is:inline>
-      document.documentElement.classList.add("js");
-      let language = "th";
-      try {
-        if (localStorage.getItem("portfolio-language") === "en") language = "en";
-      } catch {
-        language = "th";
-      }
-      document.documentElement.dataset.language = language;
-      document.documentElement.lang = language;
-    </script>
+    <script is:inline>document.documentElement.classList.add("js");</script>
   </head>
-  <body>
+  <body id="top">
     <a class="skip-link" href="#main-content">
-      <span class="lang-inline" data-lang-content="th">ข้ามไปยังเนื้อหาหลัก</span>
-      <span class="lang-inline" data-lang-content="en">Skip to main content</span>
+      Skip to main content
     </a>
     <CursorGlow />
-    <button
-      class="motion-control"
-      type="button"
-      aria-label={content.th.controls.pause}
-      data-label-th={content.th.controls.pause}
-      data-label-en={content.en.controls.pause}
-      data-pause-th={content.th.controls.pause}
-      data-pause-en={content.en.controls.pause}
-      data-play-th={content.th.controls.play}
-      data-play-en={content.en.controls.play}
-      data-motion-toggle
-    >
-      <span class="lang-inline" data-lang-content="th">{content.th.controls.pause}</span>
-      <span class="lang-inline" data-lang-content="en">{content.en.controls.pause}</span>
-    </button>
     <slot />
 
     <script>
@@ -72,7 +46,6 @@ const faviconHref = `${baseUrl}favicon.svg`;
 
       const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
       const reduceMotion = reducedMotionQuery.matches;
-      const motionToggle = document.querySelector<HTMLButtonElement>("[data-motion-toggle]");
       let lenis: Lenis | null = null;
 
       const syncLenis = () => {
@@ -92,19 +65,6 @@ const faviconHref = `${baseUrl}favicon.svg`;
 
       syncLenis();
       reducedMotionQuery.addEventListener("change", syncLenis);
-
-      motionToggle?.addEventListener("click", () => {
-        const paused = document.documentElement.classList.toggle("motion-paused");
-        const state = paused ? "play" : "pause";
-        const thaiLabel = motionToggle.dataset[`${state}Th` as "pauseTh" | "playTh"] ?? "";
-        const englishLabel = motionToggle.dataset[`${state}En` as "pauseEn" | "playEn"] ?? "";
-        motionToggle.dataset.labelTh = thaiLabel;
-        motionToggle.dataset.labelEn = englishLabel;
-        motionToggle.querySelector<HTMLElement>('[data-lang-content="th"]')!.textContent = thaiLabel;
-        motionToggle.querySelector<HTMLElement>('[data-lang-content="en"]')!.textContent = englishLabel;
-        const language = document.documentElement.dataset.language === "en" ? "en" : "th";
-        motionToggle.setAttribute("aria-label", language === "en" ? englishLabel : thaiLabel);
-      });
 
       const revealItems = document.querySelectorAll<HTMLElement>(".reveal");
       if (reduceMotion || !("IntersectionObserver" in window)) {

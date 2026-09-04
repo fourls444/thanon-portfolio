@@ -1,54 +1,75 @@
 ---
-import { content } from "../data/content";
+import { getAge, profile } from "../data/profile";
 
-const experience = [
-  { th: "เว็บ", en: "Web" },
-  { th: "โมบาย", en: "Mobile" },
-  { th: "แบ็กเอนด์", en: "Backend" },
-  { th: "ข้อมูล", en: "Data" },
+const age = getAge(profile.dateOfBirth);
+const interestedPositions = [
+  "Full Stack Developer",
+  "Backend Developer",
+  "Data Analyst",
+  "Mobile Developer",
 ];
+const imageSrc = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}icons/me.jpg`;
 ---
 
 <section class="section about-section" id="about" aria-labelledby="about-title">
-  <div class="shell about-layout">
-    <div class="section-heading reveal">
-      <span class="section-index" data-lang-content="th">{content.th.about.label}</span>
-      <span class="section-index" data-lang-content="en">{content.en.about.label}</span>
-      <h2 id="about-title">
-        <span data-lang-content="th">
-          {content.th.about.title.split("\n").map((line, index, lines) => (
-            <>{line}{index < lines.length - 1 && <br />}</>
-          ))}
-        </span>
-        <span data-lang-content="en">
-          {content.en.about.title.split("\n").map((line, index, lines) => (
-            <>{line}{index < lines.length - 1 && <br />}</>
-          ))}
-        </span>
-      </h2>
+  <div class="shell">
+    <div class="section-heading about-heading reveal">
+      <span class="section-index">01 / About Me</span>
+      <h1 id="about-title">About Me</h1>
     </div>
 
-    <div class="about-content reveal reveal-delay">
-      <p class="about-lead">
-        <span class="lang-inline" data-lang-content="th">{content.th.about.lead}</span>
-        <span class="lang-inline" data-lang-content="en">{content.en.about.lead}</span>
-      </p>
-      <p>
-        <span class="lang-inline" data-lang-content="th">{content.th.about.body}</span>
-        <span class="lang-inline" data-lang-content="en">{content.en.about.body}</span>
-      </p>
-      <div
-        class="experience-strip"
-        aria-label="ด้านประสบการณ์"
-        data-label-th="ด้านประสบการณ์"
-        data-label-en="Areas of experience"
-      >
-        {experience.map((item) => (
-          <span>
-            <span class="lang-inline" data-lang-content="th">{item.th}</span>
-            <span class="lang-inline" data-lang-content="en">{item.en}</span>
-          </span>
-        ))}
+    <p class="availability-badge reveal"><span aria-hidden="true"></span>Open to opportunities</p>
+
+    <div class="about-profile reveal reveal-delay">
+      <figure class="about-photo" data-photo-slot>
+        <div class="about-photo-frame">
+          <img
+            src={imageSrc}
+            alt="Thanon Macharoen"
+            width="449"
+            height="591"
+            sizes="(max-width: 720px) 360px, 36vw"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+      </figure>
+
+      <div class="about-details">
+        <dl class="profile-facts">
+          <div>
+            <dt>Thai Name</dt>
+            <dd>{profile.thaiName}</dd>
+          </div>
+          <div>
+            <dt>English Name</dt>
+            <dd>{profile.name}</dd>
+          </div>
+          <div>
+            <dt>Date of Birth</dt>
+            <dd>6 March 2004</dd>
+          </div>
+          <div>
+            <dt>Age</dt>
+            <dd>{age} years old</dd>
+          </div>
+          <div>
+            <dt>Interested Positions</dt>
+            <dd>
+              <ul class="interest-list">
+                {interestedPositions.map((position) => <li>{position}</li>)}
+              </ul>
+            </dd>
+          </div>
+          <div>
+            <dt>Education</dt>
+            <dd>Rangsit University<br />Bachelor of Science in Computer Science<br />GPAX 3.78</dd>
+          </div>
+          <div>
+            <dt>Location</dt>
+            <dd>{profile.location}</dd>
+          </div>
+        </dl>
       </div>
     </div>
   </div>

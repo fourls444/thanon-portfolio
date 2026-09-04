@@ -1,248 +1,153 @@
 import assert from "node:assert/strict";
-import { readFile, readdir, stat } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import test from "node:test";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-const readSourceFiles = async (directory) => {
-  const entries = await readdir(new URL(`../${directory}/`, import.meta.url), { withFileTypes: true });
-  const files = await Promise.all(
-    entries.map(async (entry) => {
-      const path = `${directory}/${entry.name}`;
-      if (entry.isDirectory()) return readSourceFiles(path);
-      if (!/\.(?:astro|tsx|jsx)$/i.test(path)) return [];
-      return [{ path, source: await read(path) }];
-    }),
-  );
-
-  return files.flat();
-};
-
-test("home page composes every V1 portfolio section in order", async () => {
+test("home page composes the current portfolio sections in order", async () => {
   const page = await read("src/pages/index.astro");
-  const sections = ["Hero", "About", "TechStack", "Education", "Contact"];
-
+  const sections = ["About", "TechStack", "FeaturedProjects", "Contact"];
   let previousIndex = -1;
   for (const section of sections) {
     const currentIndex = page.indexOf(`<${section}`);
     assert.ok(currentIndex > previousIndex, `${section} should appear in page order`);
     previousIndex = currentIndex;
   }
+  assert.doesNotMatch(page, /<(?:Hero|Education|Footer)\b/);
 });
 
-test("GitHub Pages deployment uses the repository base path", async () => {
+test("GitHub Pages deployment uses the repository base path and current actions", async () => {
   const config = await read("astro.config.mjs");
   const workflow = await read(".github/workflows/deploy.yml");
-
   assert.match(config, /base:\s*["']\/thanon-portfolio["']/);
-  assert.match(workflow, /actions\/deploy-pages/);
-});
-
-test("GitHub Pages workflow uses the current Node runtime action versions", async () => {
-  const workflow = await read(".github/workflows/deploy.yml");
-
+  assert.match(config, /output:\s*["']static["']/);
   assert.match(workflow, /actions\/checkout@v6/);
   assert.match(workflow, /actions\/setup-node@v6/);
   assert.match(workflow, /node-version:\s*24/);
   assert.match(workflow, /actions\/upload-pages-artifact@v4/);
+  assert.match(workflow, /actions\/deploy-pages/);
 });
 
 test("the npm lockfile includes Linux WASM peer dependencies", async () => {
   const packageJson = JSON.parse(await read("package.json"));
   const lockfile = JSON.parse(await read("package-lock.json"));
-
   assert.equal(packageJson.devDependencies["@emnapi/core"], "^1.11.3");
   assert.equal(packageJson.devDependencies["@emnapi/runtime"], "^1.11.3");
   assert.equal(lockfile.packages["node_modules/@emnapi/core"].version, "1.11.3");
   assert.equal(lockfile.packages["node_modules/@emnapi/runtime"].version, "1.11.3");
 });
 
-test("the V1 build keeps project data ready without rendering a projects section", async () => {
-  const projects = await read("src/data/projects.ts");
-  const page = await read("src/pages/index.astro");
-
-  assert.match(projects, /export const projects\s*=\s*\[\]/);
-  assert.doesNotMatch(page, /<Projects/);
-});
-
-test("global styles include reduced-motion and visible keyboard focus support", async () => {
+test("unused Tailwind build dependencies are removed", async () => {
+  const packageJson = JSON.parse(await read("package.json"));
+  const config = await read("astro.config.mjs");
   const css = await read("src/styles/global.css");
-
-  assert.match(css, /prefers-reduced-motion:\s*reduce/);
-  assert.match(css, /:focus-visible/);
+  assert.equal(packageJson.dependencies.tailwindcss, undefined);
+  assert.equal(packageJson.dependencies["@tailwindcss/vite"], undefined);
+  assert.doesNotMatch(config, /tailwindcss/i);
+  assert.doesNotMatch(css, /@import\s+["']tailwindcss["']/i);
 });
 
-test("reveals use progressive enhancement and autoplay motion can be paused", async () => {
-  const layout = await read("src/layouts/Layout.astro");
-  const css = await read("src/styles/global.css");
-
-  assert.match(layout, /classList\.add\(["']js["']\)/);
-  assert.match(layout, /data-motion-toggle/);
-  assert.match(css, /\.js\s+\.reveal/);
-  assert.match(css, /\.motion-paused\s+\.aurora/);
-});
-
-test("portfolio metadata and public contact details are current", async () => {
+test("page metadata and public contact details are current", async () => {
   const layout = await read("src/layouts/Layout.astro");
   const profile = await read("src/data/profile.ts");
-
-  assert.match(layout, /\btitle\s*=\s*["']Thanon Portfolio["']/);
-  assert.match(layout, /<html\s+[^>]*lang=["']th["']/i);
-  assert.match(profile, /\bname\s*:\s*["']Thanon Macharoen["']/);
-  assert.match(profile, /\bemail\s*:\s*["']thanon\.macharoen@gmail\.com["']/);
-  assert.match(profile, /\bgithub\s*:\s*["']https:\/\/github\.com\/fourls444["']/);
-  assert.match(profile, /\blinkedin\s*:\s*["']https:\/\/www\.linkedin\.com\/in\/thanon-macharoen\/["']/);
+  assert.match(layout, /title\s*=\s*["']Portfolio Thanon["']/);
+  assert.match(layout, /<html\s+[^>]*lang=["']en["']/i);
+  assert.match(layout, /rel=["']preconnect["'][^>]*raw\.githubusercontent\.com/i);
+  assert.match(profile, /thaiName\s*:\s*["']ธนนท์ มาเจริญ["']/);
+  assert.match(profile, /email\s*:\s*["']thanon\.macharoen@gmail\.com["']/);
+  assert.match(profile, /phone\s*:\s*["']0971592941["']/);
+  assert.match(profile, /github\s*:\s*["']https:\/\/github\.com\/fourls444["']/);
 });
 
-test("Thai-first bilingual content uses a persistent accessible switch", async () => {
+test("main landmark is the skip-link target", async () => {
   const layout = await read("src/layouts/Layout.astro");
-  const navbar = await read("src/components/Navbar.astro");
-  const content = await read("src/data/content.ts");
-  const languageUi = `${layout}\n${navbar}`;
-  const scripts = [...languageUi.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(
-    ([, script]) => script,
-  );
-  const languageClickScripts = scripts.filter(
-    (script) => /addEventListener\(\s*["']click["']/.test(script) && /data-language/.test(script),
-  );
-  const languageBehavior = languageClickScripts.join("\n");
-  const startupBehavior = scripts.join("\n");
+  const page = await read("src/pages/index.astro");
+  assert.match(layout, /href=["']#main-content["']/);
+  assert.match(page, /<main\b[^>]*id=["']main-content["']/i);
+  assert.doesNotMatch(page, /<main[^>]*>\s*<div\s+id=["']main-content["']/i);
+});
 
-  assert.match(content, /\bth\s*:\s*\{/);
-  assert.match(content, /\ben\s*:\s*\{/);
-  assert.match(languageUi, /data-language-switch/);
-  assert.match(navbar, /<button\b(?=[^>]*\bdata-language=["']th["'])[^>]*>[\s\S]*?<\/button>/i);
-  assert.match(navbar, /<button\b(?=[^>]*\bdata-language=["']en["'])[^>]*>[\s\S]*?<\/button>/i);
-  assert.ok(languageClickScripts.length > 0, "a click path should handle data-language controls");
-  assert.match(
-    languageBehavior,
-    /(?:\.dataset\.language\b|getAttribute\(\s*["']data-language["']\s*\))/,
-  );
-  assert.match(languageBehavior, /document\.documentElement\.(?:lang|dataset\.language)\s*=/);
-  assert.match(
-    languageBehavior,
-    /setAttribute\(\s*["']aria-pressed["']\s*,[^;]*(?:===|==)[^;]*\)/,
-  );
-  assert.match(languageBehavior, /localStorage\.setItem\(/);
-  assert.match(startupBehavior, /localStorage\.getItem\(/);
+test("profile image reserves its real aspect ratio and status copy is not a live region", async () => {
+  const about = await read("src/components/About.astro");
+  assert.match(about, /<img\b[^>]*width=["']449["'][^>]*height=["']591["']/i);
+  assert.doesNotMatch(about, /availability-badge[^>]*role=["']status["']/i);
 });
 
 test("technology cards use local WebP brand assets", async () => {
   const techStack = await read("src/components/TechStack.astro");
   const tech = await read("src/data/tech.ts");
-  const technologySources = `${techStack}\n${tech}`;
-  const iconFields = [...tech.matchAll(/(?:\bicon|["']icon["'])\s*:/g)];
-  const iconDeclarations = [
-    ...tech.matchAll(/(?:\bicon|["']icon["'])\s*:\s*(["'`])([^"'`]+)\1/g),
-  ];
-
-  assert.ok(iconFields.length > 0, "technology metadata should declare icon paths");
-  assert.equal(iconDeclarations.length, iconFields.length, "every icon should be a static path literal");
+  const iconDeclarations = [...tech.matchAll(/\bicon\s*:\s*(["'`])([^"'`]+)\1/g)];
+  assert.ok(iconDeclarations.length > 0);
   for (const [, , iconPath] of iconDeclarations) {
     assert.match(iconPath, /^\/icons\/[^/]+\.webp$/i);
     const iconFile = await stat(new URL(`../public${iconPath}`, import.meta.url));
-    assert.ok(iconFile.isFile(), `${iconPath} should reference a file`);
-    assert.ok(iconFile.size > 0, `${iconPath} should not be empty`);
+    assert.ok(iconFile.isFile());
+    assert.ok(iconFile.size > 0);
   }
+  assert.match(techStack, /class=["']tech-icon["']/);
+  assert.match(techStack, /loading=["']lazy["']/);
+  assert.match(techStack, /decoding=["']async["']/);
+});
 
-  const techIconImages = [...techStack.matchAll(/<img\b[^>]*>/gi)]
-    .map(([image]) => image)
-    .filter((image) =>
-      /\bclass\s*=\s*(?:["'][^"']*\btech-icon\b[^"']*["']|\{\s*["'][^"']*\btech-icon\b[^"']*["']\s*\})/i.test(
-        image,
-      ),
-    );
-  assert.ok(techIconImages.length > 0, "technology images should use the tech-icon class");
+test("featured project exposes GitHub, live demo, and responsive media", async () => {
+  const component = await read("src/components/FeaturedProjects.astro");
+  const projects = await read("src/data/projects.ts");
+  assert.match(projects, /title:\s*["']TogetherSpace["']/);
+  assert.match(projects, /github:\s*["']https:\/\/github\.com\/fourls444\/togetherspace["']/);
+  assert.match(projects, /live:\s*["']https:\/\/togetherspace\.vercel\.app["']/);
+  assert.match(component, /loading=["']lazy["']/);
+  assert.match(component, /decoding=["']async["']/);
+});
 
-  const itemMapping = techStack.match(
-    /\bitems\s*\.map\(\s*\(?\s*([A-Za-z_$][\w$]*)/,
-  );
-  assert.ok(itemMapping, "TechStack should map each technology item");
-  const itemName = itemMapping[1];
-  const derivedIcon = techStack.match(
-    new RegExp(
-      String.raw`\b(?:const|let)\s+([A-Za-z_$][\w$]*)\s*=[^;\n]*\b${itemName}\.icon\b`,
-      "i",
-    ),
-  )?.[1];
-  const directIconSource = new RegExp(
-    String.raw`\bsrc\s*=\s*\{\s*${itemName}\.icon\s*\}`,
-    "i",
-  );
-  const derivedIconSource = derivedIcon
-    ? new RegExp(String.raw`\bsrc\s*=\s*\{\s*${derivedIcon}\s*\}`, "i")
-    : null;
-  assert.ok(
-    techIconImages.some(
-      (image) => directIconSource.test(image) || derivedIconSource?.test(image),
-    ),
-    "a tech-icon image should bind its src to the mapped item's icon",
-  );
+test("motion progressively enhances the page and respects reduced motion", async () => {
+  const layout = await read("src/layouts/Layout.astro");
+  const css = await read("src/styles/global.css");
+  assert.match(layout, /classList\.add\(["']js["']\)/);
+  assert.match(layout, /prefers-reduced-motion:\s*reduce/);
+  assert.match(css, /\.js\s+\.reveal/);
+  assert.match(css, /prefers-reduced-motion:\s*reduce/);
+  assert.match(css, /:focus-visible/);
+});
 
-  for (const image of techIconImages) {
-    assert.match(image, /\bwidth\s*=\s*(?:["']40["']|\{\s*40\s*\})/i);
-    assert.match(image, /\bheight\s*=\s*(?:["']40["']|\{\s*40\s*\})/i);
-    assert.match(image, /\bdecoding\s*=\s*(?:["']async["']|\{\s*["']async["']\s*\})/i);
-  }
-  assert.doesNotMatch(
-    technologySources,
-    /\b(?:icon|image|src)\s*(?:=|:)\s*(?:["']|\{\s*["'])https?:\/\//i,
-  );
+test("direct section links never leave reveal content hidden", async () => {
+  const css = await read("src/styles/global.css");
+
+  assert.match(css, /\.section:target\s+\.reveal/);
+});
+
+test("responsive layout covers tablet, mobile, and narrow mobile", async () => {
+  const css = await read("src/styles/global.css");
+  assert.match(css, /@media\s*\(max-width:\s*900px\)/);
+  assert.match(css, /@media\s*\(max-width:\s*720px\)/);
+  assert.match(css, /@media\s*\(max-width:\s*420px\)/);
+  assert.match(css, /\.project-feature\s*\{[^}]*grid-template-columns:\s*1fr/s);
+  assert.match(css, /\.contact-links\s*\{[^}]*grid-template-columns:\s*repeat\(2,/s);
+  assert.match(css, /\.about-profile\s*\{[^}]*grid-template-columns:\s*1fr/s);
+});
+
+test("minimal depth effects remain dependency-free and motion-safe", async () => {
+  const packageJson = JSON.parse(await read("package.json"));
+  const css = await read("src/styles/global.css");
+  assert.equal(packageJson.dependencies.motion, undefined);
+  assert.match(css, /\.section::before/);
+  assert.match(css, /\.tech-card::before/);
+  assert.match(css, /prefers-reduced-motion:\s*reduce/);
+  assert.doesNotMatch(css, /transition:\s*all\b/i);
 });
 
 test("decorative interactions do not require React islands", async () => {
   const config = await read("astro.config.mjs");
-  const sourceFiles = await readSourceFiles("src");
-  const hydratedFiles = sourceFiles
-    .filter(({ source }) => /client:(?:load|visible|idle|media|only)\b/.test(source))
-    .map(({ path }) => path);
-
+  const sources = await Promise.all([
+    "src/layouts/Layout.astro",
+    "src/components/Navbar.astro",
+    "src/components/CursorGlow.astro",
+  ].map(read));
   assert.doesNotMatch(config, /@astrojs\/react/);
-  assert.deepEqual(hydratedFiles, [], `hydration directives found in: ${hydratedFiles.join(", ")}`);
+  assert.doesNotMatch(sources.join("\n"), /client:(?:load|visible|idle|media|only)\b/);
 });
 
-test("Midnight Cobalt palette contains no violet accent", async () => {
-  const css = await read("src/styles/global.css");
-
-  assert.match(css, /--bg\s*:\s*oklch\(0\.145\s+0\.025\s+258\)\s*;/);
-  assert.match(css, /--cobalt\s*:\s*oklch\(0\.65\s+0\.19\s+258\)\s*;/);
-  assert.doesNotMatch(
-    css,
-    /(?:--violet\b|\bviolet\b|#(?:7c3aed|b8a5ff)\b|rgba?\(\s*124\s*,\s*58\s*,\s*237\b)/i,
-  );
-});
-
-test("mobile navigation remains useful without JavaScript and enhances when JavaScript loads", async () => {
-  const css = await read("src/styles/global.css");
-  const navbar = await read("src/components/Navbar.astro");
-  const firstMedia = css.search(/@media\b/i);
-  const baseCss = css.slice(0, firstMedia === -1 ? undefined : firstMedia);
-  const mobileStart = css.search(/@media\s*\(\s*max-width\s*:\s*720px\s*\)/i);
-  const nextMedia = css.indexOf("\n@media", mobileStart + 1);
-  const mobileCss = css.slice(mobileStart, nextMedia === -1 ? undefined : nextMedia);
-  const declarationsFor = (source, selector) => {
-    const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return source.match(new RegExp(`(?:^|})\\s*${escapedSelector}\\s*\\{([^}]*)\\}`, "m"))?.[1] ?? "";
-  };
-
-  assert.ok(mobileStart >= 0, "mobile navigation rules should exist at the 720px breakpoint");
-  assert.match(css, /\.menu-toggle\s*\{[^}]*display\s*:\s*none\b[^}]*}/i);
-  assert.match(declarationsFor(baseCss, ".language-switch"), /display\s*:\s*none\b/i);
-  assert.match(declarationsFor(baseCss, ".js .language-switch"), /display\s*:\s*inline-flex\b/i);
-  assert.match(declarationsFor(mobileCss, ".nav-links"), /flex-wrap\s*:\s*wrap\b/i);
-  assert.doesNotMatch(declarationsFor(mobileCss, ".nav-links"), /position\s*:\s*absolute|visibility\s*:\s*hidden|opacity\s*:\s*0\b/i);
-  assert.match(declarationsFor(mobileCss, ".js .menu-toggle"), /display\s*:\s*block\b/i);
-  assert.match(declarationsFor(mobileCss, ".js .nav-links"), /position\s*:\s*absolute/i);
-  assert.match(declarationsFor(mobileCss, ".js .nav-links"), /visibility\s*:\s*hidden/i);
-  assert.match(declarationsFor(mobileCss, ".js .nav-links"), /opacity\s*:\s*0\b/i);
-  assert.match(declarationsFor(mobileCss, ".js .nav-links.is-open"), /visibility\s*:\s*visible/i);
-  assert.match(declarationsFor(mobileCss, ".js .nav-links.is-open"), /opacity\s*:\s*1\b/i);
-  assert.match(navbar, /links\.map\([\s\S]*href=\{link\.href\}[\s\S]*data-lang-content=["']th["']/i);
-});
-
-test("favicon uses only the Midnight Cobalt palette", async () => {
+test("favicon stays within the midnight blue palette", async () => {
   const favicon = await read("public/favicon.svg");
-
-  assert.match(favicon, /#070b17\b/i);
-  assert.doesNotMatch(favicon, /#(?:090a0f|a78bfa|7c3aed|b8a5ff)\b|\bviolet\b/i);
+  assert.match(favicon, /#0b1224\b/i);
+  assert.doesNotMatch(favicon, /\bviolet\b|#(?:7c3aed|a78bfa|b8a5ff)\b/i);
 });

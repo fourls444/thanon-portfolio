@@ -1,9 +1,7 @@
 ---
 import About from "../components/About.astro";
 import Contact from "../components/Contact.astro";
-import Education from "../components/Education.astro";
-import Footer from "../components/Footer.astro";
-import Hero from "../components/Hero.astro";
+import FeaturedProjects from "../components/FeaturedProjects.astro";
 import Navbar from "../components/Navbar.astro";
 import TechStack from "../components/TechStack.astro";
 import Layout from "../layouts/Layout.astro";
@@ -11,12 +9,10 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout>
   <Navbar />
-  <main id="main-content">
-    <Hero />
+  <main id="main-content" tabindex="-1">
     <About />
     <TechStack />
-    <Education />
+    <FeaturedProjects />
     <Contact />
   </main>
-  <Footer />
 </Layout>

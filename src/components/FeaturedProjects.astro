@@ -1,0 +1,48 @@
+---
+import { projects } from "../data/projects";
+---
+
+<section class="section projects-section" id="projects" aria-labelledby="projects-title">
+  <div class="shell">
+    <div class="section-heading reveal">
+      <span class="section-index">03 / Featured Project</span>
+      <h2 id="projects-title">Built for being together.</h2>
+    </div>
+
+    <div class="project-list">
+      {projects.map((project) => (
+        <article class="project-feature reveal reveal-delay">
+          <a class="project-visual" href={project.github} target="_blank" rel="noreferrer" aria-label={`${project.title} on GitHub, opens in a new tab`}>
+            <img
+              src={project.image}
+              alt={`${project.title} project preview`}
+              width="1200"
+              height="700"
+              sizes="(max-width: 900px) calc(100vw - 32px), 55vw"
+              loading="lazy"
+              decoding="async"
+            />
+            <span class="project-visual-label">View on GitHub ↗</span>
+          </a>
+          <div class="project-copy">
+            <div class="project-heading-row">
+              <div>
+                <span class="project-category">{project.category}</span>
+                <h3>{project.title}</h3>
+              </div>
+              <span class="project-number" aria-hidden="true">01</span>
+            </div>
+            <p>{project.description}</p>
+            <ul class="project-stack" aria-label={`${project.title} technologies`}>
+              {project.stack.map((technology) => <li>{technology}</li>)}
+            </ul>
+            <div class="project-links">
+              <a href={project.github} target="_blank" rel="noreferrer" aria-label="GitHub, opens in a new tab">GitHub <span aria-hidden="true">↗</span></a>
+              <a href={project.live} target="_blank" rel="noreferrer" aria-label="Live demo, opens in a new tab">Live demo <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
