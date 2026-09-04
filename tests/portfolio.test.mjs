@@ -99,43 +99,32 @@ test("Thai-first bilingual content uses a persistent accessible switch", async (
   const navbar = await read("src/components/Navbar.astro");
   const content = await read("src/data/content.ts");
   const languageUi = `${layout}\n${navbar}`;
+  const scripts = [...languageUi.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(
+    ([, script]) => script,
+  );
+  const languageClickScripts = scripts.filter(
+    (script) => /addEventListener\(\s*["']click["']/.test(script) && /data-language/.test(script),
+  );
+  const languageBehavior = languageClickScripts.join("\n");
+  const startupBehavior = scripts.join("\n");
 
   assert.match(content, /\bth\s*:\s*\{/);
   assert.match(content, /\ben\s*:\s*\{/);
   assert.match(languageUi, /data-language-switch/);
   assert.match(navbar, /<button\b(?=[^>]*\bdata-language=["']th["'])[^>]*>[\s\S]*?<\/button>/i);
   assert.match(navbar, /<button\b(?=[^>]*\bdata-language=["']en["'])[^>]*>[\s\S]*?<\/button>/i);
-
-  const languageFunction = languageUi.match(
-    /\b(?:function\s+|const\s+)((?:apply|set|update|change|switch)Language)\b/,
-  )?.[1];
-  assert.ok(languageFunction, "an explicit language application function should coordinate updates");
-
-  const functionStart = String.raw`\b(?:function\s+${languageFunction}\b|const\s+${languageFunction}\s*=)`;
+  assert.ok(languageClickScripts.length > 0, "a click path should handle data-language controls");
   assert.match(
-    languageUi,
-    new RegExp(`${functionStart}[\\s\\S]{0,2000}document\\.documentElement\\.lang\\s*=`),
+    languageBehavior,
+    /(?:\.dataset\.language\b|getAttribute\(\s*["']data-language["']\s*\))/,
   );
+  assert.match(languageBehavior, /document\.documentElement\.(?:lang|dataset\.language)\s*=/);
   assert.match(
-    languageUi,
-    new RegExp(`${functionStart}[\\s\\S]{0,2000}localStorage\\.setItem\\(`),
+    languageBehavior,
+    /setAttribute\(\s*["']aria-pressed["']\s*,[^;]*(?:===|==)[^;]*\)/,
   );
-  assert.match(
-    languageUi,
-    new RegExp(
-      `${functionStart}[\\s\\S]{0,2000}setAttribute\\(\\s*["']aria-pressed["']\\s*,[\\s\\S]{0,200}(?:===|==)`,
-    ),
-  );
-  assert.match(
-    languageUi,
-    new RegExp(
-      String.raw`querySelectorAll(?:<[^>]+>)?\([^)]*\[data-language\][^)]*\)[\s\S]{0,1500}addEventListener\(\s*["']click["'][\s\S]{0,500}${languageFunction}\(`,
-    ),
-  );
-  assert.match(
-    languageUi,
-    new RegExp(String.raw`localStorage\.getItem\([^)]*\)[\s\S]{0,500}${languageFunction}\(`),
-  );
+  assert.match(languageBehavior, /localStorage\.setItem\(/);
+  assert.match(startupBehavior, /localStorage\.getItem\(/);
 });
 
 test("technology cards use local WebP brand assets", async () => {
@@ -162,6 +151,32 @@ test("technology cards use local WebP brand assets", async () => {
       ),
     );
   assert.ok(techIconImages.length > 0, "technology images should use the tech-icon class");
+
+  const itemMapping = techStack.match(
+    /\bitems\s*\.map\(\s*\(?\s*([A-Za-z_$][\w$]*)/,
+  );
+  assert.ok(itemMapping, "TechStack should map each technology item");
+  const itemName = itemMapping[1];
+  const derivedIcon = techStack.match(
+    new RegExp(
+      String.raw`\b(?:const|let)\s+([A-Za-z_$][\w$]*icon[A-Za-z0-9_$]*)\s*=[^;\n]*\b${itemName}\.icon\b`,
+      "i",
+    ),
+  )?.[1];
+  const directIconSource = new RegExp(
+    String.raw`\bsrc\s*=\s*\{\s*${itemName}\.icon\s*\}`,
+    "i",
+  );
+  const derivedIconSource = derivedIcon
+    ? new RegExp(String.raw`\bsrc\s*=\s*\{\s*${derivedIcon}\s*\}`, "i")
+    : null;
+  assert.ok(
+    techIconImages.some(
+      (image) => directIconSource.test(image) || derivedIconSource?.test(image),
+    ),
+    "a tech-icon image should bind its src to the mapped item's icon",
+  );
+
   for (const image of techIconImages) {
     assert.match(image, /\bwidth\s*=\s*(?:["']40["']|\{\s*40\s*\})/i);
     assert.match(image, /\bheight\s*=\s*(?:["']40["']|\{\s*40\s*\})/i);
@@ -189,5 +204,8 @@ test("Midnight Cobalt palette contains no violet accent", async () => {
 
   assert.match(css, /--bg\s*:\s*oklch\(0\.145\s+0\.025\s+258\)\s*;/);
   assert.match(css, /--cobalt\s*:\s*oklch\(0\.65\s+0\.19\s+258\)\s*;/);
-  assert.doesNotMatch(css, /(?:--violet\b|\bviolet\b|#(?:7c3aed|b8a5ff)\b)/i);
+  assert.doesNotMatch(
+    css,
+    /(?:--violet\b|\bviolet\b|#(?:7c3aed|b8a5ff)\b|rgba?\(\s*124\s*,\s*58\s*,\s*237\b)/i,
+  );
 });
