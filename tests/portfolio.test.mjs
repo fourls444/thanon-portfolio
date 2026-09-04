@@ -1,8 +1,22 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir, stat } from "node:fs/promises";
 import test from "node:test";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
+
+const readSourceFiles = async (directory) => {
+  const entries = await readdir(new URL(`../${directory}/`, import.meta.url), { withFileTypes: true });
+  const files = await Promise.all(
+    entries.map(async (entry) => {
+      const path = `${directory}/${entry.name}`;
+      if (entry.isDirectory()) return readSourceFiles(path);
+      if (!/\.(?:astro|tsx|jsx)$/i.test(path)) return [];
+      return [{ path, source: await read(path) }];
+    }),
+  );
+
+  return files.flat();
+};
 
 test("home page composes every V1 portfolio section in order", async () => {
   const page = await read("src/pages/index.astro");
@@ -76,11 +90,8 @@ test("portfolio metadata and public contact details are current", async () => {
   assert.match(layout, /<html\s+[^>]*lang=["']th["']/i);
   assert.match(profile, /\bname\s*:\s*["']Thanon Macharoen["']/);
   assert.match(profile, /\bemail\s*:\s*["']thanon\.macharoen@gmail\.com["']/);
-  assert.match(profile, /\bgithub\s*:\s*["']https?:\/\/github\.com\/fourls444\/?["']/);
-  assert.match(
-    profile,
-    /\blinkedin\s*:\s*["']https?:\/\/(?:www\.)?linkedin\.com\/in\/thanon-macharoen\/?["']/,
-  );
+  assert.match(profile, /\bgithub\s*:\s*["']https:\/\/github\.com\/fourls444["']/);
+  assert.match(profile, /\blinkedin\s*:\s*["']https:\/\/www\.linkedin\.com\/in\/thanon-macharoen["']/);
 });
 
 test("Thai-first bilingual content uses a persistent accessible switch", async () => {
@@ -94,20 +105,68 @@ test("Thai-first bilingual content uses a persistent accessible switch", async (
   assert.match(languageUi, /data-language-switch/);
   assert.match(navbar, /<button\b(?=[^>]*\bdata-language=["']th["'])[^>]*>[\s\S]*?<\/button>/i);
   assert.match(navbar, /<button\b(?=[^>]*\bdata-language=["']en["'])[^>]*>[\s\S]*?<\/button>/i);
-  assert.match(navbar, /aria-pressed/);
-  assert.match(languageUi, /localStorage/);
-  assert.match(languageUi, /document\.documentElement\.lang/);
+
+  const languageFunction = languageUi.match(
+    /\b(?:function\s+|const\s+)((?:apply|set|update|change|switch)Language)\b/,
+  )?.[1];
+  assert.ok(languageFunction, "an explicit language application function should coordinate updates");
+
+  const functionStart = String.raw`\b(?:function\s+${languageFunction}\b|const\s+${languageFunction}\s*=)`;
+  assert.match(
+    languageUi,
+    new RegExp(`${functionStart}[\\s\\S]{0,2000}document\\.documentElement\\.lang\\s*=`),
+  );
+  assert.match(
+    languageUi,
+    new RegExp(`${functionStart}[\\s\\S]{0,2000}localStorage\\.setItem\\(`),
+  );
+  assert.match(
+    languageUi,
+    new RegExp(
+      `${functionStart}[\\s\\S]{0,2000}setAttribute\\(\\s*["']aria-pressed["']\\s*,[\\s\\S]{0,200}(?:===|==)`,
+    ),
+  );
+  assert.match(
+    languageUi,
+    new RegExp(
+      String.raw`querySelectorAll(?:<[^>]+>)?\([^)]*\[data-language\][^)]*\)[\s\S]{0,1500}addEventListener\(\s*["']click["'][\s\S]{0,500}${languageFunction}\(`,
+    ),
+  );
+  assert.match(
+    languageUi,
+    new RegExp(String.raw`localStorage\.getItem\([^)]*\)[\s\S]{0,500}${languageFunction}\(`),
+  );
 });
 
 test("technology cards use local WebP brand assets", async () => {
   const techStack = await read("src/components/TechStack.astro");
   const tech = await read("src/data/tech.ts");
   const technologySources = `${techStack}\n${tech}`;
+  const iconFields = [...tech.matchAll(/\bicon\s*:/g)];
+  const iconDeclarations = [...tech.matchAll(/\bicon\s*:\s*(["'`])([^"'`]+)\1/g)];
 
-  assert.match(techStack, /\bwidth\s*=\s*(?:["']40["']|\{40\})/);
-  assert.match(techStack, /\bheight\s*=\s*(?:["']40["']|\{40\})/);
-  assert.match(techStack, /\bdecoding\s*=\s*["']async["']/);
-  assert.match(tech, /\b(?:icon|image|src)\s*:\s*["']\/icons\/[^"']+\.webp["']/i);
+  assert.ok(iconFields.length > 0, "technology metadata should declare icon paths");
+  assert.equal(iconDeclarations.length, iconFields.length, "every icon should be a static path literal");
+  for (const [, , iconPath] of iconDeclarations) {
+    assert.match(iconPath, /^\/icons\/[^/]+\.webp$/i);
+    const iconFile = await stat(new URL(`../public${iconPath}`, import.meta.url));
+    assert.ok(iconFile.isFile(), `${iconPath} should reference a file`);
+    assert.ok(iconFile.size > 0, `${iconPath} should not be empty`);
+  }
+
+  const techIconImages = [...techStack.matchAll(/<img\b[^>]*>/gi)]
+    .map(([image]) => image)
+    .filter((image) =>
+      /\bclass\s*=\s*(?:["'][^"']*\btech-icon\b[^"']*["']|\{\s*["'][^"']*\btech-icon\b[^"']*["']\s*\})/i.test(
+        image,
+      ),
+    );
+  assert.ok(techIconImages.length > 0, "technology images should use the tech-icon class");
+  for (const image of techIconImages) {
+    assert.match(image, /\bwidth\s*=\s*(?:["']40["']|\{\s*40\s*\})/i);
+    assert.match(image, /\bheight\s*=\s*(?:["']40["']|\{\s*40\s*\})/i);
+    assert.match(image, /\bdecoding\s*=\s*(?:["']async["']|\{\s*["']async["']\s*\})/i);
+  }
   assert.doesNotMatch(
     technologySources,
     /\b(?:icon|image|src)\s*(?:=|:)\s*(?:["']|\{\s*["'])https?:\/\//i,
@@ -116,19 +175,19 @@ test("technology cards use local WebP brand assets", async () => {
 
 test("decorative interactions do not require React islands", async () => {
   const config = await read("astro.config.mjs");
-  const hero = await read("src/components/Hero.astro");
-  const techStack = await read("src/components/TechStack.astro");
-  const layout = await read("src/layouts/Layout.astro");
-  const implementation = `${config}\n${hero}\n${techStack}\n${layout}`;
+  const sourceFiles = await readSourceFiles("src");
+  const hydratedFiles = sourceFiles
+    .filter(({ source }) => /client:(?:load|visible|idle|media|only)\b/.test(source))
+    .map(({ path }) => path);
 
   assert.doesNotMatch(config, /@astrojs\/react/);
-  assert.doesNotMatch(implementation, /client:(?:load|visible|idle)\b/);
+  assert.deepEqual(hydratedFiles, [], `hydration directives found in: ${hydratedFiles.join(", ")}`);
 });
 
 test("Midnight Cobalt palette contains no violet accent", async () => {
   const css = await read("src/styles/global.css");
 
-  assert.match(css, /--bg\s*:\s*oklch\(/);
-  assert.match(css, /--cobalt\s*:\s*oklch\(/);
-  assert.doesNotMatch(css, /--violet\b/);
+  assert.match(css, /--bg\s*:\s*oklch\(0\.145\s+0\.025\s+258\)\s*;/);
+  assert.match(css, /--cobalt\s*:\s*oklch\(0\.65\s+0\.19\s+258\)\s*;/);
+  assert.doesNotMatch(css, /(?:--violet\b|\bviolet\b|#(?:7c3aed|b8a5ff)\b)/i);
 });
