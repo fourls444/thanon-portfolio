@@ -665,9 +665,14 @@ html[data-language="th"] [data-lang-content="en"] {
 }
 
 .tech-icon {
+  box-sizing: border-box;
   width: 40px;
   height: 40px;
   flex: 0 0 auto;
+  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 7px;
+  background: rgba(245, 247, 251, 0.92);
   object-fit: contain;
 }
 
@@ -966,7 +971,7 @@ html[data-language="th"] [data-lang-content="en"] {
   }
 
   .tech-card:last-child {
-    grid-column: 1 / -1;
+    grid-column: span 6;
   }
 
   .contact-grid {
