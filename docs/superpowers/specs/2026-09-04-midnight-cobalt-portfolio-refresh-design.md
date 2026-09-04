@@ -19,8 +19,20 @@ Only public information confirmed on the GitHub profile and its README will be a
 
 - Set the browser tab title and Open Graph title to `Thanon Portfolio`.
 - Keep the existing concise portfolio description for search and link previews, updating it only where needed to match the confirmed profile information.
-- Rewrite the repository `README.md` to describe the current portfolio, its stack, local development commands, production verification, GitHub Pages deployment, content update locations, and V2 project roadmap.
+- Rewrite the repository `README.md` with clearly separated Thai and English sections describing the current portfolio, its stack, local development commands, production verification, GitHub Pages deployment, content update locations, and V2 project roadmap.
 - Replace placeholder GitHub and email values in the site data with the confirmed links above, and add LinkedIn as a first-class contact link.
+
+## Language experience
+
+- Provide a compact `TH / EN` language switch in the navigation.
+- Thai is the default language on a visitor's first visit.
+- Display one language at a time rather than placing duplicate Thai and English paragraphs beside each other.
+- Translate the navigation, hero, about, tech-stack supporting copy, education and activities, contact section, footer, motion controls, and accessibility labels.
+- Keep technology names, proper nouns, email addresses, and URLs unchanged where translation would reduce clarity.
+- Store the visitor's explicit language choice in `localStorage` and restore it on later visits.
+- Update the document `lang` attribute whenever the language changes.
+- Ensure the default Thai content remains visible without JavaScript. The switch enhances the page but must not leave the page blank if scripting is unavailable.
+- Keep all bilingual content in a small local data structure or semantic HTML attributes. Do not add an internationalization dependency or server-side locale routing.
 
 ## Visual direction
 
@@ -69,6 +81,7 @@ The section may use compact category groupings to prevent the longer list from b
 - Do not add new runtime dependencies.
 - Optimize all WebP icon assets before committing them.
 - Preserve keyboard focus styles, semantic headings, descriptive links, and reduced-motion support.
+- Make the language switch keyboard accessible, expose its current state to assistive technology, and avoid a flash of the wrong language when restoring a saved preference.
 - Keep the site fully static and compatible with the existing GitHub Pages base path.
 - Avoid changes to the planned but intentionally empty `src/data/projects.ts` file.
 - Verify with the existing test suite and a production Astro build.
@@ -80,5 +93,7 @@ The section may use compact category groupings to prevent the longer list from b
 3. GitHub, email, and LinkedIn links use the confirmed public values.
 4. The site consistently uses a blue-black Midnight Cobalt palette with no remaining purple accent.
 5. Tech categories reflect the current GitHub profile README and show locally hosted WebP brand icons where an appropriate logo exists.
-6. The page remains responsive, accessible, static, and deployable through the existing GitHub Pages workflow.
-7. Tests and the production build pass without adding runtime dependencies.
+6. Thai content is shown by default, and the `TH / EN` control switches all interface content without navigating away.
+7. A visitor's explicit language selection persists locally, while the page remains usable without JavaScript.
+8. The page remains responsive, accessible, static, and deployable through the existing GitHub Pages workflow.
+9. Tests and the production build pass without adding runtime dependencies.
