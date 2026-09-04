@@ -1024,24 +1024,44 @@ html[lang="th"] .contact-card h2 {
 
   .navbar {
     min-height: 68px;
-  }
-
-  .menu-toggle {
-    display: block;
-  }
-
-  .menu-toggle[aria-expanded="true"] span:first-child {
-    transform: translateY(3.5px) rotate(45deg);
-  }
-
-  .menu-toggle[aria-expanded="true"] span:last-child {
-    transform: translateY(-3.5px) rotate(-45deg);
+    flex-wrap: wrap;
+    padding-block: 8px;
   }
 
   .nav-links {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0 16px;
+    padding-bottom: 8px;
+  }
+
+  .language-switch {
+    display: none;
+  }
+
+  .js .navbar {
+    flex-wrap: nowrap;
+    padding-block: 0;
+  }
+
+  .js .menu-toggle {
+    display: block;
+  }
+
+  .js .menu-toggle[aria-expanded="true"] span:first-child {
+    transform: translateY(3.5px) rotate(45deg);
+  }
+
+  .js .menu-toggle[aria-expanded="true"] span:last-child {
+    transform: translateY(-3.5px) rotate(-45deg);
+  }
+
+  .js .nav-links {
     position: absolute;
     inset: 68px 0 auto;
     display: grid;
+    width: auto;
     gap: 8px;
     padding: 16px;
     border-bottom: 1px solid var(--line);
@@ -1052,22 +1072,23 @@ html[lang="th"] .contact-card h2 {
     transition: opacity 200ms ease, transform 200ms var(--ease), visibility 200ms;
   }
 
-  .nav-links.is-open {
+  .js .nav-links.is-open {
     opacity: 1;
     transform: translateY(0);
     visibility: visible;
   }
 
-  .nav-links a {
+  .js .nav-links a {
     justify-content: center;
   }
 
-  .language-switch {
+  .js .language-switch {
+    display: inline-flex;
     width: min(100%, 240px);
     justify-self: center;
   }
 
-  .language-switch button {
+  .js .language-switch button {
     min-width: 50%;
     min-height: 44px;
   }

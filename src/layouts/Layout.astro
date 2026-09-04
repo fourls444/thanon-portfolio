@@ -53,7 +53,6 @@ const faviconHref = `${baseUrl}favicon.svg`;
     <button
       class="motion-control"
       type="button"
-      aria-pressed="false"
       aria-label={content.th.controls.pause}
       data-label-th={content.th.controls.pause}
       data-label-en={content.en.controls.pause}
@@ -71,12 +70,31 @@ const faviconHref = `${baseUrl}favicon.svg`;
     <script>
       import Lenis from "lenis";
 
-      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const reduceMotion = reducedMotionQuery.matches;
       const motionToggle = document.querySelector<HTMLButtonElement>("[data-motion-toggle]");
+      let lenis: Lenis | null = null;
+
+      const syncLenis = () => {
+        if (reducedMotionQuery.matches) {
+          lenis?.destroy();
+          lenis = null;
+          return;
+        }
+
+        lenis ??= new Lenis({
+          autoRaf: true,
+          anchors: { offset: -72 },
+          duration: 1.05,
+          smoothWheel: true,
+        });
+      };
+
+      syncLenis();
+      reducedMotionQuery.addEventListener("change", syncLenis);
 
       motionToggle?.addEventListener("click", () => {
         const paused = document.documentElement.classList.toggle("motion-paused");
-        motionToggle.setAttribute("aria-pressed", String(paused));
         const state = paused ? "play" : "pause";
         const thaiLabel = motionToggle.dataset[`${state}Th` as "pauseTh" | "playTh"] ?? "";
         const englishLabel = motionToggle.dataset[`${state}En` as "pauseEn" | "playEn"] ?? "";
@@ -87,15 +105,6 @@ const faviconHref = `${baseUrl}favicon.svg`;
         const language = document.documentElement.dataset.language === "en" ? "en" : "th";
         motionToggle.setAttribute("aria-label", language === "en" ? englishLabel : thaiLabel);
       });
-
-      if (!reduceMotion) {
-        new Lenis({
-          autoRaf: true,
-          anchors: { offset: -72 },
-          duration: 1.05,
-          smoothWheel: true,
-        });
-      }
 
       const revealItems = document.querySelectorAll<HTMLElement>(".reveal");
       if (reduceMotion || !("IntersectionObserver" in window)) {

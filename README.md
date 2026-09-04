@@ -14,6 +14,8 @@ V1 ประกอบด้วย Navbar, Hero, About, Tech Stack, Education & A
 
 เว็บไซต์ทำงานด้วย Astro, TypeScript, Tailwind CSS, Lenis และ CSS/vanilla JavaScript ใช้ไอคอนเทคโนโลยี WebP จากไฟล์ภายในโปรเจกต์ และเผยแพร่ผ่าน GitHub Pages ด้วย GitHub Actions
 
+ไอคอนเทคโนโลยี WebP ดัดแปลงจากแหล่ง Devicon และ Simple Icons ที่ตรวจสอบแล้ว เครื่องหมายการค้าทั้งหมดยังคงเป็นของเจ้าของแต่ละราย
+
 เทคโนโลยีที่แสดงในพอร์ต เช่น React หรือ Next.js คือทักษะของ Thanon ไม่ใช่ runtime dependency ของเว็บไซต์นี้
 
 ### เริ่มพัฒนา
@@ -64,6 +66,8 @@ V1 includes Navbar, Hero, About, Tech Stack, Education & Activities, Contact, an
 ### Site stack
 
 The site runs on Astro, TypeScript, Tailwind CSS, Lenis, and CSS/vanilla JavaScript. It uses local WebP technology icons and deploys to GitHub Pages through GitHub Actions.
+
+The local WebP technology marks are derived from verified Devicon and Simple Icons sources. All trademarks remain with their respective owners.
 
 Technologies shown in the portfolio, such as React or Next.js, represent Thanon's skills and are not runtime dependencies of this site.
 

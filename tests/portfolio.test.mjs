@@ -211,3 +211,34 @@ test("Midnight Cobalt palette contains no violet accent", async () => {
     /(?:--violet\b|\bviolet\b|#(?:7c3aed|b8a5ff)\b|rgba?\(\s*124\s*,\s*58\s*,\s*237\b)/i,
   );
 });
+
+test("mobile navigation remains useful without JavaScript and enhances when JavaScript loads", async () => {
+  const css = await read("src/styles/global.css");
+  const navbar = await read("src/components/Navbar.astro");
+  const mobileStart = css.search(/@media\s*\(\s*max-width\s*:\s*720px\s*\)/i);
+  const nextMedia = css.indexOf("\n@media", mobileStart + 1);
+  const mobileCss = css.slice(mobileStart, nextMedia === -1 ? undefined : nextMedia);
+  const declarationsFor = (selector) => {
+    const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return mobileCss.match(new RegExp(`(?:^|})\\s*${escapedSelector}\\s*\\{([^}]*)\\}`, "m"))?.[1] ?? "";
+  };
+
+  assert.ok(mobileStart >= 0, "mobile navigation rules should exist at the 720px breakpoint");
+  assert.match(css, /\.menu-toggle\s*\{[^}]*display\s*:\s*none\b[^}]*}/i);
+  assert.match(declarationsFor(".nav-links"), /flex-wrap\s*:\s*wrap\b/i);
+  assert.doesNotMatch(declarationsFor(".nav-links"), /position\s*:\s*absolute|visibility\s*:\s*hidden|opacity\s*:\s*0\b/i);
+  assert.match(declarationsFor(".js .menu-toggle"), /display\s*:\s*block\b/i);
+  assert.match(declarationsFor(".js .nav-links"), /position\s*:\s*absolute/i);
+  assert.match(declarationsFor(".js .nav-links"), /visibility\s*:\s*hidden/i);
+  assert.match(declarationsFor(".js .nav-links"), /opacity\s*:\s*0\b/i);
+  assert.match(declarationsFor(".js .nav-links.is-open"), /visibility\s*:\s*visible/i);
+  assert.match(declarationsFor(".js .nav-links.is-open"), /opacity\s*:\s*1\b/i);
+  assert.match(navbar, /links\.map\([\s\S]*href=\{link\.href\}[\s\S]*data-lang-content=["']th["']/i);
+});
+
+test("favicon uses only the Midnight Cobalt palette", async () => {
+  const favicon = await read("public/favicon.svg");
+
+  assert.match(favicon, /#070b17\b/i);
+  assert.doesNotMatch(favicon, /#(?:090a0f|a78bfa|7c3aed|b8a5ff)\b|\bviolet\b/i);
+});
