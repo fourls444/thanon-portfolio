@@ -75,12 +75,12 @@ export const content = {
       label: "01 / เกี่ยวกับ",
       title: "ช่างสงสัยโดยธรรมชาติ ลงมือทำอย่างมีแบบแผน",
       lead: "ผมเป็นนักศึกษาวิทยาการคอมพิวเตอร์ที่ Rangsit University และกำลังมุ่งพัฒนาทักษะด้านเว็บและซอฟต์แวร์",
-      body: "ผมชอบเปลี่ยนไอเดียให้เป็นผลิตภัณฑ์ดิจิทัลที่ใช้งานได้จริง ตั้งแต่การออกแบบ interface และประสบการณ์บน mobile ไปจนถึงระบบ backend และ data",
+      body: "ผมชอบเปลี่ยนไอเดียให้เป็นผลิตภัณฑ์ดิจิทัลที่ใช้งานได้จริง ครอบคลุมทั้งส่วนติดต่อผู้ใช้ แอปมือถือ ระบบเบื้องหลัง และข้อมูล",
     },
     skills: {
       label: "02 / เทคโนโลยี",
       title: "เครื่องมือที่ผมใช้สร้างสรรค์",
-      copy: "ชุดเครื่องมือที่พัฒนาจากโปรเจกต์ด้าน web, mobile, backend และ data",
+      copy: "ชุดเครื่องมือที่พัฒนาจากโปรเจกต์ด้านเว็บ โมบาย แบ็กเอนด์ ข้อมูล และ Java",
     },
     education: {
       label: "03 / การศึกษาและกิจกรรม",
@@ -131,7 +131,7 @@ export const content = {
       label: "01 / About",
       title: "Curious by nature. Practical by design.",
       lead: "I'm a Computer Science student at Rangsit University with a growing focus on web and software development.",
-      body: "I like turning ideas into dependable digital products, exploring the whole path from interface and mobile experiences to backend systems and data.",
+      body: "I like turning ideas into dependable digital products, exploring the whole path from interfaces and mobile experiences to backend systems and data.",
     },
     skills: {
       label: "02 / Tech Stack",
