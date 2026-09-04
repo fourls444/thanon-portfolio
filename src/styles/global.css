@@ -665,15 +665,18 @@ html[data-language="th"] [data-lang-content="en"] {
 }
 
 .tech-icon {
-  box-sizing: border-box;
   width: 40px;
   height: 40px;
   flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.tech-item--light-icon-surface .tech-icon {
+  box-sizing: border-box;
   padding: 5px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 7px;
   background: rgba(245, 247, 251, 0.92);
-  object-fit: contain;
 }
 
 .marquee-shell {

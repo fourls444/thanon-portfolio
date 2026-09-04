@@ -3,6 +3,7 @@ export type TechIconPath = `/icons/${string}.webp`;
 export type TechItem = {
   name: string;
   icon?: TechIconPath;
+  lightSurface?: true;
 };
 
 export type TechGroup = {
@@ -23,7 +24,7 @@ export const techGroups: TechGroup[] = [
       { name: "TypeScript", icon: "/icons/typescript.webp" },
       { name: "React", icon: "/icons/react.webp" },
       { name: "Next.js", icon: "/icons/nextjs.webp" },
-      { name: "Astro", icon: "/icons/astro.webp" },
+      { name: "Astro", icon: "/icons/astro.webp", lightSurface: true },
       { name: "Tailwind CSS", icon: "/icons/tailwindcss.webp" },
     ],
   },
@@ -52,7 +53,7 @@ export const techGroups: TechGroup[] = [
     items: [
       { name: "Python", icon: "/icons/python.webp" },
       { name: "Jupyter Notebook", icon: "/icons/jupyter.webp" },
-      { name: "Pandas", icon: "/icons/pandas.webp" },
+      { name: "Pandas", icon: "/icons/pandas.webp", lightSurface: true },
       { name: "Seaborn" },
       { name: "CSV / Data Visualization" },
     ],

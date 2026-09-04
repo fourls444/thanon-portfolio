@@ -37,7 +37,15 @@ const allTech = techGroups.flatMap((group) => group.items.map((item) => item.nam
                   : undefined;
 
                 return (
-                  <li class:list={["tech-item", { "tech-item--text": !item.icon }]}>
+                  <li
+                    class:list={[
+                      "tech-item",
+                      {
+                        "tech-item--text": !item.icon,
+                        "tech-item--light-icon-surface": item.lightSurface,
+                      },
+                    ]}
+                  >
                     {iconSrc && (
                       <img
                         class="tech-icon"
