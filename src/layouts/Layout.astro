@@ -1,5 +1,5 @@
 ---
-import CursorGlow from "../components/react/CursorGlow";
+import CursorGlow from "../components/CursorGlow.astro";
 import { content } from "../data/content";
 import "../styles/global.css";
 
@@ -49,7 +49,7 @@ const faviconHref = `${baseUrl}favicon.svg`;
       <span class="lang-inline" data-lang-content="th">ข้ามไปยังเนื้อหาหลัก</span>
       <span class="lang-inline" data-lang-content="en">Skip to main content</span>
     </a>
-    <CursorGlow client:load />
+    <CursorGlow />
     <button
       class="motion-control"
       type="button"

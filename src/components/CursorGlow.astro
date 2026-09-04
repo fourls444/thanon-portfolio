@@ -1,0 +1,61 @@
+<div class="cursor-glow" data-cursor-glow aria-hidden="true"></div>
+
+<script>
+  const glow = document.querySelector<HTMLElement>("[data-cursor-glow]");
+  const finePointer = window.matchMedia("(pointer: fine)");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  if (glow) {
+    let frameId: number | null = null;
+    let cursorX = -200;
+    let cursorY = -200;
+    let active = false;
+
+    const render = () => {
+      frameId = null;
+      glow.style.setProperty("--cursor-x", `${cursorX - 180}px`);
+      glow.style.setProperty("--cursor-y", `${cursorY - 180}px`);
+      glow.classList.add("is-visible");
+    };
+
+    const move = (event: PointerEvent) => {
+      if (event.pointerType === "touch") return;
+
+      cursorX = event.clientX;
+      cursorY = event.clientY;
+      if (frameId === null) frameId = window.requestAnimationFrame(render);
+    };
+
+    const hide = () => {
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+        frameId = null;
+      }
+      glow.classList.remove("is-visible");
+    };
+
+    const activate = () => {
+      if (active || !finePointer.matches || reduceMotion.matches) return;
+      active = true;
+      window.addEventListener("pointermove", move, { passive: true });
+      document.documentElement.addEventListener("mouseleave", hide);
+    };
+
+    const deactivate = () => {
+      if (!active) return;
+      active = false;
+      window.removeEventListener("pointermove", move);
+      document.documentElement.removeEventListener("mouseleave", hide);
+      hide();
+    };
+
+    const syncActivation = () => {
+      if (finePointer.matches && !reduceMotion.matches) activate();
+      else deactivate();
+    };
+
+    finePointer.addEventListener("change", syncActivation);
+    reduceMotion.addEventListener("change", syncActivation);
+    syncActivation();
+  }
+</script>
