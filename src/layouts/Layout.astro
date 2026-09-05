@@ -16,6 +16,9 @@ const baseUrl = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const faviconHref = `${baseUrl}favicon.svg`;
+const siteOrigin = Astro.site ?? new URL("https://fourls444.github.io");
+const canonicalUrl = new URL(baseUrl, siteOrigin).toString();
+const socialImageUrl = new URL(`${baseUrl}og-cover.jpg`, siteOrigin).toString();
 ---
 
 <!doctype html>
@@ -29,6 +32,17 @@ const faviconHref = `${baseUrl}favicon.svg`;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content="Portfolio Thanon, Software Developer" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageUrl} />
+    <meta name="twitter:image:alt" content="Portfolio Thanon, Software Developer" />
     <link rel="preconnect" href="https://raw.githubusercontent.com" />
     <link rel="icon" type="image/svg+xml" href={faviconHref} />
     <title>{title}</title>
@@ -42,10 +56,10 @@ const faviconHref = `${baseUrl}favicon.svg`;
     <slot />
 
     <script>
+      import { animate, inView, stagger } from "motion";
       import Lenis from "lenis";
 
       const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-      const reduceMotion = reducedMotionQuery.matches;
       let lenis: Lenis | null = null;
 
       const syncLenis = () => {
@@ -64,24 +78,161 @@ const faviconHref = `${baseUrl}favicon.svg`;
       };
 
       syncLenis();
-      reducedMotionQuery.addEventListener("change", syncLenis);
 
-      const revealItems = document.querySelectorAll<HTMLElement>(".reveal");
-      if (reduceMotion || !("IntersectionObserver" in window)) {
-        revealItems.forEach((item) => item.classList.add("is-visible"));
-      } else {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (!entry.isIntersecting) return;
-              entry.target.classList.add("is-visible");
-              observer.unobserve(entry.target);
-            });
+      const revealGroups = document.querySelectorAll<HTMLElement>("[data-reveal-group]");
+      let stopRevealObservers: Array<() => void> = [];
+
+      const showRevealItems = (items: HTMLElement[]) => {
+        items.forEach((item) => {
+          item.style.opacity = "1";
+          item.style.transform = "none";
+          item.style.clipPath = "none";
+        });
+      };
+
+      type MotionFrame = {
+        opacity: number;
+        transform: string;
+        clipPath: string;
+      };
+
+      type MotionVariant = {
+        initial: MotionFrame;
+        enter: MotionFrame;
+      };
+
+      const setMotionFrame = (item: HTMLElement, frame: MotionFrame) => {
+        item.style.opacity = String(frame.opacity);
+        item.style.transform = frame.transform;
+        item.style.clipPath = frame.clipPath;
+      };
+
+      const resetRevealItems = (items: HTMLElement[], motionVariants: Record<string, MotionVariant>) => {
+        items.forEach((item) => {
+          const variant = motionVariants[item.dataset.motion ?? "fade-up"] ?? motionVariants["fade-up"];
+          setMotionFrame(item, variant.initial);
+        });
+      };
+
+      const setupRevealAnimations = () => {
+        stopRevealObservers.forEach((stop) => stop());
+        stopRevealObservers = [];
+
+        const allRevealItems = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
+        if (reducedMotionQuery.matches || !("IntersectionObserver" in window)) {
+          showRevealItems(allRevealItems);
+          return;
+        }
+
+        const isMobile = window.matchMedia("(max-width: 720px)").matches;
+        const horizontalDistance = isMobile ? 26 : 54;
+        const verticalDistance = isMobile ? 22 : 38;
+        const fallbackDelay = stagger(isMobile ? 0.035 : 0.055);
+        const motionVariants: Record<string, MotionVariant> = {
+          "fade-up": {
+            initial: { opacity: 0, transform: `translate3d(0, ${verticalDistance}px, 0)`, clipPath: "none" },
+            enter: { opacity: 1, transform: "translate3d(0, 0, 0)", clipPath: "none" },
           },
-          { threshold: 0.12, rootMargin: "0px 0px -8%" },
-        );
-        revealItems.forEach((item) => observer.observe(item));
-      }
+          "from-left": {
+            initial: { opacity: 0, transform: `translate3d(-${horizontalDistance}px, 0, 0)`, clipPath: "none" },
+            enter: { opacity: 1, transform: "translate3d(0, 0, 0)", clipPath: "none" },
+          },
+          "from-left-scale": {
+            initial: { opacity: 0, transform: `translate3d(-${horizontalDistance}px, 0, 0) scale(0.96)`, clipPath: "none" },
+            enter: { opacity: 1, transform: "translate3d(0, 0, 0) scale(1)", clipPath: "none" },
+          },
+          "from-right": {
+            initial: { opacity: 0, transform: `translate3d(${horizontalDistance}px, 0, 0)`, clipPath: "none" },
+            enter: { opacity: 1, transform: "translate3d(0, 0, 0)", clipPath: "none" },
+          },
+          "pop": {
+            initial: { opacity: 0, transform: `translate3d(0, ${isMobile ? 14 : 20}px, 0) scale(0.9)`, clipPath: "none" },
+            enter: { opacity: 1, transform: "translate3d(0, 0, 0) scale(1)", clipPath: "none" },
+          },
+          "scale-up": {
+            initial: { opacity: 0, transform: "translate3d(0, 12px, 0) scale(0.94)", clipPath: "none" },
+            enter: { opacity: 1, transform: "translate3d(0, 0, 0) scale(1)", clipPath: "none" },
+          },
+          "clip-left": {
+            initial: { opacity: 0.45, transform: "translate3d(-18px, 0, 0) scale(1.035)", clipPath: "inset(0 100% 0 0 round 20px)" },
+            enter: { opacity: 1, transform: "translate3d(0, 0, 0) scale(1)", clipPath: "inset(0 0% 0 0 round 20px)" },
+          },
+        };
+        const hashId = window.location.hash.slice(1);
+        let initialTarget: HTMLElement | null = null;
+
+        if (hashId) {
+          try {
+            initialTarget = document.getElementById(decodeURIComponent(hashId));
+          } catch {
+            initialTarget = null;
+          }
+        }
+
+        revealGroups.forEach((group) => {
+          const items = Array.from(group.querySelectorAll<HTMLElement>("[data-motion]"));
+          if (!items.length) return;
+
+          items.forEach((item, index) => {
+            const rect = item.getBoundingClientRect();
+            let skipInitialAnimation = Boolean(
+              initialTarget?.contains(item) && rect.bottom > 0 && rect.top < window.innerHeight,
+            );
+
+            if (skipInitialAnimation) showRevealItems([item]);
+            else resetRevealItems([item], motionVariants);
+
+            const observerTarget = item.dataset.motion === "clip-left"
+              ? item.parentElement ?? item
+              : item;
+            const stop = inView(
+              observerTarget,
+              () => {
+                const variant = motionVariants[item.dataset.motion ?? "fade-up"] ?? motionVariants["fade-up"];
+
+                if (skipInitialAnimation) {
+                  skipInitialAnimation = false;
+                  showRevealItems([item]);
+                  return () => {
+                    resetRevealItems([item], motionVariants);
+                  };
+                }
+
+                const requestedDelay = Number.parseFloat(item.dataset.motionDelay ?? "");
+                const delay = Number.isFinite(requestedDelay)
+                  ? requestedDelay * (isMobile ? 0.65 : 1)
+                  : fallbackDelay(index, items.length);
+                const duration = item.dataset.motion === "clip-left"
+                  ? (isMobile ? 0.62 : 0.78)
+                  : (isMobile ? 0.5 : 0.64);
+                const animation = animate(
+                  item,
+                  variant.enter,
+                  {
+                    duration,
+                    delay,
+                    ease: [0.22, 1, 0.36, 1],
+                  },
+                );
+
+                return () => {
+                  animation.stop();
+                  resetRevealItems([item], motionVariants);
+                };
+              },
+              { amount: 0.16, margin: "0px 0px -5% 0px" },
+            );
+
+            stopRevealObservers.push(stop);
+          });
+        });
+      };
+
+      setupRevealAnimations();
+      reducedMotionQuery.addEventListener("change", () => {
+        syncLenis();
+        setupRevealAnimations();
+      });
     </script>
   </body>
 </html>

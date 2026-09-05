@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title" data-icon="code-document">
   <title>Portfolio Thanon</title>
   <rect width="64" height="64" rx="16" fill="#0b1224"/>
-  <rect x="9" y="9" width="46" height="46" rx="12" fill="#121d38" stroke="#2f77d0" stroke-width="2"/>
-  <path d="M23 46V18h11.5c6.4 0 10.5 3.2 10.5 8.8s-4.1 8.8-10.5 8.8H23" fill="none" stroke="#c8edff" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
-  <circle cx="46" cy="18" r="4" fill="#60a5fa"/>
+  <path d="M16 8h22l11 11v37H16V8Z" fill="#12346b" stroke="#3b82f6" stroke-width="3.5" stroke-linejoin="round"/>
+  <path data-part="folded-corner" d="M38 8v12h11" fill="#1d67d8" stroke="#8de8ff" stroke-width="3.5" stroke-linejoin="round"/>
+  <path data-part="code-mark" d="m28 29-6 6 6 6m8-12 6 6-6 6" fill="none" stroke="#d9f6ff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

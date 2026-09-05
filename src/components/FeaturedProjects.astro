@@ -2,17 +2,17 @@
 import { projects } from "../data/projects";
 ---
 
-<section class="section projects-section" id="projects" aria-labelledby="projects-title">
+<section class="section projects-section" id="projects" aria-labelledby="projects-title" data-reveal-group>
   <div class="shell">
-    <div class="section-heading reveal">
+    <div class="section-heading reveal" data-motion="fade-up">
       <span class="section-index">03 / Featured Project</span>
       <h2 id="projects-title">Built for being together.</h2>
     </div>
 
     <div class="project-list">
       {projects.map((project) => (
-        <article class="project-feature reveal reveal-delay">
-          <a class="project-visual" href={project.github} target="_blank" rel="noreferrer" aria-label={`${project.title} on GitHub, opens in a new tab`}>
+        <article class="project-feature">
+          <a class="project-visual reveal" data-motion="clip-left" data-motion-delay="0.1" href={project.github} target="_blank" rel="noreferrer" aria-label={`${project.title} on GitHub, opens in a new tab`}>
             <img
               src={project.image}
               alt={`${project.title} project preview`}
@@ -25,18 +25,20 @@ import { projects } from "../data/projects";
             <span class="project-visual-label">View on GitHub ↗</span>
           </a>
           <div class="project-copy">
-            <div class="project-heading-row">
+            <div class="project-heading-row reveal" data-motion="from-right" data-motion-delay="0.16">
               <div>
                 <span class="project-category">{project.category}</span>
                 <h3>{project.title}</h3>
               </div>
               <span class="project-number" aria-hidden="true">01</span>
             </div>
-            <p>{project.description}</p>
+            <p class="reveal" data-motion="from-right" data-motion-delay="0.24">{project.description}</p>
             <ul class="project-stack" aria-label={`${project.title} technologies`}>
-              {project.stack.map((technology) => <li>{technology}</li>)}
+              {project.stack.map((technology, index) => (
+                <li class="reveal" data-motion="pop" data-motion-delay={String(0.32 + index * 0.045)}>{technology}</li>
+              ))}
             </ul>
-            <div class="project-links">
+            <div class="project-links reveal" data-motion="from-right" data-motion-delay="0.52">
               <a href={project.github} target="_blank" rel="noreferrer" aria-label="GitHub, opens in a new tab">GitHub <span aria-hidden="true">↗</span></a>
               <a href={project.live} target="_blank" rel="noreferrer" aria-label="Live demo, opens in a new tab">Live demo <span aria-hidden="true">↗</span></a>
             </div>

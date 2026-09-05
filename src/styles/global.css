@@ -726,22 +726,7 @@ button {
 
 .js .reveal {
   opacity: 0;
-  transform: translateY(34px);
-  transition: opacity 720ms var(--ease), transform 720ms var(--ease);
-}
-
-.reveal-delay {
-  transition-delay: 100ms;
-}
-
-.js .reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.section:target .reveal {
-  opacity: 1;
-  transform: translateY(0);
+  transform: translateY(44px);
 }
 
 .cursor-glow {
@@ -862,6 +847,10 @@ button {
 
   .section {
     padding-block: clamp(82px, 20vw, 112px);
+  }
+
+  .js .reveal {
+    transform: translateY(28px);
   }
 
   .tech-grid {

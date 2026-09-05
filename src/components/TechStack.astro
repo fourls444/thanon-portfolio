@@ -2,26 +2,34 @@
 import { techGroups } from "../data/tech";
 ---
 
-<section class="section tech-section" id="skills" aria-labelledby="skills-title">
+<section class="section tech-section" id="skills" aria-labelledby="skills-title" data-reveal-group>
   <div class="shell">
-    <div class="section-heading reveal">
+    <div class="section-heading reveal" data-motion="fade-up">
       <span class="section-index">02 / Tech Stack</span>
       <h2 id="skills-title">Tools I build with.</h2>
     </div>
 
     <div class="tech-grid">
-      {techGroups.map((group) => (
-        <article class="tech-card reveal">
+      {techGroups.map((group, index) => (
+        <article
+          class="tech-card reveal"
+          data-motion={index % 2 === 0 ? "from-left" : "from-right"}
+          data-motion-delay={String(0.08 + index * 0.1)}
+        >
           <header class="tech-card-heading">
             <h3>{group.title}</h3>
             <span class="tech-count" aria-hidden="true">{String(group.items.length).padStart(2, "0")}</span>
           </header>
           <ul>
-            {group.items.map((item) => {
+            {group.items.map((item, itemIndex) => {
               const iconSrc = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}${item.icon.replace(/^\//, "")}`;
 
               return (
-                <li class:list={["tech-item", { "tech-item--light-icon-surface": item.lightSurface }]}>
+                <li
+                  class:list={["tech-item", "reveal", { "tech-item--light-icon-surface": item.lightSurface }]}
+                  data-motion="pop"
+                  data-motion-delay={String(0.18 + index * 0.1 + itemIndex * 0.025)}
+                >
                   <img class="tech-icon" src={iconSrc} alt="" width="40" height="40" loading="lazy" decoding="async" />
                   <span>{item.name}</span>
                 </li>

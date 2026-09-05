@@ -59,6 +59,24 @@ test("page metadata and public contact details are current", async () => {
   assert.match(profile, /github\s*:\s*["']https:\/\/github\.com\/fourls444["']/);
 });
 
+test("social preview metadata points to the dedicated absolute cover image", async () => {
+  const config = await read("astro.config.mjs");
+  const layout = await read("src/layouts/Layout.astro");
+  const coverUrl = new URL("../public/og-cover.jpg", import.meta.url);
+  const cover = await stat(coverUrl).catch(() => null);
+
+  assert.match(config, /site:\s*["']https:\/\/fourls444\.github\.io["']/);
+  assert.match(layout, /property=["']og:url["']/);
+  assert.match(layout, /property=["']og:image["']/);
+  assert.match(layout, /property=["']og:image:width["']\s+content=["']1200["']/);
+  assert.match(layout, /property=["']og:image:height["']\s+content=["']630["']/);
+  assert.match(layout, /property=["']og:image:type["']\s+content=["']image\/jpeg["']/);
+  assert.match(layout, /name=["']twitter:card["']\s+content=["']summary_large_image["']/);
+  assert.match(layout, /name=["']twitter:image["']/);
+  assert.ok(cover?.isFile(), "public/og-cover.jpg should exist");
+  assert.ok(cover && cover.size > 0, "public/og-cover.jpg should not be empty");
+});
+
 test("main landmark is the skip-link target", async () => {
   const layout = await read("src/layouts/Layout.astro");
   const page = await read("src/pages/index.astro");
@@ -102,17 +120,47 @@ test("featured project exposes GitHub, live demo, and responsive media", async (
 test("motion progressively enhances the page and respects reduced motion", async () => {
   const layout = await read("src/layouts/Layout.astro");
   const css = await read("src/styles/global.css");
+  const packageJson = JSON.parse(await read("package.json"));
   assert.match(layout, /classList\.add\(["']js["']\)/);
   assert.match(layout, /prefers-reduced-motion:\s*reduce/);
+  assert.match(layout, /import\s*\{[^}]*animate[^}]*inView[^}]*stagger[^}]*\}\s*from\s*["']motion["']/s);
+  assert.match(layout, /return\s*\(\)\s*=>\s*\{/);
+  assert.match(layout, /animation\.stop\(\)/);
+  assert.match(layout, /resetRevealItems/);
+  assert.match(packageJson.dependencies.motion, /^\^?\d+/);
   assert.match(css, /\.js\s+\.reveal/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /:focus-visible/);
 });
 
-test("direct section links never leave reveal content hidden", async () => {
-  const css = await read("src/styles/global.css");
+test("each portfolio section has its own motion choreography", async () => {
+  const layout = await read("src/layouts/Layout.astro");
+  const about = await read("src/components/About.astro");
+  const techStack = await read("src/components/TechStack.astro");
+  const projects = await read("src/components/FeaturedProjects.astro");
+  const contact = await read("src/components/Contact.astro");
 
-  assert.match(css, /\.section:target\s+\.reveal/);
+  assert.match(layout, /motionVariants/);
+  assert.match(layout, /data-motion/);
+  assert.match(layout, /clipPath/);
+  assert.match(layout, /const observerTarget/);
+  assert.match(layout, /item\.dataset\.motion === "clip-left"\s*\?\s*item\.parentElement/s);
+  assert.match(about, /data-motion=["']from-left-scale["']/);
+  assert.match(about, /data-motion=["']from-right["']/);
+  assert.match(techStack, /data-motion=\{index % 2 === 0 \? "from-left" : "from-right"\}/);
+  assert.match(techStack, /data-motion=["']pop["']/);
+  assert.match(projects, /data-motion=["']clip-left["']/);
+  assert.match(projects, /data-motion=["']from-right["']/);
+  assert.match(contact, /data-motion=["']scale-up["']/);
+  assert.match(contact, /data-motion=["']pop["']/);
+});
+
+test("direct section links never leave reveal content hidden", async () => {
+  const layout = await read("src/layouts/Layout.astro");
+
+  assert.match(layout, /initialTarget/);
+  assert.match(layout, /window\.location\.hash/);
+  assert.match(layout, /showRevealItems/);
 });
 
 test("responsive layout covers tablet, mobile, and narrow mobile", async () => {
@@ -125,10 +173,8 @@ test("responsive layout covers tablet, mobile, and narrow mobile", async () => {
   assert.match(css, /\.about-profile\s*\{[^}]*grid-template-columns:\s*1fr/s);
 });
 
-test("minimal depth effects remain dependency-free and motion-safe", async () => {
-  const packageJson = JSON.parse(await read("package.json"));
+test("minimal depth effects remain motion-safe", async () => {
   const css = await read("src/styles/global.css");
-  assert.equal(packageJson.dependencies.motion, undefined);
   assert.match(css, /\.section::before/);
   assert.match(css, /\.tech-card::before/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
@@ -146,8 +192,11 @@ test("decorative interactions do not require React islands", async () => {
   assert.doesNotMatch(sources.join("\n"), /client:(?:load|visible|idle|media|only)\b/);
 });
 
-test("favicon stays within the midnight blue palette", async () => {
+test("favicon uses the selected code document symbol and midnight blue palette", async () => {
   const favicon = await read("public/favicon.svg");
+  assert.match(favicon, /data-icon=["']code-document["']/i);
+  assert.match(favicon, /data-part=["']folded-corner["']/i);
+  assert.match(favicon, /data-part=["']code-mark["']/i);
   assert.match(favicon, /#0b1224\b/i);
   assert.doesNotMatch(favicon, /\bviolet\b|#(?:7c3aed|a78bfa|b8a5ff)\b/i);
 });

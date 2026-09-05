@@ -11,17 +11,17 @@ const interestedPositions = [
 const imageSrc = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}icons/me.jpg`;
 ---
 
-<section class="section about-section" id="about" aria-labelledby="about-title">
+<section class="section about-section" id="about" aria-labelledby="about-title" data-reveal-group>
   <div class="shell">
-    <div class="section-heading about-heading reveal">
+    <div class="section-heading about-heading reveal" data-motion="fade-up">
       <span class="section-index">01 / About Me</span>
       <h1 id="about-title">About Me</h1>
     </div>
 
-    <p class="availability-badge reveal"><span aria-hidden="true"></span>Open to opportunities</p>
+    <p class="availability-badge reveal" data-motion="fade-up" data-motion-delay="0.08"><span aria-hidden="true"></span>Open to opportunities</p>
 
-    <div class="about-profile reveal reveal-delay">
-      <figure class="about-photo" data-photo-slot>
+    <div class="about-profile">
+      <figure class="about-photo reveal" data-photo-slot data-motion="from-left-scale" data-motion-delay="0.12">
         <div class="about-photo-frame">
           <img
             src={imageSrc}
@@ -37,23 +37,23 @@ const imageSrc = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}icons/me.jpg`;
 
       <div class="about-details">
         <dl class="profile-facts">
-          <div>
+          <div class="reveal" data-motion="from-right" data-motion-delay="0.16">
             <dt>Thai Name</dt>
             <dd>{profile.thaiName}</dd>
           </div>
-          <div>
+          <div class="reveal" data-motion="from-right" data-motion-delay="0.21">
             <dt>English Name</dt>
             <dd>{profile.name}</dd>
           </div>
-          <div>
+          <div class="reveal" data-motion="from-right" data-motion-delay="0.26">
             <dt>Date of Birth</dt>
             <dd>6 March 2004</dd>
           </div>
-          <div>
+          <div class="reveal" data-motion="from-right" data-motion-delay="0.31">
             <dt>Age</dt>
             <dd>{age} years old</dd>
           </div>
-          <div>
+          <div class="reveal" data-motion="from-right" data-motion-delay="0.36">
             <dt>Interested Positions</dt>
             <dd>
               <ul class="interest-list">
@@ -61,11 +61,11 @@ const imageSrc = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}icons/me.jpg`;
               </ul>
             </dd>
           </div>
-          <div>
+          <div class="reveal" data-motion="from-right" data-motion-delay="0.41">
             <dt>Education</dt>
             <dd>Rangsit University<br />Bachelor of Science in Computer Science<br />GPAX 3.78</dd>
           </div>
-          <div>
+          <div class="reveal" data-motion="from-right" data-motion-delay="0.46">
             <dt>Location</dt>
             <dd>{profile.location}</dd>
           </div>

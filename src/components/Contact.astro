@@ -9,15 +9,17 @@ const contactLinks = [
 ] as const;
 ---
 
-<section class="section contact-section" id="contact" aria-labelledby="contact-title">
-  <div class="shell contact-card reveal">
-    <span class="section-index">04 / Contact</span>
+<section class="section contact-section" id="contact" aria-labelledby="contact-title" data-reveal-group>
+  <div class="shell contact-card">
+    <span class="section-index reveal" data-motion="fade-up">04 / Contact</span>
     <div class="contact-minimal-row">
-      <h2 id="contact-title">Let's connect.</h2>
+      <h2 id="contact-title" class="reveal" data-motion="scale-up" data-motion-delay="0.08">Let's connect.</h2>
       <div class="contact-links" aria-label="Contact links">
-        {contactLinks.map((link) => (
+        {contactLinks.map((link, index) => (
           <a
-            class="contact-icon-link"
+            class="contact-icon-link reveal"
+            data-motion="pop"
+            data-motion-delay={String(0.16 + index * 0.06)}
             href={link.href}
             target={link.external ? "_blank" : undefined}
             rel={link.external ? "noreferrer" : undefined}
@@ -40,6 +42,6 @@ const contactLinks = [
         ))}
       </div>
     </div>
-    <a class="back-to-top" href="#top">Back to top <span aria-hidden="true">↑</span></a>
+    <a class="back-to-top reveal" data-motion="fade-up" data-motion-delay="0.42" href="#top">Back to top <span aria-hidden="true">↑</span></a>
   </div>
 </section>
