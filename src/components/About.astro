@@ -15,7 +15,7 @@ const imageSrc = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}icons/me.jpg`;
   <div class="shell">
     <div class="section-heading about-heading reveal" data-motion="fade-up">
       <span class="section-index">01 / About Me</span>
-      <h1 id="about-title">About Me</h1>
+      <h1 id="about-title">Get to know me.</h1>
     </div>
 
     <p class="availability-badge reveal" data-motion="fade-up" data-motion-delay="0.08"><span aria-hidden="true"></span>Open to opportunities</p>
@@ -36,40 +36,62 @@ const imageSrc = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}icons/me.jpg`;
       </figure>
 
       <div class="about-details">
-        <dl class="profile-facts">
-          <div class="reveal" data-motion="from-right" data-motion-delay="0.16">
-            <dt>Thai Name</dt>
-            <dd>{profile.thaiName}</dd>
-          </div>
-          <div class="reveal" data-motion="from-right" data-motion-delay="0.21">
-            <dt>English Name</dt>
-            <dd>{profile.name}</dd>
-          </div>
-          <div class="reveal" data-motion="from-right" data-motion-delay="0.26">
-            <dt>Date of Birth</dt>
-            <dd>6 March 2004</dd>
-          </div>
-          <div class="reveal" data-motion="from-right" data-motion-delay="0.31">
-            <dt>Age</dt>
-            <dd>{age} years old</dd>
-          </div>
-          <div class="reveal" data-motion="from-right" data-motion-delay="0.36">
-            <dt>Interested Positions</dt>
-            <dd>
-              <ul class="interest-list">
-                {interestedPositions.map((position) => <li>{position}</li>)}
-              </ul>
-            </dd>
-          </div>
-          <div class="reveal" data-motion="from-right" data-motion-delay="0.41">
-            <dt>Education</dt>
-            <dd>Rangsit University<br />Bachelor of Science in Computer Science<br />GPAX 3.78</dd>
-          </div>
-          <div class="reveal" data-motion="from-right" data-motion-delay="0.46">
-            <dt>Location</dt>
-            <dd>{profile.location}</dd>
-          </div>
-        </dl>
+        <div class="profile-groups">
+          <section class="profile-group reveal" data-motion="from-right" data-motion-delay="0.16">
+            <header class="profile-group-heading">
+              <span aria-hidden="true">01</span>
+              <h2>Personal</h2>
+            </header>
+            <dl class="profile-group-facts">
+              <div>
+                <dt>English Name</dt>
+                <dd>{profile.name}</dd>
+              </div>
+              <div>
+                <dt>Thai Name</dt>
+                <dd>{profile.thaiName}</dd>
+              </div>
+              <div>
+                <dt>Date of Birth</dt>
+                <dd>6 March 2004</dd>
+              </div>
+              <div>
+                <dt>Age</dt>
+                <dd>{age} years old</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section class="profile-group reveal" data-motion="from-right" data-motion-delay="0.28">
+            <header class="profile-group-heading">
+              <span aria-hidden="true">02</span>
+              <h2>Career</h2>
+            </header>
+            <dl class="profile-group-facts profile-group-facts--single">
+              <div>
+                <dt>Interested Positions</dt>
+                <dd>
+                  <ul class="interest-list">
+                    {interestedPositions.map((position) => <li>{position}</li>)}
+                  </ul>
+                </dd>
+              </div>
+            </dl>
+          </section>
+
+          <section class="profile-group reveal" data-motion="from-right" data-motion-delay="0.4">
+            <header class="profile-group-heading">
+              <span aria-hidden="true">03</span>
+              <h2>Education</h2>
+            </header>
+            <dl class="profile-group-facts">
+              <div>
+                <dt>University</dt>
+                <dd>Rangsit University<br />Computer Science<br />GPAX 3.78</dd>
+              </div>
+            </dl>
+          </section>
+        </div>
       </div>
     </div>
   </div>

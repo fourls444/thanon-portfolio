@@ -173,6 +173,15 @@ const socialImageUrl = new URL(`${baseUrl}og-cover.jpg`, siteOrigin).toString();
           const items = Array.from(group.querySelectorAll<HTMLElement>("[data-motion]"));
           if (!items.length) return;
 
+          const stopSectionReset = inView(
+            group,
+            () => () => {
+              resetRevealItems(items, motionVariants);
+            },
+            { amount: "some" },
+          );
+          stopRevealObservers.push(stopSectionReset);
+
           items.forEach((item, index) => {
             const rect = item.getBoundingClientRect();
             let skipInitialAnimation = Boolean(
@@ -193,9 +202,7 @@ const socialImageUrl = new URL(`${baseUrl}og-cover.jpg`, siteOrigin).toString();
                 if (skipInitialAnimation) {
                   skipInitialAnimation = false;
                   showRevealItems([item]);
-                  return () => {
-                    resetRevealItems([item], motionVariants);
-                  };
+                  return () => {};
                 }
 
                 const requestedDelay = Number.parseFloat(item.dataset.motionDelay ?? "");
@@ -207,7 +214,11 @@ const socialImageUrl = new URL(`${baseUrl}og-cover.jpg`, siteOrigin).toString();
                   : (isMobile ? 0.5 : 0.64);
                 const animation = animate(
                   item,
-                  variant.enter,
+                  {
+                    opacity: [variant.initial.opacity, variant.enter.opacity],
+                    transform: [variant.initial.transform, variant.enter.transform],
+                    clipPath: [variant.initial.clipPath, variant.enter.clipPath],
+                  },
                   {
                     duration,
                     delay,
@@ -216,8 +227,7 @@ const socialImageUrl = new URL(`${baseUrl}og-cover.jpg`, siteOrigin).toString();
                 );
 
                 return () => {
-                  animation.stop();
-                  resetRevealItems([item], motionVariants);
+                  animation.cancel();
                 };
               },
               { amount: 0.16, margin: "0px 0px -5% 0px" },

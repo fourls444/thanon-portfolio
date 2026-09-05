@@ -1,50 +1,173 @@
 ---
 import { projects } from "../data/projects";
+
+const featuredProject = projects.find((project) => project.featured) ?? projects[0];
+const otherProjects = projects.filter((project) => project !== featuredProject);
+
+const formatLink = (href: string) => {
+  try {
+    const url = new URL(href);
+    return `${url.hostname}${url.pathname}`.replace(/\/$/, "");
+  } catch {
+    return href;
+  }
+};
 ---
 
 <section class="section projects-section" id="projects" aria-labelledby="projects-title" data-reveal-group>
   <div class="shell">
     <div class="section-heading reveal" data-motion="fade-up">
-      <span class="section-index">03 / Featured Project</span>
-      <h2 id="projects-title">Built for being together.</h2>
+      <span class="section-index">03 / Projects</span>
+      <h2 id="projects-title">What I've built.</h2>
     </div>
 
     <div class="project-list">
-      {projects.map((project) => (
+      {featuredProject && (
         <article class="project-feature">
-          <a class="project-visual reveal" data-motion="clip-left" data-motion-delay="0.1" href={project.github} target="_blank" rel="noreferrer" aria-label={`${project.title} on GitHub, opens in a new tab`}>
-            <img
-              src={project.image}
-              alt={`${project.title} project preview`}
-              width="1200"
-              height="700"
-              sizes="(max-width: 900px) calc(100vw - 32px), 55vw"
-              loading="lazy"
-              decoding="async"
-            />
-            <span class="project-visual-label">View on GitHub ↗</span>
-          </a>
+          {featuredProject.github ? (
+            <a class="project-visual reveal" data-motion="clip-left" data-motion-delay="0.1" href={featuredProject.github} target="_blank" rel="noreferrer" aria-label={`${featuredProject.title} on GitHub, opens in a new tab`}>
+              <img
+                src={featuredProject.image}
+                alt={`${featuredProject.title} project preview`}
+                width="1200"
+                height="700"
+                sizes="(max-width: 900px) calc(100vw - 32px), 55vw"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="project-visual-label">View on GitHub ↗</span>
+            </a>
+          ) : (
+            <div class="project-visual reveal" data-motion="clip-left" data-motion-delay="0.1">
+              <img
+                src={featuredProject.image}
+                alt={`${featuredProject.title} project preview`}
+                width="1200"
+                height="700"
+                sizes="(max-width: 900px) calc(100vw - 32px), 55vw"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          )}
           <div class="project-copy">
             <div class="project-heading-row reveal" data-motion="from-right" data-motion-delay="0.16">
               <div>
-                <span class="project-category">{project.category}</span>
-                <h3>{project.title}</h3>
+                <span class="project-category">{featuredProject.category}</span>
+                <h3>{featuredProject.title}</h3>
               </div>
               <span class="project-number" aria-hidden="true">01</span>
             </div>
-            <p class="reveal" data-motion="from-right" data-motion-delay="0.24">{project.description}</p>
-            <ul class="project-stack" aria-label={`${project.title} technologies`}>
-              {project.stack.map((technology, index) => (
+            <p class="reveal" data-motion="from-right" data-motion-delay="0.24">{featuredProject.description}</p>
+            <ul class="project-stack" aria-label={`${featuredProject.title} technologies`}>
+              {featuredProject.stack.map((technology, index) => (
                 <li class="reveal" data-motion="pop" data-motion-delay={String(0.32 + index * 0.045)}>{technology}</li>
               ))}
             </ul>
-            <div class="project-links reveal" data-motion="from-right" data-motion-delay="0.52">
-              <a href={project.github} target="_blank" rel="noreferrer" aria-label="GitHub, opens in a new tab">GitHub <span aria-hidden="true">↗</span></a>
-              <a href={project.live} target="_blank" rel="noreferrer" aria-label="Live demo, opens in a new tab">Live demo <span aria-hidden="true">↗</span></a>
-            </div>
+            {(featuredProject.github || featuredProject.live) && (
+              <div class="project-links reveal" data-motion="from-right" data-motion-delay="0.52">
+                {featuredProject.github && (
+                  <span class="project-link-wrap">
+                    <a href={featuredProject.github} target="_blank" rel="noreferrer" aria-describedby="project-featured-github-preview" aria-label="GitHub, opens in a new tab">GitHub <span aria-hidden="true">↗</span></a>
+                    <span class="project-link-preview" id="project-featured-github-preview" role="tooltip">
+                      <span class="project-link-preview-label">View source code</span>
+                      <span class="project-link-preview-title">{featuredProject.title}</span>
+                      <span class="project-link-preview-url">{formatLink(featuredProject.github)}</span>
+                      <span class="project-link-preview-arrow" aria-hidden="true">↗</span>
+                    </span>
+                  </span>
+                )}
+                {featuredProject.live && (
+                  <span class="project-link-wrap">
+                    <a href={featuredProject.live} target="_blank" rel="noreferrer" aria-describedby="project-featured-live-preview" aria-label="Live demo, opens in a new tab">Live demo <span aria-hidden="true">↗</span></a>
+                    <span class="project-link-preview" id="project-featured-live-preview" role="tooltip">
+                      <span class="project-link-preview-label">Open live demo</span>
+                      <span class="project-link-preview-title">{featuredProject.title}</span>
+                      <span class="project-link-preview-url">{formatLink(featuredProject.live)}</span>
+                      <span class="project-link-preview-arrow" aria-hidden="true">↗</span>
+                    </span>
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </article>
-      ))}
+      )}
+
+      {otherProjects.length > 0 && (
+        <>
+          <div class="project-subheading reveal" data-motion="fade-up">
+            <span class="project-category">More work</span>
+            <h3>Other projects.</h3>
+          </div>
+          <div class="project-card-grid">
+            {otherProjects.map((project, index) => (
+              <article class="project-card">
+              {project.github ? (
+                <a class="project-card-media reveal" data-motion={index % 2 === 0 ? "from-left" : "from-right"} href={project.github} target="_blank" rel="noreferrer" aria-label={`${project.title} on GitHub, opens in a new tab`}>
+                  <img src={project.image} alt={`${project.title} project preview`} width="1200" height="700" loading="lazy" decoding="async" />
+                </a>
+              ) : (
+                <div class="project-card-media reveal" data-motion={index % 2 === 0 ? "from-left" : "from-right"}>
+                  <img src={project.image} alt={`${project.title} project preview`} width="1200" height="700" loading="lazy" decoding="async" />
+                </div>
+              )}
+              <div class="project-card-copy">
+                <div class="project-heading-row reveal" data-motion="fade-up" data-motion-delay="0.08">
+                  <div>
+                    <span class="project-category">{project.category}</span>
+                    <h3>{project.title}</h3>
+                  </div>
+                  <span class="project-number" aria-hidden="true">{String(index + 2).padStart(2, "0")}</span>
+                </div>
+                <p class="reveal" data-motion="fade-up" data-motion-delay="0.14">{project.description}</p>
+                {project.previews?.length ? (
+                  <div class="project-preview-grid reveal" data-motion="fade-up" data-motion-delay="0.2" aria-label={`${project.title} feature previews`}>
+                    {project.previews?.map((preview) => (
+                      <figure>
+                        <img src={preview.src} alt={preview.alt} width="640" height="420" loading="lazy" decoding="async" />
+                        {preview.label && <figcaption>{preview.label}</figcaption>}
+                      </figure>
+                    ))}
+                  </div>
+                ) : null}
+                <ul class="project-stack project-stack--compact" aria-label={`${project.title} technologies`}>
+                  {project.stack.map((technology, technologyIndex) => (
+                    <li class="reveal" data-motion="pop" data-motion-delay={String(0.24 + technologyIndex * 0.04)}>{technology}</li>
+                  ))}
+                </ul>
+                {(project.github || project.live) && (
+                  <div class="project-links reveal" data-motion="fade-up" data-motion-delay="0.4">
+                    {project.github && (
+                      <span class="project-link-wrap">
+                        <a href={project.github} target="_blank" rel="noreferrer" aria-describedby={`project-${index}-github-preview`} aria-label="GitHub, opens in a new tab">GitHub <span aria-hidden="true">↗</span></a>
+                        <span class="project-link-preview" id={`project-${index}-github-preview`} role="tooltip">
+                          <span class="project-link-preview-label">View source code</span>
+                          <span class="project-link-preview-title">{project.title}</span>
+                          <span class="project-link-preview-url">{formatLink(project.github)}</span>
+                          <span class="project-link-preview-arrow" aria-hidden="true">↗</span>
+                        </span>
+                      </span>
+                    )}
+                    {project.live && (
+                      <span class="project-link-wrap">
+                        <a href={project.live} target="_blank" rel="noreferrer" aria-describedby={`project-${index}-live-preview`} aria-label="Live demo, opens in a new tab">Live demo <span aria-hidden="true">↗</span></a>
+                        <span class="project-link-preview" id={`project-${index}-live-preview`} role="tooltip">
+                          <span class="project-link-preview-label">Open live demo</span>
+                          <span class="project-link-preview-title">{project.title}</span>
+                          <span class="project-link-preview-url">{formatLink(project.live)}</span>
+                          <span class="project-link-preview-arrow" aria-hidden="true">↗</span>
+                        </span>
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+              </article>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   </div>
 </section>

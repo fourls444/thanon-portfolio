@@ -117,6 +117,25 @@ test("featured project exposes GitHub, live demo, and responsive media", async (
   assert.match(component, /decoding=["']async["']/);
 });
 
+test("projects support featured work, optional links, and preview galleries", async () => {
+  const component = await read("src/components/FeaturedProjects.astro");
+  const projects = await read("src/data/projects.ts");
+  const css = await read("src/styles/global.css");
+
+  assert.match(projects, /featured\?:\s*boolean/);
+  assert.match(projects, /github\?:\s*string/);
+  assert.match(projects, /live\?:\s*string/);
+  assert.match(projects, /previews\?:/);
+  assert.match(component, /const featuredProject/);
+  assert.match(component, /const otherProjects/);
+  assert.match(component, /otherProjects\.map/);
+  assert.match(component, /Other projects\./);
+  assert.match(component, /project\.previews\?\.map/);
+  assert.match(component, /project\.github &&/);
+  assert.match(component, /project\.live &&/);
+  assert.match(css, /\.project-subheading/);
+});
+
 test("motion progressively enhances the page and respects reduced motion", async () => {
   const layout = await read("src/layouts/Layout.astro");
   const css = await read("src/styles/global.css");
@@ -125,7 +144,8 @@ test("motion progressively enhances the page and respects reduced motion", async
   assert.match(layout, /prefers-reduced-motion:\s*reduce/);
   assert.match(layout, /import\s*\{[^}]*animate[^}]*inView[^}]*stagger[^}]*\}\s*from\s*["']motion["']/s);
   assert.match(layout, /return\s*\(\)\s*=>\s*\{/);
-  assert.match(layout, /animation\.stop\(\)/);
+  assert.match(layout, /animation\.cancel\(\)/);
+  assert.doesNotMatch(layout, /animation\.stop\(\)/);
   assert.match(layout, /resetRevealItems/);
   assert.match(packageJson.dependencies.motion, /^\^?\d+/);
   assert.match(css, /\.js\s+\.reveal/);
@@ -155,12 +175,27 @@ test("each portfolio section has its own motion choreography", async () => {
   assert.match(contact, /data-motion=["']pop["']/);
 });
 
+test("visible content stays rendered until its whole section leaves", async () => {
+  const layout = await read("src/layouts/Layout.astro");
+
+  assert.match(layout, /const stopSectionReset = inView\(\s*group,/s);
+  assert.match(layout, /\{\s*amount:\s*["']some["']\s*\}/);
+  assert.match(layout, /stopRevealObservers\.push\(stopSectionReset\)/);
+  assert.match(layout, /opacity:\s*\[variant\.initial\.opacity,\s*variant\.enter\.opacity\]/);
+  assert.match(layout, /transform:\s*\[variant\.initial\.transform,\s*variant\.enter\.transform\]/);
+  assert.equal(
+    (layout.match(/resetRevealItems\(\[item\],\s*motionVariants\)/g) ?? []).length,
+    1,
+  );
+});
+
 test("direct section links never leave reveal content hidden", async () => {
   const layout = await read("src/layouts/Layout.astro");
 
   assert.match(layout, /initialTarget/);
   assert.match(layout, /window\.location\.hash/);
   assert.match(layout, /showRevealItems/);
+  assert.match(layout, /showRevealItems\(\[item\]\);\s*return \(\) => \{\};/s);
 });
 
 test("responsive layout covers tablet, mobile, and narrow mobile", async () => {
@@ -199,4 +234,52 @@ test("favicon uses the selected code document symbol and midnight blue palette",
   assert.match(favicon, /data-part=["']code-mark["']/i);
   assert.match(favicon, /#0b1224\b/i);
   assert.doesNotMatch(favicon, /\bviolet\b|#(?:7c3aed|a78bfa|b8a5ff)\b/i);
+});
+
+test("navigation and return links use the visible section anchors", async () => {
+  const navbar = await read("src/components/Navbar.astro");
+  const about = await read("src/components/About.astro");
+  const contact = await read("src/components/Contact.astro");
+  const techStack = await read("src/components/TechStack.astro");
+  const projects = await read("src/components/FeaturedProjects.astro");
+
+  assert.doesNotMatch(navbar, /href=["']#top["']/);
+  assert.match(navbar, /label: ["']About Me["']/);
+  assert.match(navbar, /label: ["']Skills["']/);
+  assert.match(navbar, /label: ["']Projects["']/);
+  assert.match(contact, /class=["']back-to-top[^"']*["'][^>]*href=["']#about["']/);
+  assert.match(about, /<h1[^>]*>Get to know me\.<\/h1>/);
+  assert.match(techStack, /<h2[^>]*>Tools I build with\.<\/h2>/);
+  assert.doesNotMatch(techStack, /section-heading-subtitle/);
+  assert.match(projects, /<h2[^>]*>What I've built\.<\/h2>/);
+  assert.match(about, /<dt>English Name<\/dt>[\s\S]*?<dt>Thai Name<\/dt>/);
+  assert.match(about, /Rangsit University<br \/>Computer Science<br \/>GPAX 3\.78/);
+  assert.doesNotMatch(about, /<dt>Location<\/dt>/);
+});
+
+test("contact and project links share clear button affordances", async () => {
+  const contact = await read("src/components/Contact.astro");
+  const css = await read("src/styles/global.css");
+
+  assert.doesNotMatch(contact, /contact-status/);
+  assert.match(css, /\.contact-links\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2,/s);
+  assert.match(css, /@media\s*\(max-width:\s*720px\)[\s\S]*?\.contact-links\s*\{[\s\S]*?margin-inline:\s*0/s);
+  assert.match(css, /\.project-links a\s*\{[\s\S]*?border:\s*1px solid var\(--line\)/s);
+  assert.match(css, /\.project-links a\s*\{[\s\S]*?background:/s);
+  assert.match(css, /\.project-links a\s*\{[\s\S]*?min-height:\s*52px/s);
+});
+
+test("about profile uses grouped dossier sections instead of a cell grid", async () => {
+  const about = await read("src/components/About.astro");
+  const css = await read("src/styles/global.css");
+
+  assert.match(about, /class=["']profile-groups["']/);
+  assert.match(about, />Personal<\/h2>/);
+  assert.match(about, />Career<\/h2>/);
+  assert.match(about, />Education<\/h2>/);
+  assert.doesNotMatch(about, /class=["']profile-facts["']/);
+  assert.match(css, /\.profile-group\s*\{[\s\S]*?grid-template-columns:/s);
+  assert.match(css, /@media\s*\(max-width:\s*560px\)[\s\S]*?\.profile-group\s*\{[\s\S]*?grid-template-columns:\s*1fr/s);
+  assert.match(css, /\.profile-group-facts\s*>\s*div:hover/);
+  assert.match(css, /\.tech-item:hover/);
 });
