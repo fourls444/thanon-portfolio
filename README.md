@@ -6,7 +6,7 @@ A static personal portfolio for Thanon, built with a midnight blue theme and Eng
 
 ## V1 content
 
-V1 includes Navbar, About Me, Tech Stack, Featured Projects, and Contact. The current featured project is TogetherSpace.
+V1 includes Navbar, About Me, Tech Stack, Projects, and Contact. Projects are listed in the order defined in `src/data/projects.ts`.
 
 ## Site stack
 
@@ -33,7 +33,7 @@ npm run preview
 
 - `src/data/profile.ts` for profile, education, and contact details
 - `src/data/tech.ts` for the technology list
-- `src/data/projects.ts` for featured project data
+- `src/data/projects.ts` for project data, media, links, and tech stacks
 - `public/icons/` for local WebP technology icons
 
 ## Deployment
@@ -42,6 +42,6 @@ Set the repository's `Settings > Pages` source to `GitHub Actions`. Every push o
 
 The repository base path is `/thanon-portfolio`, so the expected URL is `https://<github-username>.github.io/thanon-portfolio/`. Contact links use `mailto:` and `tel:`; no server runtime is required.
 
-## V2 roadmap
+## Project media
 
-V2 may add Other Projects, richer project animation, and project detail pages.
+Each project can contain multiple image or video previews in its `media` array. Add more than two projects to enable the horizontal project rail automatically.

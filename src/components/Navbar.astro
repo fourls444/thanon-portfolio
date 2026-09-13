@@ -1,15 +1,16 @@
 ---
+const baseUrl = import.meta.env.BASE_URL.replace(/\/?$/, "/");
 const links = [
-  { label: "About Me", href: "#about" },
-  { label: "Skills", href: "#skills" },
-  { label: "Projects", href: "#projects" },
-  { label: "Contact", href: "#contact" },
+  { label: "About Me", href: `${baseUrl}#about` },
+  { label: "Skills", href: `${baseUrl}#skills` },
+  { label: "Projects", href: `${baseUrl}#projects` },
+  { label: "Contact", href: `${baseUrl}#contact` },
 ] as const;
 ---
 
 <header class="site-header" data-header>
   <nav class="navbar shell" aria-label="Primary navigation">
-    <a class="wordmark" href="#about" aria-label="Go to About Me">
+    <a class="wordmark" href={`${baseUrl}#about`} aria-label="Go to About Me">
       Portfolio
     </a>
 

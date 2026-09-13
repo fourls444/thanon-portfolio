@@ -1,0 +1,151 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import { projects, type Project, type ProjectMedia } from "../../data/projects";
+import { techGroups } from "../../data/tech";
+
+export function getStaticPaths() {
+  return projects.map((project, index) => ({ params: { slug: project.slug }, props: { project, index } }));
+}
+
+interface Props { project: Project; index: number }
+const { project, index } = Astro.props as Props;
+const baseUrl = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+const mediaSrc = (src: string) => /^https?:\/\//i.test(src) ? src : `${baseUrl}${src.replace(/^\/+/, "")}`;
+const previousProject = projects[(index - 1 + projects.length) % projects.length];
+const nextProject = projects[(index + 1) % projects.length];
+const groupedMedia = (project.media ?? []).reduce<Record<string, ProjectMedia[]>>((groups, media) => {
+  const group = media.group ?? project.category;
+  (groups[group] ??= []).push(media);
+  return groups;
+}, {});
+const heroMedia = project.media?.[0];
+const projectTechIcons = new Map<string, string>([
+  ...techGroups.flatMap((group) => group.items.map((item) => [item.name, item.icon] as [string, string])),
+  ["Fastify", "/icons/fastify.svg"],
+  ["REST API", "/icons/api.svg"],
+  ["CRUD", "/icons/database.svg"],
+]);
+const stackIconSrc = (technology: string) => {
+  const icon = projectTechIcons.get(technology) ?? "/icons/api.svg";
+  return `${baseUrl}${icon.replace(/^\/+/, "")}`;
+};
+---
+
+<Layout title={`${project.title} | Portfolio Thanon`}>
+  <Navbar />
+  <main class="project-detail" id="main-content" tabindex="-1">
+    <section class="project-detail-hero shell">
+      <a class="project-detail-back" href={`${baseUrl}#projects`}><span aria-hidden="true">←</span> All Projects</a>
+      <div class="project-detail-heading">
+        <div>
+          <div class="project-detail-meta">
+            <span class="project-category">{project.category}</span>
+            <time class="project-detail-year" datetime={String(project.year)}>{project.year}</time>
+          </div>
+          <h1>{project.title}</h1>
+          <p>{project.description}</p>
+        </div>
+      </div>
+      <div class="project-detail-actions">
+        <ul class="project-stack project-stack--with-icons" aria-label={`${project.title} technologies`}>
+          {project.stack.map((technology) => <li><img class="project-tech-icon" src={stackIconSrc(technology)} alt="" width="22" height="22" loading="lazy" decoding="async" /><span>{technology}</span></li>)}
+        </ul>
+        <div class="project-links">
+          {project.github && <a href={project.github} target="_blank" rel="noreferrer">GitHub</a>}
+          {project.live && <a href={project.live} target="_blank" rel="noreferrer">Live demo</a>}
+        </div>
+      </div>
+      {project.confidentialityNote && <aside class="project-confidentiality"><strong>Privacy note</strong><p>{project.confidentialityNote}</p></aside>}
+      {heroMedia && (
+        <div class:list={["project-detail-cover", heroMedia.fullSrc && "project-detail-cover--top"]}>
+          {heroMedia.type === "video" ? (
+            <video src={mediaSrc(heroMedia.src)} aria-label={heroMedia.alt} controls muted playsinline preload="metadata">Your browser does not support the video tag.</video>
+          ) : <img src={mediaSrc(heroMedia.src)} alt={heroMedia.alt} width="1440" height="900" decoding="async" />}
+        </div>
+      )}
+    </section>
+
+    <section class="case-study-section shell" aria-labelledby="features-title">
+      <div class="case-study-heading"><h2 id="features-title">Features</h2></div>
+      <ol class="feature-list">
+        {project.features.map((feature, featureIndex) => (
+          <li><span>{String(featureIndex + 1).padStart(2, "0")}</span><div><h3>{feature.title}</h3><p>{feature.description}</p></div></li>
+        ))}
+      </ol>
+    </section>
+
+    {(project.media?.length ?? 0) > 1 && Object.keys(groupedMedia).length > 0 && (
+      <section class="case-study-section case-study-screens shell" aria-labelledby="screens-title">
+        <div class="case-study-heading"><h2 id="screens-title">Media</h2></div>
+        <div class="case-study-groups">
+          {Object.entries(groupedMedia).map(([group, mediaItems]) => (
+            <details class="case-study-group">
+              <summary>
+                <span class="case-study-group-name"><span>{group}</span><small>{mediaItems.length} {mediaItems.length === 1 ? "preview" : "previews"}</small></span>
+                <span class="case-study-group-action">
+                  <span class="case-study-group-action-closed">View previews</span>
+                  <span class="case-study-group-action-open">Hide previews</span>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <div class="case-study-screen-grid">
+                {mediaItems.map((media) => (
+                  <figure class="case-study-screen">
+                    {media.type === "video" ? (
+                      <video src={mediaSrc(media.src)} aria-label={media.alt} controls muted playsinline preload="metadata">Your browser does not support the video tag.</video>
+                    ) : media.fullSrc ? (
+                      <button type="button" class="case-study-screen-open" data-screen-open data-full-src={mediaSrc(media.fullSrc)}
+                        data-full-alt={media.alt} data-label={media.label ?? project.title} data-description={media.description ?? ""} aria-haspopup="dialog">
+                        <img src={mediaSrc(media.src)} alt={media.alt} width="900" height="560" loading="lazy" decoding="async" />
+                        <span>Open preview</span>
+                      </button>
+                    ) : <img src={mediaSrc(media.src)} alt={media.alt} width="900" height="560" loading="lazy" decoding="async" />}
+                    {(media.label || media.description) && <figcaption><strong>{media.label}</strong>{media.description && <span>{media.description}</span>}</figcaption>}
+                  </figure>
+                ))}
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <nav class="next-project-navigation shell" aria-label="Other projects">
+      <a href={`${baseUrl}projects/${previousProject.slug}/`}><span>Previous Project</span><strong>← {previousProject.title}</strong></a>
+      <a href={`${baseUrl}projects/${nextProject.slug}/`}><span>Next Project</span><strong>{nextProject.title} →</strong></a>
+    </nav>
+  </main>
+
+  <dialog class="project-media-dialog" data-screen-dialog aria-labelledby="screen-dialog-title">
+    <div class="project-media-dialog-shell">
+      <header class="project-media-dialog-header">
+        <div class="project-media-dialog-copy"><span>Media preview</span><h3 id="screen-dialog-title" data-dialog-title></h3><p data-dialog-description></p></div>
+        <button type="button" class="project-media-dialog-close" data-dialog-close aria-label="Close full screen preview">×</button>
+      </header>
+      <div class="project-media-dialog-viewport"><img data-dialog-image alt="" /></div>
+    </div>
+  </dialog>
+</Layout>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>("[data-screen-dialog]");
+  const dialogImage = dialog?.querySelector<HTMLImageElement>("[data-dialog-image]");
+  const dialogTitle = dialog?.querySelector<HTMLElement>("[data-dialog-title]");
+  const dialogDescription = dialog?.querySelector<HTMLElement>("[data-dialog-description]");
+  let trigger: HTMLButtonElement | null = null;
+  document.querySelectorAll<HTMLButtonElement>("[data-screen-open]").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (!dialog || !dialogImage) return;
+      trigger = button;
+      dialogImage.src = button.dataset.fullSrc ?? "";
+      dialogImage.alt = button.dataset.fullAlt ?? "";
+      if (dialogTitle) dialogTitle.textContent = button.dataset.label ?? "Media preview";
+      if (dialogDescription) dialogDescription.textContent = button.dataset.description ?? "";
+      dialog.showModal();
+    });
+  });
+  const closeDialog = () => { dialog?.close(); trigger?.focus(); };
+  dialog?.querySelector("[data-dialog-close]")?.addEventListener("click", closeDialog);
+  dialog?.addEventListener("click", (event) => { if (event.target === dialog) closeDialog(); });
+</script>

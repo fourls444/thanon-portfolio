@@ -1,10 +1,27 @@
+export type ProjectMedia = {
+  type: "image" | "video";
+  src: string;
+  alt: string;
+  fullSrc?: string;
+  label?: string;
+  description?: string;
+  section?: string;
+  group?: "Public Website" | "Member Portal" | "Backoffice";
+};
+
 export type Project = {
+  slug: string;
   title: string;
+  year: number;
   category: string;
   description: string;
-  image: string;
+  features: Array<{
+    title: string;
+    description: string;
+  }>;
+  confidentialityNote?: string;
+  media?: ProjectMedia[];
   stack: string[];
-  featured?: boolean;
   github?: string;
   live?: string;
   previews?: ProjectPreview[];
@@ -16,16 +33,203 @@ export type ProjectPreview = {
   label?: string;
 };
 
-export const projects: Project[] = [
+const internshipImage = (
+  path: string,
+  label: string,
+  description: string,
+  section: string,
+): ProjectMedia => ({
+  type: "image",
+  src: `images/projects/internship/generated-v2/${path}.webp`,
+  fullSrc: `images/projects/internship/generated-v2/${path}.webp`,
+  alt: `${label}, sample Internship Project screen`,
+  label,
+  description,
+  section,
+  group: path.startsWith("member-portal/")
+    ? "Member Portal"
+    : path.startsWith("public-")
+      ? "Public Website"
+      : "Backoffice",
+});
+
+const internshipMedia: ProjectMedia[] = [
   {
+    type: "image",
+    src: "images/projects/internship/generated-v2/public-information/home.webp",
+    fullSrc: "images/projects/internship/generated-v2/public-information/home.webp",
+    alt: "Sample Internship Project public website home page",
+    label: "Public Website · Home",
+    description: "Home page with services, activities, and news.",
+    section: "Home",
+    group: "Public Website",
+  },
+  internshipImage("public-information/about-overview", "Public Website · About Overview", "Short introduction to the sample organization.", "About"),
+  internshipImage("public-information/department", "Public Website · Departments", "List of departments and their services.", "About"),
+  internshipImage("public-information/contact", "Public Website · Contact", "Contact details and a simple message form.", "Contact"),
+  internshipImage("public-services/service-index", "Public Website · Service Index", "List of public services with search.", "Public Services"),
+  internshipImage("public-services/public-projects", "Public Website · Public Projects", "Project list with filters and short details.", "Projects"),
+  internshipImage("public-services/e-service-index", "Public Website · E-Service Index", "List of online services in one place.", "E-Service"),
+  internshipImage("public-services/e-service-form", "Public Website · E-Service Form", "Step-by-step online service form.", "E-Service"),
+  internshipImage("public-services/meetings", "Public Website · Meetings", "List of upcoming meetings and activities.", "Activities"),
+  internshipImage("public-services/news", "Public Website · News", "News page with search and categories.", "News"),
+  internshipImage("public-services/other-services", "Public Website · Other Services", "Extra services grouped by type.", "Public Services"),
+  internshipImage("member-portal/login", "Member Portal · Sign In", "Sign-in page using sample account details.", "Member Portal"),
+  internshipImage("member-portal/member-home", "Member Portal · Dashboard", "Member home page with important updates.", "Member Home"),
+  internshipImage("member-portal/profile", "Member Portal · Profile", "Member profile using sample personal data.", "Profile"),
+  internshipImage("member-portal/member-services", "Member Portal · Services", "Quick links to common member services.", "Services"),
+  internshipImage("member-portal/member-meetings", "Member Portal · Appointments", "Appointment list with clear status labels.", "Appointments"),
+  internshipImage("member-portal/learning-hub", "Member Portal · Learning Hub", "Articles, videos, and learning materials.", "Learning"),
+  internshipImage("member-portal/courses", "Member Portal · Courses", "Course list with filters and progress.", "Learning"),
+  internshipImage("member-portal/careers", "Member Portal · Careers", "Job search page with sample listings.", "Careers"),
+  internshipImage("member-portal/tools", "Member Portal · Tools", "Useful tools for members.", "Tools"),
+  internshipImage("member-portal/store", "Member Portal · Store", "Store page with sample products and prices.", "Store"),
+  internshipImage("backoffice-core/admin-login", "Backoffice · Sign In", "Sign-in page for staff.", "Access"),
+  internshipImage("backoffice-core/module-dashboard", "Backoffice · Module Dashboard", "Main page for choosing a work area.", "Dashboard"),
+  internshipImage("backoffice-core/registration-dashboard", "Backoffice · Registration Dashboard", "Summary of registrations and their status.", "Registration"),
+  internshipImage("backoffice-core/registration-list", "Backoffice · Registration List", "Searchable list of sample registrations.", "Registration"),
+  internshipImage("backoffice-core/settings", "Backoffice · Settings", "Basic system settings.", "Settings"),
+  internshipImage("backoffice-core/users", "Backoffice · Users", "User list with roles and account status.", "Users"),
+  internshipImage("backoffice-core/permissions", "Backoffice · Permissions", "Page for setting access by role.", "Permissions"),
+  internshipImage("council-website-cms/cms-dashboard", "Backoffice · Website Dashboard", "Overview of website content.", "Website CMS"),
+  internshipImage("council-website-cms/website-settings", "Backoffice · Website Settings", "Settings for the sample website.", "Website CMS"),
+  internshipImage("council-website-cms/homepage-manager", "Backoffice · Homepage Manager", "Page for managing home page content.", "Homepage"),
+  internshipImage("council-website-cms/agency-manager", "Backoffice · Department Manager", "Page for managing department information.", "Departments"),
+  internshipImage("council-website-cms/about-overview", "Backoffice · About Overview", "Page for editing the About overview.", "About"),
+  internshipImage("services-news-cms/service-overview", "Backoffice · Service Overview", "Main page for managing services.", "Services"),
+  internshipImage("services-news-cms/public-project-list", "Backoffice · Public Projects", "List of sample public projects.", "Projects"),
+  internshipImage("services-news-cms/e-service-manager", "Backoffice · E-Service Manager", "Page for managing online services.", "E-Service"),
+  internshipImage("services-news-cms/other-service-manager", "Backoffice · Other Services", "Page for managing extra services.", "Services"),
+  internshipImage("services-news-cms/news-list", "Backoffice · News", "Page for managing news items.", "News"),
+  internshipImage("operations/pharmacist-dashboard", "Backoffice · Professional Dashboard", "Summary page for a sample service area.", "Professional Service"),
+  internshipImage("operations/pharmacist-homepage", "Backoffice · Professional Homepage", "Page for managing service home content.", "Professional Service"),
+  internshipImage("operations/product-manager", "Backoffice · Product Manager", "Page for managing sample products.", "Products"),
+  internshipImage("operations/e-service-dashboard", "Backoffice · E-Service Dashboard", "Summary of online service activity.", "E-Service"),
+  internshipImage("operations/service-catalog", "Backoffice · Service Catalogue", "List of available online services.", "E-Service"),
+  internshipImage("operations/billing-dashboard", "Backoffice · Billing Dashboard", "Summary of sample payments.", "Billing"),
+  internshipImage("operations/transactions", "Backoffice · Transactions", "Searchable list of sample payments.", "Billing"),
+];
+
+const projectEntries: Project[] = [
+  {
+    slug: "together-space",
     title: "TogetherSpace",
-    category: "Featured Project",
-    featured: true,
+    year: 2026,
+    category: "Web Project",
     description:
-      "A shared space for friends, couples, and families, with rooms, invitations, boards, calendars, albums, chat, and shared finance modules.",
-    image: "https://raw.githubusercontent.com/fourls444/togetherspace/master/public/images/logo.jpg",
+      "A web app where friends, couples, and families can share tasks, calendars, photos, chat, and expenses.",
+    features: [
+      {
+        title: "Shared spaces",
+        description: "Create a private room and invite people to join.",
+      },
+      {
+        title: "Planning together",
+        description: "Plan tasks and events together in one place.",
+      },
+      {
+        title: "Memories and conversation",
+        description: "Share photos and chat with everyone in the room.",
+      },
+      {
+        title: "Shared finance",
+        description: "Record shared expenses so everyone can see them.",
+      },
+    ],
+    media: [
+      {
+        type: "image",
+        src: "https://raw.githubusercontent.com/fourls444/togetherspace/master/public/images/logo.jpg",
+        alt: "TogetherSpace project preview",
+      },
+    ],
     stack: ["Next.js", "React", "TypeScript", "Supabase", "Drizzle ORM"],
     github: "https://github.com/fourls444/togetherspace",
     live: "https://togetherspace.vercel.app",
   },
+  {
+    slug: "flutter-pokedex",
+    title: "Flutter Pokedex",
+    year: 2025,
+    category: "Mobile Project",
+    description:
+      "A hands-on Flutter project built to practice mobile app basics. It includes Pokémon search, type filters, details, API data, and admin tools.",
+    features: [
+      {
+        title: "Search by name or number",
+        description: "Find Pokémon by name or Pokédex number.",
+      },
+      {
+        title: "Type filtering",
+        description: "Choose a type to show matching Pokémon.",
+      },
+      {
+        title: "Detail and base stats",
+        description: "View the image, type, and six base stats.",
+      },
+      {
+        title: "Validated CRUD workflow",
+        description: "Add, edit, and delete Pokémon with input checks.",
+      },
+      {
+        title: "Environment-aware API",
+        description: "Connect to the correct API on web and Android.",
+      },
+    ],
+    media: [
+      {
+        type: "video",
+        src: "videos/pokedex.webm",
+        alt: "Flutter Pokedex project preview",
+      },
+    ],
+    stack: ["Flutter", "Dart", "REST API", "CRUD"],
+    github: "https://github.com/fourls444/flutter_pokedex",
+  },
+  {
+    slug: "internship-project",
+    title: "Internship Project",
+    year: 2026,
+    category: "Co-operative Education",
+    description:
+      "A web system built during my internship. It includes a public website, member portal, back-office tools, and an API connected to PostgreSQL.",
+    confidentialityNote:
+      "The real project is private under an NDA. These previews were remade with new names, images, and sample data, so no private information is shown.",
+    features: [
+      {
+        title: "Public information website",
+        description: "Shows services, projects, activities, news, and contact details.",
+      },
+      {
+        title: "Member portal",
+        description: "Lets members view profiles, appointments, services, and learning materials.",
+      },
+      {
+        title: "Backoffice tools",
+        description: "Lets staff manage content, users, services, and payments.",
+      },
+      {
+        title: "Shared backend API",
+        description: "Connects each website to shared data in PostgreSQL.",
+      },
+      {
+        title: "Roles and permissions",
+        description: "Controls what each staff role can view and manage.",
+      },
+    ],
+    media: internshipMedia,
+    stack: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Node.js",
+      "Fastify",
+      "PostgreSQL",
+      "Drizzle ORM",
+      "Supabase",
+    ],
+  },
 ];
+
+export const projects = [...projectEntries].sort((a, b) => b.year - a.year);

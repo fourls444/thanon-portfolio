@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-13T19:44:10.8837332+07:00",
+  "title": "Design System: Thanon Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "midnight-canvas": {
+        "role": "neutral",
+        "displayName": "Midnight Canvas",
+        "canonical": "oklch(0.145 0.025 258)",
+        "tonalRamp": ["oklch(0.15 0.025 258)", "oklch(0.25 0.025 258)", "oklch(0.35 0.024 258)", "oklch(0.45 0.022 258)", "oklch(0.58 0.019 258)", "oklch(0.7 0.015 258)", "oklch(0.83 0.011 258)", "oklch(0.95 0.006 258)"]
+      },
+      "deep-midnight": {
+        "role": "neutral",
+        "displayName": "Deep Midnight",
+        "canonical": "oklch(0.105 0.02 258)",
+        "tonalRamp": ["oklch(0.12 0.02 258)", "oklch(0.23 0.02 258)", "oklch(0.34 0.019 258)", "oklch(0.45 0.018 258)", "oklch(0.58 0.015 258)", "oklch(0.7 0.012 258)", "oklch(0.83 0.009 258)", "oklch(0.95 0.004 258)"]
+      },
+      "ice-accent": {
+        "role": "primary",
+        "displayName": "Ice Signal",
+        "canonical": "oklch(0.86 0.09 233)",
+        "tonalRamp": ["oklch(0.15 0.05 233)", "oklch(0.26 0.07 233)", "oklch(0.38 0.09 233)", "oklch(0.5 0.1 233)", "oklch(0.62 0.1 233)", "oklch(0.74 0.095 233)", "oklch(0.86 0.09 233)", "oklch(0.95 0.035 233)"]
+      },
+      "frost-text": {
+        "role": "neutral",
+        "displayName": "Frost Text",
+        "canonical": "oklch(0.965 0.012 245)",
+        "tonalRamp": ["oklch(0.15 0.012 245)", "oklch(0.27 0.012 245)", "oklch(0.39 0.012 245)", "oklch(0.51 0.012 245)", "oklch(0.63 0.012 245)", "oklch(0.75 0.012 245)", "oklch(0.87 0.012 245)", "oklch(0.965 0.012 245)"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Large project and page statements." },
+      "body": { "displayName": "Body", "purpose": "Readable descriptions capped near 65 to 75 characters." },
+      "label": { "displayName": "Technical Label", "purpose": "Dates, categories, and compact metadata only." }
+    },
+    "shadows": [
+      { "name": "card-ambient", "value": "0 24px 64px oklch(0.05 0.025 258 / 0.22)", "purpose": "Project cards at rest." },
+      { "name": "floating-control", "value": "0 18px 46px oklch(0.04 0.025 258 / 0.34)", "purpose": "Compact navigation controls." },
+      { "name": "tooltip-lift", "value": "0 10px 28px oklch(0.04 0.025 258 / 0.4)", "purpose": "Temporary explanatory overlays." },
+      { "name": "dialog-depth", "value": "0 32px 96px oklch(0.02 0.015 258 / 0.7)", "purpose": "Full media preview dialogs." }
+    ],
+    "motion": [
+      { "name": "ease-confident", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Default deceleration for reveals and interactive feedback." },
+      { "name": "feedback-fast", "value": "180ms", "purpose": "Color and opacity feedback." },
+      { "name": "state-standard", "value": "260ms", "purpose": "Hover lift and icon movement." },
+      { "name": "reveal", "value": "420ms", "purpose": "Project and media state transitions." }
+    ],
+    "breakpoints": [
+      { "name": "compact", "value": "420px" },
+      { "name": "mobile", "value": "560px" },
+      { "name": "tablet", "value": "720px" },
+      { "name": "wide", "value": "900px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Project Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary route into a project case study.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"3.5\" y=\"4.5\" width=\"17\" height=\"15\" rx=\"1.5\"></rect><path d=\"M8 9h8M8 13h5\"></path></svg>View Project</a>",
+      "css": ".ds-btn-primary { display:inline-flex; min-height:52px; align-items:center; justify-content:center; gap:8px; padding:10px 18px; border:1px solid var(--ice); background:var(--ice); color:var(--bg-deep); font:700 .82rem Inter,sans-serif; text-decoration:none; transition:transform 220ms cubic-bezier(.22,1,.36,1), box-shadow 260ms ease; } .ds-btn-primary svg { width:18px; fill:none; stroke:currentColor; stroke-width:1.7; } .ds-btn-primary:hover { transform:translateY(-3px) scale(1.01); box-shadow:0 16px 36px oklch(0.72 0.14 244 / .28); } .ds-btn-primary:focus-visible { outline:2px solid var(--ice); outline-offset:4px; } .ds-btn-primary:active { transform:translateY(-1px) scale(.985); }"
+    },
+    {
+      "name": "Secondary Action",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "GitHub, live demo, and supporting actions.",
+      "html": "<a class=\"ds-btn-secondary\" href=\"#\">GitHub</a>",
+      "css": ".ds-btn-secondary { display:inline-flex; min-height:52px; align-items:center; justify-content:center; padding:10px 18px; border:1px solid var(--line); background:oklch(0.72 0.14 244 / .035); color:var(--text); font:700 .82rem Inter,sans-serif; text-decoration:none; transition:color 180ms ease,border-color 180ms ease,background 180ms ease,transform 180ms cubic-bezier(.22,1,.36,1); } .ds-btn-secondary:hover { border-color:var(--ice); background:oklch(0.72 0.14 244 / .08); color:var(--ice); transform:translateY(-2px); } .ds-btn-secondary:focus-visible { outline:2px solid var(--ice); outline-offset:4px; }"
+    },
+    {
+      "name": "Metadata Badge",
+      "kind": "chip",
+      "refersTo": "metadata-badge",
+      "description": "Consistent year and compact project metadata.",
+      "html": "<span class=\"ds-meta-badge\">2026</span>",
+      "css": ".ds-meta-badge { display:inline-flex; min-height:30px; align-items:center; padding:5px 10px; border:1px solid var(--line-strong); background:var(--surface); color:var(--text); font:700 .76rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing:.08em; }"
+    },
+    {
+      "name": "Project Card",
+      "kind": "card",
+      "refersTo": "project-card",
+      "description": "Screenshot-led summary with metadata, stack, and actions.",
+      "html": "<article class=\"ds-project-card\"><div class=\"ds-project-media\"></div><div class=\"ds-project-copy\"><span>WEB PROJECT</span><h3>Project name</h3><p>Short project description.</p></div></article>",
+      "css": ".ds-project-card { overflow:hidden; border:1px solid var(--line); background:var(--surface); color:var(--text); box-shadow:0 24px 64px oklch(0.05 0.025 258 / .22); } .ds-project-media { aspect-ratio:16/9; background:var(--bg-deep); border-bottom:1px solid var(--line); } .ds-project-copy { padding:24px; } .ds-project-copy span { color:var(--ice); font:700 .68rem ui-monospace,monospace; letter-spacing:.12em; } .ds-project-copy h3 { margin:10px 0; font:700 1.35rem Inter,sans-serif; } .ds-project-copy p { color:var(--muted); }"
+    },
+    {
+      "name": "Project Tooltip",
+      "kind": "custom",
+      "refersTo": "tooltip",
+      "description": "Short explanation above an already-labelled action.",
+      "html": "<span class=\"ds-tooltip\" role=\"tooltip\">Open project details</span>",
+      "css": ".ds-tooltip { display:inline-flex; padding:7px 10px; border:1px solid var(--line-strong); background:var(--bg-deep); color:var(--text); box-shadow:0 10px 28px oklch(0.04 0.025 258 / .4); font:650 .7rem Inter,sans-serif; line-height:1.35; }"
+    },
+    {
+      "name": "Project Navigation",
+      "kind": "nav",
+      "description": "Centered Previous and Next controls without ambiguous numbering.",
+      "html": "<nav class=\"ds-project-nav\" aria-label=\"Project navigation\"><button disabled>Previous</button><button>Next</button></nav>",
+      "css": ".ds-project-nav { display:inline-grid; grid-template-columns:repeat(2,auto); gap:10px; padding:8px; border:1px solid var(--line-strong); background:var(--bg-deep); box-shadow:0 18px 46px oklch(0.04 0.025 258 / .34); } .ds-project-nav button { min-width:112px; min-height:48px; border:1px solid var(--line); background:var(--surface); color:var(--text); font:700 .78rem Inter,sans-serif; cursor:pointer; transition:transform 220ms cubic-bezier(.22,1,.36,1),color 180ms ease,border-color 180ms ease; } .ds-project-nav button:hover:not(:disabled) { border-color:var(--ice); color:var(--ice); transform:translateY(-2px); } .ds-project-nav button:focus-visible { outline:2px solid var(--ice); outline-offset:4px; } .ds-project-nav button:disabled { opacity:.28; cursor:default; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Midnight Project Desk",
+    "overview": "A focused technical workspace where project screenshots and clear actions carry the experience. Midnight surfaces preserve attention, while ice blue communicates priority and interaction.",
+    "keyCharacteristics": [
+      "Midnight-blue layered surfaces with one clear ice-blue accent.",
+      "Large, compact headlines balanced by readable body copy.",
+      "Project screenshots carry more visual weight than decoration.",
+      "Square-edged controls and cards with thin structural borders.",
+      "Short motion that confirms interaction and never delays navigation."
+    ],
+    "rules": [
+      { "name": "The Ice Signal Rule", "body": "Ice blue must communicate priority or interaction. Never spread it across large decorative areas.", "section": "colors" },
+      { "name": "The Tinted Neutral Rule", "body": "Never introduce pure black or pure white. Every neutral remains tied to the blue hue of the interface.", "section": "colors" },
+      { "name": "The Two-Voice Rule", "body": "Use sans for reading and hierarchy. Use monospace only for short technical labels and metadata.", "section": "typography" },
+      { "name": "The Structural Depth Rule", "body": "Use borders and tonal contrast first. Add shadow only when an element is raised, temporary, or interactive.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do show real project work before decoration.",
+      "Do keep navigation obvious and easy to use at every screen size.",
+      "Do use short, plain English descriptions.",
+      "Do keep the midnight-blue visual identity consistent.",
+      "Do separate quick project summaries from detailed project pages.",
+      "Do respect reduced-motion preferences and preserve keyboard focus states."
+    ],
+    "donts": [
+      "Don't use generic template layouts.",
+      "Don't create crowded controls or duplicate navigation signals.",
+      "Don't use vague marketing language.",
+      "Don't hide navigation or make project movement depend on unexplained numbers.",
+      "Don't add decorative effects that reduce readability.",
+      "Don't use pure black, pure white, gradient text, decorative glassmorphism, bounce motion, or colored side stripes."
+    ]
+  }
+}
