@@ -19,12 +19,19 @@ const groupedMedia = (project.media ?? []).reduce<Record<string, ProjectMedia[]>
   (groups[group] ??= []).push(media);
   return groups;
 }, {});
+const mediaGroups = Object.entries(groupedMedia);
+const hasSingleMediaGroup = mediaGroups.length === 1;
 const heroMedia = project.media?.[0];
 const projectTechIcons = new Map<string, string>([
   ...techGroups.flatMap((group) => group.items.map((item) => [item.name, item.icon] as [string, string])),
   ["Fastify", "/icons/fastify.svg"],
   ["REST API", "/icons/api.svg"],
   ["CRUD", "/icons/database.svg"],
+  ["LIFF", "/icons/line.webp"],
+  ["LINE Bot Designer", "/icons/line.webp"],
+  ["LINE Messaging API", "/icons/line.webp"],
+  ["LINE Developers", "/icons/line.webp"],
+  ["LINE OA", "/icons/line.webp"],
 ]);
 const stackIconSrc = (technology: string) => {
   const icon = projectTechIcons.get(technology) ?? "/icons/api.svg";
@@ -36,7 +43,7 @@ const stackIconSrc = (technology: string) => {
   <Navbar />
   <main class="project-detail" id="main-content" tabindex="-1">
     <section class="project-detail-hero shell">
-      <a class="project-detail-back" href={`${baseUrl}#projects`}><span aria-hidden="true">←</span> All Projects</a>
+      <a class="project-detail-back" href={`${baseUrl}#projects`}><span class="project-back-arrow" aria-hidden="true">←</span> All Projects</a>
       <div class="project-detail-heading">
         <div>
           <div class="project-detail-meta">
@@ -51,14 +58,24 @@ const stackIconSrc = (technology: string) => {
         <ul class="project-stack project-stack--with-icons" aria-label={`${project.title} technologies`}>
           {project.stack.map((technology) => <li><img class="project-tech-icon" src={stackIconSrc(technology)} alt="" width="22" height="22" loading="lazy" decoding="async" /><span>{technology}</span></li>)}
         </ul>
-        <div class="project-links">
-          {project.github && <a href={project.github} target="_blank" rel="noreferrer">GitHub</a>}
-          {project.live && <a href={project.live} target="_blank" rel="noreferrer">Live demo</a>}
+        <div class="project-detail-links">
+          {project.github && (
+            <a class="project-detail-link project-detail-link--github" href={project.github} target="_blank" rel="noreferrer" aria-label={`View ${project.title} source code on GitHub`}>
+              <svg class="project-detail-link-icon project-detail-link-icon--github" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a9.5 9.5 0 0 0-3 18.51c.48.09.66-.21.66-.47v-1.67c-2.7.59-3.27-1.3-3.27-1.3-.43-1.1-1.05-1.4-1.05-1.4-.86-.59.07-.58.07-.58.95.07 1.45.98 1.45.98.85 1.45 2.22 1.03 2.76.79.09-.61.33-1.03.6-1.27-2.16-.25-4.43-1.08-4.43-4.8 0-1.06.38-1.92 1-2.6-.1-.25-.43-1.24.1-2.57 0 0 .81-.26 2.63.99A9.2 9.2 0 0 1 12 6.8c.82 0 1.65.11 2.42.32 1.82-1.25 2.63-.99 2.63-.99.53 1.33.2 2.32.1 2.57.62.68 1 1.54 1 2.6 0 3.73-2.27 4.55-4.44 4.8.35.3.66.88.66 1.78v2.66c0 .26.18.57.67.47A9.5 9.5 0 0 0 12 2.5Z"></path></svg>
+              <span>GitHub</span>
+            </a>
+          )}
+          {project.live && (
+            <a class="project-detail-link project-detail-link--live" href={project.live} target="_blank" rel="noreferrer" aria-label={`Open ${project.title} live website`}>
+              <svg class="project-detail-link-icon project-detail-link-icon--live" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="12" rx="1.5"></rect><path d="M8 20h8M12 16.5V20"></path></svg>
+              <span>Live demo</span>
+            </a>
+          )}
         </div>
       </div>
       {project.confidentialityNote && <aside class="project-confidentiality"><strong>Privacy note</strong><p>{project.confidentialityNote}</p></aside>}
       {heroMedia && (
-        <div class:list={["project-detail-cover", heroMedia.fullSrc && "project-detail-cover--top"]}>
+        <div class:list={["project-detail-cover", heroMedia.fullSrc && "project-detail-cover--top", heroMedia.src.includes("logo.jpg") && "project-detail-cover--logo"]}>
           {heroMedia.type === "video" ? (
             <video src={mediaSrc(heroMedia.src)} aria-label={heroMedia.alt} controls muted playsinline preload="metadata">Your browser does not support the video tag.</video>
           ) : <img src={mediaSrc(heroMedia.src)} alt={heroMedia.alt} width="1440" height="900" decoding="async" />}
@@ -78,20 +95,37 @@ const stackIconSrc = (technology: string) => {
     {(project.media?.length ?? 0) > 1 && Object.keys(groupedMedia).length > 0 && (
       <section class="case-study-section case-study-screens shell" aria-labelledby="screens-title">
         <div class="case-study-heading"><h2 id="screens-title">Media</h2></div>
-        <div class="case-study-groups">
-          {Object.entries(groupedMedia).map(([group, mediaItems]) => (
-            <details class="case-study-group">
+        <div class:list={["case-study-groups", hasSingleMediaGroup && "case-study-groups--direct"]}>
+          {hasSingleMediaGroup ? (
+            <div class="case-study-screen-grid case-study-screen-grid--direct">
+              {mediaGroups[0][1].map((media) => (
+                <figure class:list={["case-study-screen", media.type === "video" && "case-study-screen--video"]}>
+                  {media.type === "video" ? (
+                    <video src={mediaSrc(media.src)} aria-label={media.alt} controls muted playsinline preload="metadata">Your browser does not support the video tag.</video>
+                  ) : media.fullSrc ? (
+                    <button type="button" class="case-study-screen-open" data-screen-open data-full-src={mediaSrc(media.fullSrc)}
+                      data-full-alt={media.alt} data-label={media.label ?? project.title} data-description={media.description ?? ""} aria-haspopup="dialog">
+                      <img src={mediaSrc(media.src)} alt={media.alt} width="900" height="560" loading="lazy" decoding="async" />
+                      <span>Open preview</span>
+                    </button>
+                  ) : <img src={mediaSrc(media.src)} alt={media.alt} width="900" height="560" loading="lazy" decoding="async" />}
+                  {(media.label || media.description) && <figcaption><strong>{media.label}</strong>{media.description && <span>{media.description}</span>}</figcaption>}
+                </figure>
+              ))}
+            </div>
+          ) : mediaGroups.map(([group, mediaItems]) => (
+            <details class="case-study-group" open={project.slug === "internship-project" && group === "Public Website"}>
               <summary>
                 <span class="case-study-group-name"><span>{group}</span><small>{mediaItems.length} {mediaItems.length === 1 ? "preview" : "previews"}</small></span>
                 <span class="case-study-group-action">
                   <span class="case-study-group-action-closed">View previews</span>
                   <span class="case-study-group-action-open">Hide previews</span>
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+                  <span class="case-study-group-action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></span>
                 </span>
               </summary>
               <div class="case-study-screen-grid">
                 {mediaItems.map((media) => (
-                  <figure class="case-study-screen">
+                  <figure class:list={["case-study-screen", media.type === "video" && "case-study-screen--video"]}>
                     {media.type === "video" ? (
                       <video src={mediaSrc(media.src)} aria-label={media.alt} controls muted playsinline preload="metadata">Your browser does not support the video tag.</video>
                     ) : media.fullSrc ? (
@@ -112,8 +146,14 @@ const stackIconSrc = (technology: string) => {
     )}
 
     <nav class="next-project-navigation shell" aria-label="Other projects">
-      <a href={`${baseUrl}projects/${previousProject.slug}/`}><span>Previous Project</span><strong>← {previousProject.title}</strong></a>
-      <a href={`${baseUrl}projects/${nextProject.slug}/`}><span>Next Project</span><strong>{nextProject.title} →</strong></a>
+      <a class="next-project-link next-project-link--previous" href={`${baseUrl}projects/${previousProject.slug}/`}>
+        <span class="next-project-label"><span class="next-project-dir-icon" aria-hidden="true">←</span> Previous Project</span>
+        <strong class="next-project-title">{previousProject.title}</strong>
+      </a>
+      <a class="next-project-link next-project-link--next" href={`${baseUrl}projects/${nextProject.slug}/`}>
+        <span class="next-project-label">Next Project <span class="next-project-dir-icon" aria-hidden="true">→</span></span>
+        <strong class="next-project-title">{nextProject.title}</strong>
+      </a>
     </nav>
   </main>
 

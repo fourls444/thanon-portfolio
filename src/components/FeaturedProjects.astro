@@ -1,9 +1,22 @@
 ---
 import { projects } from "../data/projects";
+import { techGroups } from "../data/tech";
 
 const baseUrl = import.meta.env.BASE_URL.replace(/\/?$/, "/");
 const mediaSrc = (src: string) => /^https?:\/\//i.test(src) ? src : `${baseUrl}${src.replace(/^\/+/, "")}`;
 const projectHref = (slug: string) => `${baseUrl}projects/${slug}/`;
+const projectTechIcons = new Map<string, string>([
+  ...techGroups.flatMap((group) => group.items.map((item) => [item.name, item.icon] as [string, string])),
+  ["Fastify", "/icons/fastify.svg"],
+  ["REST API", "/icons/api.svg"],
+  ["CRUD", "/icons/database.svg"],
+  ["LIFF", "/icons/line.webp"],
+  ["LINE Bot Designer", "/icons/line.webp"],
+]);
+const stackIconSrc = (technology: string) => {
+  const icon = projectTechIcons.get(technology) ?? "/icons/api.svg";
+  return `${baseUrl}${icon.replace(/^\/+/, "")}`;
+};
 ---
 
 <section class="section projects-section" id="projects" aria-labelledby="projects-title" data-reveal-group>
@@ -19,12 +32,15 @@ const projectHref = (slug: string) => `${baseUrl}projects/${slug}/`;
       <div class="project-card-grid project-card-grid--scroll" data-projects-track>
         {projects.map((project, index) => {
           const media = project.media?.[0];
+          const visibleTechnologies = project.stack.slice(0, 3);
+          const hiddenTechnologyCount = Math.max(0, project.stack.length - visibleTechnologies.length);
+          const hiddenTechnologies = project.stack.slice(visibleTechnologies.length);
           return (
             <article class="project-card" data-project-card>
               {media && (
                 <div class="project-card-media">
                   <div class="project-media-track">
-                    <div class:list={["project-media-slide", "is-active", media.fullSrc && "project-media-slide--top-preview"]}>
+                    <div class:list={["project-media-slide", "is-active", media.fullSrc && "project-media-slide--top-preview", media.src.includes("logo.jpg") && "project-media-slide--logo"]}>
                       {media.type === "video" ? (
                         <video src={mediaSrc(media.src)} aria-label={media.alt} controls muted playsinline preload="metadata">Your browser does not support the video tag.</video>
                       ) : (
@@ -32,40 +48,57 @@ const projectHref = (slug: string) => `${baseUrl}projects/${slug}/`;
                       )}
                     </div>
                   </div>
+                  {project.confidentialityNote && <span class="project-card-badge">Sample Data</span>}
                 </div>
               )}
 
               <div class="project-card-copy">
                 <div class="project-heading-row">
-                  <div>
-                    <div class="project-heading-meta">
-                      <span class="project-category">{project.category}</span>
-                      <time class="project-year" datetime={String(project.year)}>{project.year}</time>
-                    </div>
-                    <h3>{project.title}</h3>
+                  <div class="project-heading-meta">
+                    <span class="project-category">{project.category}</span>
+                    <time class="project-year" datetime={String(project.year)}>{project.year}</time>
                   </div>
+                  <h3>{project.title}</h3>
                 </div>
                 <p>{project.description}</p>
-                {project.confidentialityNote && <span class="project-disclosure">Sample Data</span>}
                 <ul class="project-stack project-stack--compact" aria-label={`${project.title} technologies`}>
-                  {project.stack.slice(0, 6).map((technology) => <li>{technology}</li>)}
+                  {visibleTechnologies.map((technology) => (
+                    <li><img class="project-tech-icon" src={stackIconSrc(technology)} alt="" width="18" height="18" loading="lazy" decoding="async" /><span>{technology}</span></li>
+                  ))}
+                  {hiddenTechnologyCount > 0 && (
+                    <li class="project-stack-more" tabindex="0" aria-label={`${hiddenTechnologyCount} more technologies: ${hiddenTechnologies.join(", ")}`}>
+                      <span>+{hiddenTechnologyCount} more</span>
+                      <span class="project-stack-tooltip" role="tooltip">
+                        <strong>More technologies</strong>
+                        <span class="project-stack-tooltip-list">
+                          {hiddenTechnologies.map((technology) => (
+                            <span class="project-stack-tooltip-item"><img src={stackIconSrc(technology)} alt="" width="17" height="17" loading="lazy" decoding="async" /><span>{technology}</span></span>
+                          ))}
+                        </span>
+                      </span>
+                    </li>
+                  )}
                 </ul>
-                <div class="project-links project-card-actions">
+                <div class="project-card-actions">
+                  {(project.github || project.live) && (
+                    <div class="project-utility-links" aria-label={`${project.title} external links`}>
+                      {project.github && <a class="project-utility-link project-utility-link--github" href={project.github} target="_blank" rel="noreferrer" aria-label={`View ${project.title} source code on GitHub`}>
+                        <svg class="project-action-icon project-action-icon--github" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a9.5 9.5 0 0 0-3 18.51c.48.09.66-.21.66-.47v-1.67c-2.7.59-3.27-1.3-3.27-1.3-.43-1.1-1.05-1.4-1.05-1.4-.86-.59.07-.58.07-.58.95.07 1.45.98 1.45.98.85 1.45 2.22 1.03 2.76.79.09-.61.33-1.03.6-1.27-2.16-.25-4.43-1.08-4.43-4.8 0-1.06.38-1.92 1-2.6-.1-.25-.43-1.24.1-2.57 0 0 .81-.26 2.63.99A9.2 9.2 0 0 1 12 6.8c.82 0 1.65.11 2.42.32 1.82-1.25 2.63-.99 2.63-.99.53 1.33.2 2.32.1 2.57.62.68 1 1.54 1 2.6 0 3.73-2.27 4.55-4.44 4.8.35.3.66.88.66 1.78v2.66c0 .26.18.57.67.47A9.5 9.5 0 0 0 12 2.5Z"></path></svg>
+                        <span>GitHub</span>
+                        <span class="project-action-tooltip" aria-hidden="true">View source code on GitHub</span>
+                      </a>}
+                      {project.live && <a class="project-utility-link project-utility-link--live" href={project.live} target="_blank" rel="noreferrer" aria-label={`Open ${project.title} live website`}>
+                        <svg class="project-action-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="12" rx="1.5"></rect><path d="M8 20h8M12 16.5V20"></path></svg>
+                        <span>Live demo</span>
+                        <span class="project-action-tooltip" aria-hidden="true">Open the live website</span>
+                      </a>}
+                    </div>
+                  )}
                   <a class="project-primary-link" href={projectHref(project.slug)} aria-label={`Open ${project.title} project details`}>
                     <svg class="project-action-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="1.5"></rect><path d="M8 9h8M8 13h5"></path></svg>
-                    View Project
+                    <span>View Project</span>
                     <span class="project-action-tooltip" aria-hidden="true">Open project details</span>
                   </a>
-                  {project.github && <a href={project.github} target="_blank" rel="noreferrer" aria-label={`View ${project.title} source code on GitHub`}>
-                    <svg class="project-action-icon project-action-icon--github" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a9.5 9.5 0 0 0-3 18.51c.48.09.66-.21.66-.47v-1.67c-2.7.59-3.27-1.3-3.27-1.3-.43-1.1-1.05-1.4-1.05-1.4-.86-.59.07-.58.07-.58.95.07 1.45.98 1.45.98.85 1.45 2.22 1.03 2.76.79.09-.61.33-1.03.6-1.27-2.16-.25-4.43-1.08-4.43-4.8 0-1.06.38-1.92 1-2.6-.1-.25-.43-1.24.1-2.57 0 0 .81-.26 2.63.99A9.2 9.2 0 0 1 12 6.8c.82 0 1.65.11 2.42.32 1.82-1.25 2.63-.99 2.63-.99.53 1.33.2 2.32.1 2.57.62.68 1 1.54 1 2.6 0 3.73-2.27 4.55-4.44 4.8.35.3.66.88.66 1.78v2.66c0 .26.18.57.67.47A9.5 9.5 0 0 0 12 2.5Z"></path></svg>
-                    GitHub
-                    <span class="project-action-tooltip" aria-hidden="true">View source code on GitHub</span>
-                  </a>}
-                  {project.live && <a href={project.live} target="_blank" rel="noreferrer" aria-label={`Open ${project.title} live website`}>
-                    <svg class="project-action-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="12" rx="1.5"></rect><path d="M8 20h8M12 16.5V20"></path></svg>
-                    Live demo
-                    <span class="project-action-tooltip" aria-hidden="true">Open the live website</span>
-                  </a>}
                 </div>
               </div>
             </article>
@@ -100,7 +133,6 @@ const projectHref = (slug: string) => `${baseUrl}projects/${slug}/`;
       Math.abs(card.offsetLeft - firstOffset - track.scrollLeft) < Math.abs(cards[closest].offsetLeft - firstOffset - track.scrollLeft) ? index : closest, 0);
   };
   const updateControls = () => {
-    const index = currentIndex();
     const atStart = !track || track.scrollLeft <= 2;
     const atEnd = !track || track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
     if (previous) previous.disabled = atStart;

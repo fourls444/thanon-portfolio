@@ -18,17 +18,14 @@ import { techGroups } from "../data/tech";
         >
           <header class="tech-card-heading">
             <h3>{group.title}</h3>
-            <span class="tech-count" aria-hidden="true">{String(group.items.length).padStart(2, "0")}</span>
           </header>
           <ul>
-            {group.items.map((item, itemIndex) => {
+            {group.items.map((item) => {
               const iconSrc = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}${item.icon.replace(/^\//, "")}`;
 
               return (
                 <li
-                  class:list={["tech-item", "reveal", { "tech-item--light-icon-surface": item.lightSurface }]}
-                  data-motion="pop"
-                  data-motion-delay={String(0.18 + index * 0.1 + itemIndex * 0.025)}
+                  class:list={["tech-item", { "tech-item--light-icon-surface": item.lightSurface }]}
                 >
                   <img class="tech-icon" src={iconSrc} alt="" width="40" height="40" loading="lazy" decoding="async" />
                   <span>{item.name}</span>

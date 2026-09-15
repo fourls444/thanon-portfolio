@@ -4,8 +4,8 @@ import { profile } from "../data/profile";
 const contactLinks = [
   { label: "GitHub", href: profile.github, preview: "github.com/fourls444", action: "Open profile", icon: "github", external: true },
   { label: "LinkedIn", href: profile.linkedin, preview: "linkedin.com/in/thanon-macharoen", action: "Open profile", icon: "linkedin", external: true },
-  { label: "Email", href: `mailto:${profile.email}`, preview: profile.email, action: "Send email", icon: "email", external: false },
-  { label: "Phone", href: `tel:${profile.phone}`, preview: profile.phone, action: "Call now", icon: "phone", external: false },
+  { label: "Email", href: `mailto:${profile.email}`, preview: profile.email, action: "Send email", icon: "email", external: false, copyValue: profile.email },
+  { label: "Phone", href: `tel:${profile.phone}`, preview: profile.phone, action: "Call now", icon: "phone", external: false, copyValue: profile.phone },
 ] as const;
 ---
 
@@ -18,7 +18,7 @@ const contactLinks = [
       </div>
       <div class="contact-links" aria-label="Contact links">
           {contactLinks.map((link, index) => (
-            <div class="contact-link-wrap">
+            <div class:list={["contact-link-wrap", "copyValue" in link && "contact-link-wrap--with-copy"]}>
               <a
                 class="contact-icon-link reveal"
                 data-motion="pop"
@@ -43,8 +43,29 @@ const contactLinks = [
               )}
                 <span>{link.label}</span>
               </a>
+
+              {"copyValue" in link && (
+                <button
+                  type="button"
+                  class="contact-copy-button"
+                  data-copy-button
+                  data-copy-value={link.copyValue}
+                  aria-label={`Copy ${link.label} to clipboard`}
+                  title={`Copy ${link.label}`}
+                >
+                  <svg class="contact-copy-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <svg class="contact-check-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span class="contact-copied-badge" aria-hidden="true">Copied!</span>
+                </button>
+              )}
+
               <span class="contact-preview" id={`contact-preview-${link.icon}`} role="tooltip">
-                <span class="contact-preview-label">{link.action}</span>
+                <span class="contact-preview-label">{"copyValue" in link ? `${link.action} · Click 📋 to copy` : link.action}</span>
                 <span class="contact-preview-title">{link.label}</span>
                 <span class="contact-preview-url">{link.preview}</span>
                 <span class="contact-preview-arrow" aria-hidden="true">↗</span>
@@ -55,6 +76,52 @@ const contactLinks = [
     </div>
   </div>
   <div class="shell contact-bottom">
-    <a class="back-to-top reveal" data-motion="fade-up" data-motion-delay="0.42" href="#about">Back to top <span aria-hidden="true">↑</span></a>
+    <a class="back-to-top reveal" data-motion="fade-up" data-motion-delay="0.42" href="#top">Back to top <span aria-hidden="true">↑</span></a>
   </div>
 </section>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>("[data-copy-button]").forEach((button) => {
+    button.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const textToCopy = button.dataset.copyValue;
+      if (!textToCopy) return;
+
+      let success = false;
+      if (navigator.clipboard && window.isSecureContext) {
+        try {
+          await navigator.clipboard.writeText(textToCopy);
+          success = true;
+        } catch {
+          success = false;
+        }
+      }
+
+      if (!success) {
+        const textarea = document.createElement("textarea");
+        textarea.value = textToCopy;
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          success = Boolean((document as any).execCommand?.("copy"));
+        } catch {
+          success = false;
+        }
+        textarea.remove();
+      }
+
+      if (success) {
+        button.classList.add("is-copied");
+        const badge = button.querySelector<HTMLElement>(".contact-copied-badge");
+        if (badge) badge.textContent = "Copied!";
+
+        setTimeout(() => {
+          button.classList.remove("is-copied");
+        }, 2200);
+      }
+    });
+  });
+</script>

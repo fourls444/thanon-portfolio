@@ -13,23 +13,24 @@ export type TechGroup = {
 
 export const techGroups: TechGroup[] = [
   {
-    title: "Programming Language",
+    title: "Programming Languages",
     items: [
       { name: "JavaScript", icon: "/icons/javascript.webp" },
       { name: "TypeScript", icon: "/icons/typescript.webp" },
       { name: "Python", icon: "/icons/python.webp" },
       { name: "Java", icon: "/icons/java.webp" },
+      { name: "Dart", icon: "/icons/dart.webp" },
     ],
   },
   {
-    title: "Frontend",
+    title: "Frontend & Mobile",
     items: [
       { name: "HTML5", icon: "/icons/html5.webp" },
       { name: "CSS3", icon: "/icons/css3.webp" },
       { name: "React", icon: "/icons/react.webp" },
       { name: "Next.js", icon: "/icons/nextjs.webp" },
-      { name: "Astro", icon: "/icons/astro.webp", lightSurface: true },
       { name: "Tailwind CSS", icon: "/icons/tailwindcss.webp" },
+      { name: "Flutter", icon: "/icons/flutter.webp" },
     ],
   },
   {
@@ -40,24 +41,20 @@ export const techGroups: TechGroup[] = [
       { name: "PostgreSQL", icon: "/icons/postgresql.webp" },
       { name: "MySQL", icon: "/icons/mysql.webp" },
       { name: "Supabase", icon: "/icons/supabase.webp" },
+      { name: "Firebase", icon: "/icons/firebase.webp" },
       { name: "Drizzle ORM", icon: "/icons/drizzle.webp" },
     ],
   },
   {
-    title: "Other",
+    title: "Tools & Platforms",
     items: [
-      { name: "Flutter", icon: "/icons/flutter.webp" },
-      { name: "Dart", icon: "/icons/dart.webp" },
-      { name: "Jupyter Notebook", icon: "/icons/jupyter.webp" },
-      { name: "Pandas", icon: "/icons/pandas.webp", lightSurface: true },
-      { name: "LINE OA", icon: "/icons/line.webp" },
-      { name: "LINE Messaging API", icon: "/icons/line.webp" },
-      { name: "Firebase", icon: "/icons/firebase.webp" },
-      { name: "Dialogflow", icon: "/icons/dialogflow.webp" },
-      { name: "Solidity", icon: "/icons/solidity.webp" },
       { name: "Git", icon: "/icons/git.webp" },
       { name: "GitHub", icon: "/icons/github.webp" },
       { name: "Vercel", icon: "/icons/vercel.webp" },
+      { name: "LINE Developers", icon: "/icons/line.webp" },
+      { name: "Dialogflow", icon: "/icons/dialogflow.webp" },
+      { name: "Jupyter Notebook", icon: "/icons/jupyter.webp" },
+      { name: "Pandas", icon: "/icons/pandas.webp", lightSurface: true },
     ],
   },
 ];

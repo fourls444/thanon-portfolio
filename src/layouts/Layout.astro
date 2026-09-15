@@ -173,15 +173,6 @@ const socialImageUrl = new URL(`${baseUrl}og-cover.jpg`, siteOrigin).toString();
           const items = Array.from(group.querySelectorAll<HTMLElement>("[data-motion]"));
           if (!items.length) return;
 
-          const stopSectionReset = inView(
-            group,
-            () => () => {
-              resetRevealItems(items, motionVariants);
-            },
-            { amount: "some" },
-          );
-          stopRevealObservers.push(stopSectionReset);
-
           items.forEach((item, index) => {
             const rect = item.getBoundingClientRect();
             let skipInitialAnimation = Boolean(

@@ -6,7 +6,7 @@ export type ProjectMedia = {
   label?: string;
   description?: string;
   section?: string;
-  group?: "Public Website" | "Member Portal" | "Backoffice";
+  group?: "Public Website" | "Member Portal" | "Back Office";
 };
 
 export type Project = {
@@ -50,7 +50,7 @@ const internshipImage = (
     ? "Member Portal"
     : path.startsWith("public-")
       ? "Public Website"
-      : "Backoffice",
+      : "Back Office",
 });
 
 const internshipMedia: ProjectMedia[] = [
@@ -84,30 +84,30 @@ const internshipMedia: ProjectMedia[] = [
   internshipImage("member-portal/careers", "Member Portal · Careers", "Job search page with sample listings.", "Careers"),
   internshipImage("member-portal/tools", "Member Portal · Tools", "Useful tools for members.", "Tools"),
   internshipImage("member-portal/store", "Member Portal · Store", "Store page with sample products and prices.", "Store"),
-  internshipImage("backoffice-core/admin-login", "Backoffice · Sign In", "Sign-in page for staff.", "Access"),
-  internshipImage("backoffice-core/module-dashboard", "Backoffice · Module Dashboard", "Main page for choosing a work area.", "Dashboard"),
-  internshipImage("backoffice-core/registration-dashboard", "Backoffice · Registration Dashboard", "Summary of registrations and their status.", "Registration"),
-  internshipImage("backoffice-core/registration-list", "Backoffice · Registration List", "Searchable list of sample registrations.", "Registration"),
-  internshipImage("backoffice-core/settings", "Backoffice · Settings", "Basic system settings.", "Settings"),
-  internshipImage("backoffice-core/users", "Backoffice · Users", "User list with roles and account status.", "Users"),
-  internshipImage("backoffice-core/permissions", "Backoffice · Permissions", "Page for setting access by role.", "Permissions"),
-  internshipImage("council-website-cms/cms-dashboard", "Backoffice · Website Dashboard", "Overview of website content.", "Website CMS"),
-  internshipImage("council-website-cms/website-settings", "Backoffice · Website Settings", "Settings for the sample website.", "Website CMS"),
-  internshipImage("council-website-cms/homepage-manager", "Backoffice · Homepage Manager", "Page for managing home page content.", "Homepage"),
-  internshipImage("council-website-cms/agency-manager", "Backoffice · Department Manager", "Page for managing department information.", "Departments"),
-  internshipImage("council-website-cms/about-overview", "Backoffice · About Overview", "Page for editing the About overview.", "About"),
-  internshipImage("services-news-cms/service-overview", "Backoffice · Service Overview", "Main page for managing services.", "Services"),
-  internshipImage("services-news-cms/public-project-list", "Backoffice · Public Projects", "List of sample public projects.", "Projects"),
-  internshipImage("services-news-cms/e-service-manager", "Backoffice · E-Service Manager", "Page for managing online services.", "E-Service"),
-  internshipImage("services-news-cms/other-service-manager", "Backoffice · Other Services", "Page for managing extra services.", "Services"),
-  internshipImage("services-news-cms/news-list", "Backoffice · News", "Page for managing news items.", "News"),
-  internshipImage("operations/pharmacist-dashboard", "Backoffice · Professional Dashboard", "Summary page for a sample service area.", "Professional Service"),
-  internshipImage("operations/pharmacist-homepage", "Backoffice · Professional Homepage", "Page for managing service home content.", "Professional Service"),
-  internshipImage("operations/product-manager", "Backoffice · Product Manager", "Page for managing sample products.", "Products"),
-  internshipImage("operations/e-service-dashboard", "Backoffice · E-Service Dashboard", "Summary of online service activity.", "E-Service"),
-  internshipImage("operations/service-catalog", "Backoffice · Service Catalogue", "List of available online services.", "E-Service"),
-  internshipImage("operations/billing-dashboard", "Backoffice · Billing Dashboard", "Summary of sample payments.", "Billing"),
-  internshipImage("operations/transactions", "Backoffice · Transactions", "Searchable list of sample payments.", "Billing"),
+  internshipImage("backoffice-core/admin-login", "Back Office · Sign In", "Sign-in page for staff.", "Access"),
+  internshipImage("backoffice-core/module-dashboard", "Back Office · Module Dashboard", "Main page for choosing a work area.", "Dashboard"),
+  internshipImage("backoffice-core/registration-dashboard", "Back Office · Registration Dashboard", "Summary of registrations and their status.", "Registration"),
+  internshipImage("backoffice-core/registration-list", "Back Office · Registration List", "Searchable list of sample registrations.", "Registration"),
+  internshipImage("backoffice-core/settings", "Back Office · Settings", "Basic system settings.", "Settings"),
+  internshipImage("backoffice-core/users", "Back Office · Users", "User list with roles and account status.", "Users"),
+  internshipImage("backoffice-core/permissions", "Back Office · Permissions", "Page for setting access by role.", "Permissions"),
+  internshipImage("council-website-cms/cms-dashboard", "Back Office · Website Dashboard", "Overview of website content.", "Website CMS"),
+  internshipImage("council-website-cms/website-settings", "Back Office · Website Settings", "Settings for the sample website.", "Website CMS"),
+  internshipImage("council-website-cms/homepage-manager", "Back Office · Homepage Manager", "Page for managing home page content.", "Homepage"),
+  internshipImage("council-website-cms/agency-manager", "Back Office · Department Manager", "Page for managing department information.", "Departments"),
+  internshipImage("council-website-cms/about-overview", "Back Office · About Overview", "Page for editing the About overview.", "About"),
+  internshipImage("services-news-cms/service-overview", "Back Office · Service Overview", "Main page for managing services.", "Services"),
+  internshipImage("services-news-cms/public-project-list", "Back Office · Public Projects", "List of sample public projects.", "Projects"),
+  internshipImage("services-news-cms/e-service-manager", "Back Office · E-Service Manager", "Page for managing online services.", "E-Service"),
+  internshipImage("services-news-cms/other-service-manager", "Back Office · Other Services", "Page for managing extra services.", "Services"),
+  internshipImage("services-news-cms/news-list", "Back Office · News", "Page for managing news items.", "News"),
+  internshipImage("operations/pharmacist-dashboard", "Back Office · Professional Dashboard", "Summary page for a sample service area.", "Professional Service"),
+  internshipImage("operations/pharmacist-homepage", "Back Office · Professional Homepage", "Page for managing service home content.", "Professional Service"),
+  internshipImage("operations/product-manager", "Back Office · Product Manager", "Page for managing sample products.", "Products"),
+  internshipImage("operations/e-service-dashboard", "Back Office · E-Service Dashboard", "Summary of online service activity.", "E-Service"),
+  internshipImage("operations/service-catalog", "Back Office · Service Catalogue", "List of available online services.", "E-Service"),
+  internshipImage("operations/billing-dashboard", "Back Office · Billing Dashboard", "Summary of sample payments.", "Billing"),
+  internshipImage("operations/transactions", "Back Office · Transactions", "Searchable list of sample payments.", "Billing"),
 ];
 
 const projectEntries: Project[] = [
@@ -185,6 +185,57 @@ const projectEntries: Project[] = [
     ],
     stack: ["Flutter", "Dart", "REST API", "CRUD"],
     github: "https://github.com/fourls444/flutter_pokedex",
+  },
+  {
+    slug: "line-developer",
+    title: "LINE Developer",
+    year: 2023,
+    category: "Workshop Project",
+    description:
+      "A LINE workshop project covering chatbot Webhooks, external API data, LIFF tools, and a Rich Menu created with LINE Bot Designer.",
+    features: [
+      {
+        title: "Webhook chatbot",
+        description: "Receives LINE events and sends automated responses back to the user.",
+      },
+      {
+        title: "External API data",
+        description: "Requests weather data from a web API and returns the result inside LINE.",
+      },
+      {
+        title: "Product and order flow",
+        description: "Shows products and coupons, accepts an order confirmation, and sends a LINE Notify alert.",
+      },
+      {
+        title: "LIFF tools",
+        description: "Runs inside LINE with profile, messaging, sharing, and QR code features.",
+      },
+      {
+        title: "Rich Menu",
+        description: "Uses a Rich Menu created with LINE Bot Designer to open bot actions and LIFF pages.",
+      },
+    ],
+    media: [
+      {
+        type: "video",
+        src: "videos/line-developer/webhook.mp4",
+        alt: "LINE chatbot Webhook and external API demonstration",
+        label: "Webhook and External API Demo",
+        description:
+          "Receives commands, retrieves weather data from an external API, shows products and promotions, confirms an order, and sends a LINE Notify alert.",
+        section: "Webhook",
+      },
+      {
+        type: "video",
+        src: "videos/line-developer/liff.mp4",
+        alt: "LIFF application demonstration inside LINE",
+        label: "LIFF Application Demo",
+        description:
+          "Opens a web application inside LINE and demonstrates profile, messaging, sharing, and QR code tools.",
+        section: "LIFF",
+      },
+    ],
+    stack: ["LINE Messaging API", "LIFF", "Node.js", "Firebase", "REST API", "LINE Bot Designer"],
   },
   {
     slug: "internship-project",
