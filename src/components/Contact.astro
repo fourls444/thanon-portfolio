@@ -2,8 +2,8 @@
 import { profile } from "../data/profile";
 
 const contactLinks = [
-  { label: "GitHub", href: profile.github, preview: "github.com/fourls444", action: "Open profile", icon: "github", external: true },
-  { label: "LinkedIn", href: profile.linkedin, preview: "linkedin.com/in/thanon-macharoen", action: "Open profile", icon: "linkedin", external: true },
+  { label: "GitHub", href: profile.github, preview: "@fourls444", action: "Open profile", icon: "github", external: true, copyValue: profile.github },
+  { label: "LinkedIn", href: profile.linkedin, preview: "thanon-macharoen", action: "Open profile", icon: "linkedin", external: true, copyValue: profile.linkedin },
   { label: "Email", href: `mailto:${profile.email}`, preview: profile.email, action: "Send email", icon: "email", external: false, copyValue: profile.email },
   { label: "Phone", href: `tel:${profile.phone}`, preview: profile.phone, action: "Call now", icon: "phone", external: false, copyValue: profile.phone },
 ] as const;
@@ -18,36 +18,32 @@ const contactLinks = [
       </div>
       <div class="contact-links" aria-label="Contact links">
           {contactLinks.map((link, index) => (
-            <div class:list={["contact-link-wrap", "copyValue" in link && "contact-link-wrap--with-copy"]}>
-              <a
-                class="contact-icon-link reveal"
-                data-motion="pop"
-                data-motion-delay={String(0.16 + index * 0.06)}
-                href={link.href}
-                target={link.external ? "_blank" : undefined}
-                rel={link.external ? "noreferrer" : undefined}
-                aria-label={link.external ? `${link.label}, opens in a new tab` : link.label}
-                aria-describedby={`contact-preview-${link.icon}`}
-              >
-              {link.icon === "github" && (
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a9.5 9.5 0 0 0-3 18.51c.48.09.66-.21.66-.47v-1.67c-2.7.59-3.27-1.3-3.27-1.3-.43-1.1-1.05-1.4-1.05-1.4-.86-.59.07-.58.07-.58.95.07 1.45.98 1.45.98.85 1.45 2.22 1.03 2.76.79.09-.61.33-1.03.6-1.27-2.16-.25-4.43-1.08-4.43-4.8 0-1.06.38-1.92 1-2.6-.1-.25-.43-1.24.1-2.57 0 0 .81-.26 2.63.99A9.2 9.2 0 0 1 12 6.8c.82 0 1.65.11 2.42.32 1.82-1.25 2.63-.99 2.63-.99.53 1.33.2 2.32.1 2.57.62.68 1 1.54 1 2.6 0 3.73-2.27 4.55-4.44 4.8.35.3.66.88.66 1.78v2.66c0 .26.18.57.67.47A9.5 9.5 0 0 0 12 2.5Z" /></svg>
-              )}
-              {link.icon === "linkedin" && (
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 7.1a1.7 1.7 0 1 0 0-3.4 1.7 1.7 0 0 0 0 3.4ZM3.7 20.3h3V9h-3v11.3ZM9 9v11.3h3v-6.28c0-1.65.31-3.25 2.36-3.25 2.02 0 2.05 1.89 2.05 3.36v6.17h3v-6.83c0-3.35-.72-5.92-4.62-5.92-1.88 0-3.14 1.03-3.66 2.01h-.04V9H9Z" /></svg>
-              )}
-              {link.icon === "email" && (
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5.5h17v13h-17v-13Zm.7 1 7.8 6 7.8-6M4 17.5l5.1-4M20 17.5l-5.1-4" /></svg>
-              )}
-              {link.icon === "phone" && (
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.1 3.7 9.9 3l1.5 4-1.8 1.45a13.6 13.6 0 0 0 5.95 5.95L17 12.6l4 1.5-.7 2.8a2.4 2.4 0 0 1-2.6 1.8C10.6 17.9 6.1 13.4 5.3 6.3a2.4 2.4 0 0 1 1.8-2.6Z" /></svg>
-              )}
-                <span>{link.label}</span>
-              </a>
+            <div class="contact-item reveal" data-motion="pop" data-motion-delay={String(0.16 + index * 0.06)}>
+              <div class="contact-item-info">
+                <span class="contact-item-icon" aria-hidden="true">
+                  {link.icon === "github" && (
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a9.5 9.5 0 0 0-3 18.51c.48.09.66-.21.66-.47v-1.67c-2.7.59-3.27-1.3-3.27-1.3-.43-1.1-1.05-1.4-1.05-1.4-.86-.59.07-.58.07-.58.95.07 1.45.98 1.45.98.85 1.45 2.22 1.03 2.76.79.09-.61.33-1.03.6-1.27-2.16-.25-4.43-1.08-4.43-4.8 0-1.06.38-1.92 1-2.6-.1-.25-.43-1.24.1-2.57 0 0 .81-.26 2.63.99A9.2 9.2 0 0 1 12 6.8c.82 0 1.65.11 2.42.32 1.82-1.25 2.63-.99 2.63-.99.53 1.33.2 2.32.1 2.57.62.68 1 1.54 1 2.6 0 3.73-2.27 4.55-4.44 4.8.35.3.66.88.66 1.78v2.66c0 .26.18.57.67.47A9.5 9.5 0 0 0 12 2.5Z" /></svg>
+                  )}
+                  {link.icon === "linkedin" && (
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 7.1a1.7 1.7 0 1 0 0-3.4 1.7 1.7 0 0 0 0 3.4ZM3.7 20.3h3V9h-3v11.3ZM9 9v11.3h3v-6.28c0-1.65.31-3.25 2.36-3.25 2.02 0 2.05 1.89 2.05 3.36v6.17h3v-6.83c0-3.35-.72-5.92-4.62-5.92-1.88 0-3.14 1.03-3.66 2.01h-.04V9H9Z" /></svg>
+                  )}
+                  {link.icon === "email" && (
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5.5h17v13h-17v-13Zm.7 1 7.8 6 7.8-6M4 17.5l5.1-4M20 17.5l-5.1-4" /></svg>
+                  )}
+                  {link.icon === "phone" && (
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.1 3.7 9.9 3l1.5 4-1.8 1.45a13.6 13.6 0 0 0 5.95 5.95L17 12.6l4 1.5-.7 2.8a2.4 2.4 0 0 1-2.6 1.8C10.6 17.9 6.1 13.4 5.3 6.3a2.4 2.4 0 0 1 1.8-2.6Z" /></svg>
+                  )}
+                </span>
+                <div class="contact-item-meta">
+                  <span class="contact-item-label">{link.label}</span>
+                  <span class="contact-item-value">{link.preview}</span>
+                </div>
+              </div>
 
-              {"copyValue" in link && (
+              <div class="contact-item-actions">
                 <button
                   type="button"
-                  class="contact-copy-button"
+                  class="contact-action-btn contact-copy-button"
                   data-copy-button
                   data-copy-value={link.copyValue}
                   aria-label={`Copy ${link.label} to clipboard`}
@@ -62,14 +58,22 @@ const contactLinks = [
                   </svg>
                   <span class="contact-copied-badge" aria-hidden="true">Copied!</span>
                 </button>
-              )}
 
-              <span class="contact-preview" id={`contact-preview-${link.icon}`} role="tooltip">
-                <span class="contact-preview-label">{"copyValue" in link ? `${link.action} · Click 📋 to copy` : link.action}</span>
-                <span class="contact-preview-title">{link.label}</span>
-                <span class="contact-preview-url">{link.preview}</span>
-                <span class="contact-preview-arrow" aria-hidden="true">↗</span>
-              </span>
+                <a
+                  class="contact-action-btn contact-open-button"
+                  href={link.href}
+                  target={link.external ? "_blank" : undefined}
+                  rel={link.external ? "noreferrer" : undefined}
+                  aria-label={link.external ? `Open ${link.label}, opens in a new tab` : `Open ${link.label}`}
+                  title={`Open ${link.label}`}
+                >
+                  <svg class="contact-open-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </a>
+              </div>
             </div>
           ))}
       </div>

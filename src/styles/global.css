@@ -1043,7 +1043,7 @@ button {
   scroll-snap-align: start;
 }
 .project-card {
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid var(--line);
   background: var(--surface);
   box-shadow: 0 24px 64px oklch(0.05 0.025 258 / 0.22);
@@ -1558,13 +1558,13 @@ button {
 
 .contact-minimal-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
-  gap: clamp(32px, 7vw, 96px);
+  grid-template-columns: minmax(260px, auto) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 48px);
   align-items: center;
 }
 
 .contact-card h2 {
-  max-width: 650px;
+  max-width: 420px;
   font-size: clamp(2rem, 4vw, 3.8rem);
 }
 
@@ -1578,75 +1578,110 @@ button {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   margin: 0;
-  justify-self: end;
 }
 
-.contact-link-wrap {
+.contact-item {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 60px;
   min-width: 0;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: 0 4px 18px oklch(0.04 0.02 258 / 0.15);
+  transition: border-color 180ms ease, background-color 180ms ease, transform 180ms var(--ease), box-shadow 180ms ease;
 }
 
-.contact-icon-link {
-  display: inline-flex;
-  width: 100%;
-  min-height: 52px;
+.contact-item:hover {
+  border-color: var(--ice);
+  background: oklch(0.72 0.14 244 / 0.07);
+  box-shadow: 0 8px 24px oklch(0.04 0.02 258 / 0.25);
+  transform: translateY(-2px);
+}
+
+.contact-item-info {
+  display: flex;
+  align-items: center;
+  gap: 11px;
   min-width: 0;
+  flex: 1;
+}
+
+.contact-item-icon {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  padding: 10px 14px;
-  border: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 0.86rem;
-  font-weight: 650;
-  text-align: center;
-  transition: color 180ms ease, border-color 180ms ease, background 180ms ease, transform 180ms var(--ease);
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  color: var(--ice);
 }
 
-.contact-icon-link svg {
-  width: 19px;
-  height: 19px;
+.contact-item-icon svg {
+  width: 24px;
+  height: 24px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 1.6;
+  stroke-width: 1.7;
 }
 
-.contact-icon-link:first-child svg,
-.contact-icon-link:nth-child(2) svg {
+.contact-item:first-child .contact-item-icon svg,
+.contact-item:nth-child(2) .contact-item-icon svg {
   fill: currentColor;
   stroke: none;
 }
 
-.contact-icon-link:hover {
-  border-color: var(--ice);
-  background: oklch(0.72 0.14 244 / 0.08);
-  color: var(--text);
-  transform: translateY(-2px);
-}
-
-.contact-link-wrap--with-copy .contact-icon-link {
-  padding-right: 48px;
-}
-
-.contact-copy-button {
-  position: absolute;
-  right: 9px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
+.contact-item-meta {
   display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 2px;
+}
+
+.contact-item-label {
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.contact-item-value {
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contact-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+}
+
+.contact-action-btn {
+  position: relative;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 34px;
   height: 34px;
   padding: 0;
   border: 1px solid var(--line-strong);
-  border-radius: 6px;
+  border-radius: 7px;
   background: color-mix(in srgb, var(--ice) 8%, var(--surface-solid));
   color: var(--muted);
   cursor: pointer;
+  text-decoration: none;
   transition:
     transform 180ms var(--ease),
     border-color 180ms ease,
@@ -1655,22 +1690,25 @@ button {
     box-shadow 180ms ease;
 }
 
-.contact-copy-button:hover {
+.contact-action-btn:hover,
+.contact-action-btn:focus-visible {
   border-color: var(--ice);
-  background: color-mix(in srgb, var(--ice) 18%, var(--surface-solid));
+  background: color-mix(in srgb, var(--ice) 20%, var(--surface-solid));
   color: var(--ice);
-  transform: translateY(-50%) scale(1.08);
-  box-shadow: 0 0 14px oklch(0.86 0.09 233 / 0.22);
+  transform: scale(1.08);
+  box-shadow: 0 0 14px oklch(0.86 0.09 233 / 0.25);
+  outline: none;
 }
 
-.contact-copy-button:active {
-  transform: translateY(-50%) scale(0.95);
+.contact-action-btn:active {
+  transform: scale(0.95);
 }
 
 .contact-copy-icon,
-.contact-check-icon {
-  width: 15px;
-  height: 15px;
+.contact-check-icon,
+.contact-open-icon {
+  width: 17px;
+  height: 17px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -1722,6 +1760,7 @@ button {
   opacity: 0;
   box-shadow: 0 8px 20px oklch(0.02 0.02 258 / 0.5);
   transition: opacity 180ms ease, transform 180ms var(--ease);
+  z-index: 10;
 }
 
 .contact-copied-badge::after {
@@ -1740,79 +1779,6 @@ button {
 .contact-copy-button.is-copied .contact-copied-badge {
   opacity: 1;
   transform: translateX(50%) translateY(0);
-}
-
-.contact-preview {
-  position: absolute;
-  bottom: calc(100% + 14px);
-  left: 50%;
-  z-index: 5;
-  display: grid;
-  width: min(280px, calc(100vw - 48px));
-  gap: 5px;
-  padding: 14px 18px;
-  border: 1px solid var(--line-strong);
-  background:
-    linear-gradient(135deg, oklch(0.65 0.19 258 / 0.1), transparent 65%),
-    var(--surface-solid);
-  box-shadow: 0 18px 45px oklch(0.03 0.02 258 / 0.4);
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(-50%, -8px) scale(0.96);
-  transition: opacity 180ms ease, transform 220ms var(--ease), visibility 180ms ease;
-  visibility: hidden;
-}
-
-.contact-preview::after {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  width: 8px;
-  height: 8px;
-  border-right: 1px solid var(--line-strong);
-  border-bottom: 1px solid var(--line-strong);
-  background: var(--surface-solid);
-  content: "";
-  transform: translate(-50%, -4px) rotate(45deg);
-}
-
-.contact-link-wrap:hover .contact-preview,
-.contact-link-wrap:focus-within .contact-preview {
-  opacity: 1;
-  transform: translate(-50%, 0) scale(1);
-  visibility: visible;
-}
-
-.contact-preview-label {
-  color: var(--ice);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.64rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.contact-preview-title {
-  color: var(--text);
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.contact-preview-url {
-  overflow: hidden;
-  color: var(--muted);
-  font-size: 0.78rem;
-  line-height: 1.45;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.contact-preview-arrow {
-  position: absolute;
-  top: 16px;
-  right: 17px;
-  color: var(--ice);
-  font-size: 1rem;
 }
 
 .contact-bottom {
@@ -2019,33 +1985,6 @@ button {
     margin-inline: 0;
   }
 
-  .contact-link-wrap:nth-child(odd) .contact-preview {
-    left: 0;
-    transform: translate(0, -8px) scale(0.96);
-  }
-
-  .contact-link-wrap:nth-child(odd) .contact-preview::after {
-    left: 32px;
-  }
-
-  .contact-link-wrap:nth-child(even) .contact-preview {
-    right: 0;
-    left: auto;
-    transform: translate(0, -8px) scale(0.96);
-  }
-
-  .contact-link-wrap:nth-child(even) .contact-preview::after {
-    right: 32px;
-    left: auto;
-  }
-
-  .contact-link-wrap:nth-child(odd):hover .contact-preview,
-  .contact-link-wrap:nth-child(odd):focus-within .contact-preview,
-  .contact-link-wrap:nth-child(even):hover .contact-preview,
-  .contact-link-wrap:nth-child(even):focus-within .contact-preview {
-    transform: translate(0, 0) scale(1);
-  }
-
   .availability-badge {
     margin-block: 26px 36px;
   }
@@ -2172,6 +2111,11 @@ button {
   .contact-card {
     padding: 24px 20px;
   }
+
+  .contact-links {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
 }
 
 @media (max-width: 420px) {
@@ -2179,14 +2123,26 @@ button {
     --shell: min(100% - 24px, 1180px);
   }
 
-  .contact-links {
-    gap: 10px;
+  .contact-item {
+    padding: 10px 12px;
   }
 
-  .contact-icon-link {
-    min-height: 52px;
-    padding-inline: 10px;
-    font-size: 0.82rem;
+  .contact-item-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .contact-item-label {
+    font-size: 0.84rem;
+  }
+
+  .contact-item-value {
+    font-size: 0.70rem;
+  }
+
+  .contact-action-btn {
+    width: 32px;
+    height: 32px;
   }
 }
 
@@ -2226,17 +2182,17 @@ button {
 
 .project-stack-tooltip {
   position: absolute;
-  z-index: 6;
+  z-index: 20;
   bottom: calc(100% + 11px);
   left: 50%;
   display: grid;
   width: max-content;
-  max-width: min(280px, 72vw);
+  max-width: min(280px, calc(100vw - 64px));
   gap: 5px;
   padding: 11px 13px;
   border: 1px solid var(--line-strong);
   background: var(--bg-deep);
-  box-shadow: 0 14px 32px rgb(0 0 0 / 0.26);
+  box-shadow: 0 14px 32px rgb(0 0 0 / 0.4);
   color: var(--text);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.68rem;
@@ -2244,15 +2200,50 @@ button {
   opacity: 0;
   pointer-events: none;
   transform: translate(-50%, 6px);
-  transition: opacity 180ms ease, transform 220ms var(--ease);
+  transition: opacity 180ms ease, transform 220ms var(--ease), visibility 180ms ease;
+  visibility: hidden;
+}
+
+.project-stack-tooltip[data-align="left"] {
+  left: 0;
+  right: auto;
+  transform: translateY(6px);
+}
+
+.project-stack-tooltip[data-align="right"] {
+  right: 0;
+  left: auto;
+  transform: translateY(6px);
 }
 
 .project-stack-tooltip > strong { color: var(--ice); font-size: 0.64rem; text-transform: uppercase; }
 .project-stack-tooltip-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px 14px; }
 .project-stack-tooltip-item { display: inline-flex; min-width: 0; align-items: center; gap: 7px; color: var(--muted); white-space: nowrap; }
 .project-stack-tooltip-item img { width: 17px; height: 17px; flex: 0 0 auto; object-fit: contain; }
+
 .project-stack-more:hover .project-stack-tooltip,
-.project-stack-more:focus-visible .project-stack-tooltip { opacity: 1; transform: translate(-50%, 0); }
+.project-stack-more:focus-visible .project-stack-tooltip,
+.project-stack-more:focus .project-stack-tooltip,
+.project-stack-more.is-open .project-stack-tooltip {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.project-stack-more:hover .project-stack-tooltip[data-align="left"],
+.project-stack-more:focus-visible .project-stack-tooltip[data-align="left"],
+.project-stack-more:focus .project-stack-tooltip[data-align="left"],
+.project-stack-more.is-open .project-stack-tooltip[data-align="left"] {
+  transform: translateY(0);
+}
+
+.project-stack-more:hover .project-stack-tooltip[data-align="right"],
+.project-stack-more:focus-visible .project-stack-tooltip[data-align="right"],
+.project-stack-more:focus .project-stack-tooltip[data-align="right"],
+.project-stack-more.is-open .project-stack-tooltip[data-align="right"] {
+  transform: translateY(0);
+}
 
 .project-card-copy .project-card-actions {
   display: flex;
@@ -2301,6 +2292,18 @@ button {
   transform: translate(-50%, -4px) rotate(45deg);
 }
 
+.project-utility-links a:first-child .project-action-tooltip {
+  left: 0;
+  right: auto;
+  transform: translateY(6px);
+}
+
+.project-utility-links a:first-child .project-action-tooltip::after {
+  left: 17px;
+  right: auto;
+  transform: translateY(-4px) rotate(45deg);
+}
+
 .project-utility-links a:last-child .project-action-tooltip {
   right: 0;
   left: auto;
@@ -2321,8 +2324,15 @@ button {
   transform: translate(-50%, 0);
 }
 
+.project-utility-links a:first-child:hover .project-action-tooltip,
+.project-utility-links a:first-child:focus-visible .project-action-tooltip {
+  transform: translateY(0);
+}
+
 .project-utility-links a:last-child:hover .project-action-tooltip,
-.project-utility-links a:last-child:focus-visible .project-action-tooltip { transform: translateY(0); }
+.project-utility-links a:last-child:focus-visible .project-action-tooltip {
+  transform: translateY(0);
+}
 
 .project-action-icon {
   width: 18px;

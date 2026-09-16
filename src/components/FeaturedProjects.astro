@@ -153,4 +153,60 @@ const stackIconSrc = (technology: string) => {
   track?.addEventListener("scroll", updateControls, { passive: true });
   window.addEventListener("resize", updateControls, { passive: true });
   updateControls();
+
+  // Stack tooltip alignment & interaction
+  const positionStackTooltip = (moreEl: HTMLElement) => {
+    const tooltip = moreEl.querySelector<HTMLElement>(".project-stack-tooltip");
+    const card = moreEl.closest<HTMLElement>(".project-card");
+    if (!tooltip || !card) return;
+    const cardRect = card.getBoundingClientRect();
+    const moreRect = moreEl.getBoundingClientRect();
+    const tooltipWidth = tooltip.offsetWidth || 240;
+    const halfWidth = tooltipWidth / 2;
+    const moreCenter = moreRect.left + moreRect.width / 2;
+
+    const leftBoundary = cardRect.left + 16;
+    const rightBoundary = cardRect.right - 16;
+
+    if (moreCenter - halfWidth < leftBoundary) {
+      tooltip.setAttribute("data-align", "left");
+    } else if (moreCenter + halfWidth > rightBoundary) {
+      tooltip.setAttribute("data-align", "right");
+    } else {
+      tooltip.setAttribute("data-align", "center");
+    }
+  };
+
+  const stackMores = Array.from(document.querySelectorAll<HTMLElement>(".project-stack-more"));
+  stackMores.forEach((moreEl) => {
+    moreEl.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = moreEl.classList.contains("is-open");
+      stackMores.forEach((el) => {
+        if (el !== moreEl) el.classList.remove("is-open");
+      });
+      if (!isOpen) {
+        positionStackTooltip(moreEl);
+        moreEl.classList.add("is-open");
+      } else {
+        moreEl.classList.remove("is-open");
+      }
+    });
+    moreEl.addEventListener("mouseenter", () => positionStackTooltip(moreEl));
+    moreEl.addEventListener("focus", () => positionStackTooltip(moreEl));
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!(e.target as HTMLElement)?.closest(".project-stack-more")) {
+      stackMores.forEach((el) => el.classList.remove("is-open"));
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    stackMores.forEach((moreEl) => {
+      if (moreEl.classList.contains("is-open")) {
+        positionStackTooltip(moreEl);
+      }
+    });
+  }, { passive: true });
 </script>
