@@ -128,6 +128,20 @@ const projectEntries: Project[] = [
         label: "Crystal Dreams Storefront",
         description: "Live storefront home page and brand banner.",
       },
+      {
+        type: "image",
+        src: "images/projects/crystal-dreams/storefront-home.png",
+        alt: "Crystal Dreams storefront home page with the campaign banner",
+        label: "Storefront Home Page",
+        description: "Live storefront with campaign content, product navigation, and shopping cart access.",
+      },
+      {
+        type: "image",
+        src: "images/projects/crystal-dreams/admin-dashboard-redacted.png",
+        alt: "Crystal Dreams admin dashboard with order identifiers blurred for privacy",
+        label: "Admin Dashboard (Redacted)",
+        description: "Sales, orders, and inventory overview. Sensitive order information has been redacted.",
+      },
     ],
     features: [
       {
