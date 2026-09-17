@@ -14,6 +14,7 @@ export type Project = {
   title: string;
   year: number;
   category: string;
+  projectType: "Web" | "Mobile" | "LINE Development";
   description: string;
   features: Array<{
     title: string;
@@ -116,6 +117,7 @@ const projectEntries: Project[] = [
     title: "Crystal Dreams",
     year: 2026,
     category: "Freelance Project",
+    projectType: "Web",
     description:
       "A full-stack e-commerce application for a retail client, covering product browsing, checkout, payment confirmation, delivery tracking, inventory, reviews, and admin operations.",
     media: [
@@ -153,7 +155,8 @@ const projectEntries: Project[] = [
     slug: "together-space",
     title: "TogetherSpace",
     year: 2026,
-    category: "Web Project",
+    category: "Academic Project",
+    projectType: "Web",
     description:
       "A web app where friends, couples, and families can share tasks, calendars, photos, chat, and expenses.",
     features: [
@@ -189,7 +192,8 @@ const projectEntries: Project[] = [
     slug: "flutter-pokedex",
     title: "Flutter Pokedex",
     year: 2025,
-    category: "Mobile Project",
+    category: "Academic Project",
+    projectType: "Mobile",
     description:
       "A hands-on Flutter project built to practice mobile app basics. It includes Pokémon search, type filters, details, API data, and admin tools.",
     features: [
@@ -228,7 +232,8 @@ const projectEntries: Project[] = [
     slug: "line-developer",
     title: "LINE Developer",
     year: 2023,
-    category: "Workshop Project",
+    category: "Academic Project",
+    projectType: "LINE Development",
     description:
       "A LINE workshop project covering chatbot Webhooks, external API data, LIFF tools, and a Rich Menu created with LINE Bot Designer.",
     features: [
@@ -280,6 +285,7 @@ const projectEntries: Project[] = [
     title: "Internship Project",
     year: 2026,
     category: "Co-operative Education",
+    projectType: "Web",
     description:
       "A web system built during my internship. It includes a public website, member portal, back-office tools, and an API connected to PostgreSQL.",
     confidentialityNote:
