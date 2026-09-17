@@ -727,37 +727,6 @@ button {
   line-height: 1.65;
 }
 
-.about-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin: 1.25rem 0 2rem;
-}
-
-.about-actions a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.75rem;
-  padding: 0.65rem 1rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  color: var(--text);
-  text-decoration: none;
-  transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
-}
-
-.about-actions a:first-child {
-  border-color: var(--cobalt);
-  background: var(--cobalt);
-  color: var(--bg);
-}
-
-.about-actions a:hover,
-.about-actions a:focus-visible {
-  border-color: var(--cobalt);
-  color: var(--ice);
-}
-
 .about-profile {
   display: grid;
   grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr);
