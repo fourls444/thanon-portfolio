@@ -6,7 +6,16 @@ export type ProjectMedia = {
   label?: string;
   description?: string;
   section?: string;
-  group?: "Public Website" | "Member Portal" | "Back Office";
+  group?:
+    | "Public Website"
+    | "Member Portal"
+    | "Back Office"
+    | "Storefront"
+    | "Back Office · Dashboard"
+    | "Back Office · Orders"
+    | "Back Office · Products"
+    | "Back Office · Reviews"
+    | "Back Office · Settings";
 };
 
 export type Project = {
@@ -127,22 +136,65 @@ const projectEntries: Project[] = [
         alt: "Crystal Dreams storefront banner introducing the pillow brand",
         label: "Crystal Dreams Storefront",
         description: "Live storefront home page and brand banner.",
+        group: "Storefront",
       },
       {
         type: "image",
-        src: "images/projects/crystal-dreams/storefront-home.png",
-        alt: "Crystal Dreams storefront home page with the campaign banner",
-        label: "Storefront Home Page",
-        description: "Live storefront with campaign content, product navigation, and shopping cart access.",
+        src: "images/projects/crystal-dreams/storefront-full.png",
+        fullSrc: "images/projects/crystal-dreams/storefront-full.png",
+        alt: "Full Crystal Dreams storefront home page from header to footer",
+        label: "Storefront · Full Home Page",
+        description: "Full-page capture covering the campaign banner, product catalogue, sample reviews, and footer.",
+        group: "Storefront",
       },
       {
         type: "image",
-        src: "images/projects/crystal-dreams/admin-dashboard-redacted.png",
-        alt: "Crystal Dreams admin dashboard with order identifiers blurred for privacy",
-        label: "Admin Dashboard (Redacted)",
-        description: "Sales, orders, and inventory overview. Sensitive order information has been redacted.",
+        src: "images/projects/crystal-dreams/backoffice-dashboard.png",
+        fullSrc: "images/projects/crystal-dreams/backoffice-dashboard.png",
+        alt: "Crystal Dreams Back Office dashboard with order rows blurred for privacy",
+        label: "Back Office · Dashboard",
+        description: "Sales, order, and inventory overview using sample data. Order rows are blurred for privacy.",
+        group: "Back Office · Dashboard",
+      },
+      {
+        type: "image",
+        src: "images/projects/crystal-dreams/backoffice-orders.png",
+        fullSrc: "images/projects/crystal-dreams/backoffice-orders.png",
+        alt: "Crystal Dreams Back Office orders page with customer and order data blurred",
+        label: "Back Office · Orders & Payments",
+        description: "Order and payment management screen. Customer and order data are blurred for privacy.",
+        group: "Back Office · Orders",
+      },
+      {
+        type: "image",
+        src: "images/projects/crystal-dreams/backoffice-products.png",
+        fullSrc: "images/projects/crystal-dreams/backoffice-products.png",
+        alt: "Crystal Dreams Back Office product and inventory management page",
+        label: "Back Office · Products & Inventory",
+        description: "Product visibility, pricing, stock, ordering, and catalogue management using sample inventory data.",
+        group: "Back Office · Products",
+      },
+      {
+        type: "image",
+        src: "images/projects/crystal-dreams/backoffice-reviews.png",
+        fullSrc: "images/projects/crystal-dreams/backoffice-reviews.png",
+        alt: "Crystal Dreams Back Office review management page with review rows blurred",
+        label: "Back Office · Reviews",
+        description: "Review moderation and visibility controls. Review entries are sample data and are blurred for privacy.",
+        group: "Back Office · Reviews",
+      },
+      {
+        type: "image",
+        src: "images/projects/crystal-dreams/backoffice-settings.png",
+        fullSrc: "images/projects/crystal-dreams/backoffice-settings.png",
+        alt: "Crystal Dreams Back Office system settings page with configuration values blurred",
+        label: "Back Office · System Settings",
+        description: "Homepage banners, payments, cash on delivery, and footer settings. Configuration values are blurred.",
+        group: "Back Office · Settings",
       },
     ],
+    confidentialityNote:
+      "Some storefront and Back Office records shown in these captures use sample data. Customer-related rows and configuration values are blurred or redacted for privacy.",
     features: [
       {
         title: "Shopping and orders",
@@ -163,7 +215,6 @@ const projectEntries: Project[] = [
     ],
     stack: ["Next.js", "React", "TypeScript", "Supabase", "Drizzle ORM", "PostgreSQL"],
     github: "https://github.com/fourls444/crystaldreams",
-    live: "https://crystaldreams.vercel.app/",
   },
   {
     slug: "together-space",

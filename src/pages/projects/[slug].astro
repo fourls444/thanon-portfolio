@@ -115,7 +115,10 @@ const stackIconSrc = (technology: string) => {
               ))}
             </div>
           ) : mediaGroups.map(([group, mediaItems]) => (
-            <details class="case-study-group" open={project.slug === "internship-project" && group === "Public Website"}>
+            <details
+              class="case-study-group"
+              open={(project.slug === "internship-project" && group === "Public Website") || (project.slug === "crystal-dreams" && group === "Storefront")}
+            >
               <summary>
                 <span class="case-study-group-name"><span>{group}</span><small>{mediaItems.length} {mediaItems.length === 1 ? "preview" : "previews"}</small></span>
                 <span class="case-study-group-action">
