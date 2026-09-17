@@ -112,6 +112,34 @@ const internshipMedia: ProjectMedia[] = [
 
 const projectEntries: Project[] = [
   {
+    slug: "crystal-dreams",
+    title: "Crystal Dreams",
+    year: 2026,
+    category: "Freelance Project",
+    description:
+      "A full-stack e-commerce application for a retail client, covering product browsing, checkout, payment confirmation, delivery tracking, inventory, reviews, and admin operations.",
+    features: [
+      {
+        title: "Shopping and orders",
+        description: "Browse products, manage a cart, create orders, and follow delivery status.",
+      },
+      {
+        title: "Payment flows",
+        description: "Supports PromptPay slip payment and Beam payment integration for checkout.",
+      },
+      {
+        title: "Operations",
+        description: "Provides inventory, product, order, review, and settings workflows for administrators.",
+      },
+      {
+        title: "Full-stack implementation",
+        description: "Uses Next.js API routes and Supabase-backed PostgreSQL data access with Drizzle ORM.",
+      },
+    ],
+    stack: ["Next.js", "React", "TypeScript", "Supabase", "Drizzle ORM", "PostgreSQL"],
+    github: "https://github.com/fourls444/crystaldreams",
+  },
+  {
     slug: "together-space",
     title: "TogetherSpace",
     year: 2026,
@@ -283,4 +311,9 @@ const projectEntries: Project[] = [
   },
 ];
 
-export const projects = [...projectEntries].sort((a, b) => b.year - a.year);
+const featuredOrder = ["internship-project", "crystal-dreams", "together-space", "flutter-pokedex"];
+
+export const projects = [...projectEntries].sort((a, b) => {
+  if (a.year !== b.year) return b.year - a.year;
+  return featuredOrder.indexOf(a.slug) - featuredOrder.indexOf(b.slug);
+});

@@ -8,6 +8,9 @@ export const profile = {
   github: "https://github.com/fourls444",
   linkedin: "https://www.linkedin.com/in/thanon-macharoen/",
   location: "Bangkok, Thailand",
+  degree: "Bachelor of Science in Computer Science",
+  university: "Rangsit University",
+  expectedGraduation: "2026",
 } as const;
 
 export const getAge = (dateOfBirth: string, today = new Date()) => {

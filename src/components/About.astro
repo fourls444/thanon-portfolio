@@ -3,10 +3,10 @@ import { getAge, profile } from "../data/profile";
 
 const age = getAge(profile.dateOfBirth);
 const interestedPositions = [
-  "Full Stack Developer",
+  "Full-Stack Developer",
   "Backend Developer",
-  "Data Analyst",
   "Mobile Developer",
+  "Data Analyst",
 ];
 const imageSrc = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}icons/me.jpg`;
 ---
@@ -15,10 +15,16 @@ const imageSrc = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}icons/me.jpg`;
   <div class="shell">
     <div class="section-heading about-heading reveal" data-motion="fade-up">
       <span class="section-index">01 / About Me</span>
-      <h1 id="about-title">Get to know me.</h1>
+      <h1 id="about-title">Thanon Macharoen</h1>
+      <p class="about-lede">Full-Stack Developer building web applications, backend APIs, and internal tools with Next.js, TypeScript, Node.js, PostgreSQL, and Supabase.</p>
     </div>
 
     <p class="availability-badge reveal" data-motion="fade-up" data-motion-delay="0.08"><span aria-hidden="true"></span>Open to opportunities</p>
+
+    <div class="about-actions reveal" data-motion="fade-up" data-motion-delay="0.1">
+      <a href="#projects">View Projects</a>
+      <a href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
+    </div>
 
     <div class="about-profile">
       <figure class="about-photo reveal" data-photo-slot data-motion="from-left-scale" data-motion-delay="0.12">
@@ -86,8 +92,8 @@ const imageSrc = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}icons/me.jpg`;
             </header>
             <dl class="profile-group-facts">
               <div>
-                <dt>University</dt>
-                <dd>Rangsit University<br />Computer Science<br />GPAX 3.78</dd>
+                <dt>Education</dt>
+                <dd>{profile.university}<br />{profile.degree}<br />GPAX 3.78<br />Expected Graduation: {profile.expectedGraduation}</dd>
               </div>
             </dl>
           </section>
