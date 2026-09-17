@@ -10,12 +10,7 @@ export type ProjectMedia = {
     | "Public Website"
     | "Member Portal"
     | "Back Office"
-    | "Storefront"
-    | "Back Office · Dashboard"
-    | "Back Office · Orders"
-    | "Back Office · Products"
-    | "Back Office · Reviews"
-    | "Back Office · Settings";
+    | "Storefront";
 };
 
 export type Project = {
@@ -154,7 +149,7 @@ const projectEntries: Project[] = [
         alt: "Crystal Dreams Back Office dashboard with order rows blurred for privacy",
         label: "Back Office · Dashboard",
         description: "Sales, order, and inventory overview using sample data. Order rows are blurred for privacy.",
-        group: "Back Office · Dashboard",
+        group: "Back Office",
       },
       {
         type: "image",
@@ -163,7 +158,7 @@ const projectEntries: Project[] = [
         alt: "Crystal Dreams Back Office orders page with customer and order data blurred",
         label: "Back Office · Orders & Payments",
         description: "Order and payment management screen. Customer and order data are blurred for privacy.",
-        group: "Back Office · Orders",
+        group: "Back Office",
       },
       {
         type: "image",
@@ -172,7 +167,7 @@ const projectEntries: Project[] = [
         alt: "Crystal Dreams Back Office product and inventory management page",
         label: "Back Office · Products & Inventory",
         description: "Product visibility, pricing, stock, ordering, and catalogue management using sample inventory data.",
-        group: "Back Office · Products",
+        group: "Back Office",
       },
       {
         type: "image",
@@ -181,7 +176,7 @@ const projectEntries: Project[] = [
         alt: "Crystal Dreams Back Office review management page with review rows blurred",
         label: "Back Office · Reviews",
         description: "Review moderation and visibility controls. Review entries are sample data and are blurred for privacy.",
-        group: "Back Office · Reviews",
+        group: "Back Office",
       },
       {
         type: "image",
@@ -190,7 +185,7 @@ const projectEntries: Project[] = [
         alt: "Crystal Dreams Back Office system settings page with configuration values blurred",
         label: "Back Office · System Settings",
         description: "Homepage banners, payments, cash on delivery, and footer settings. Configuration values are blurred.",
-        group: "Back Office · Settings",
+        group: "Back Office",
       },
     ],
     confidentialityNote:
