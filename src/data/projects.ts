@@ -118,6 +118,15 @@ const projectEntries: Project[] = [
     category: "Freelance Project",
     description:
       "A full-stack e-commerce application for a retail client, covering product browsing, checkout, payment confirmation, delivery tracking, inventory, reviews, and admin operations.",
+    media: [
+      {
+        type: "image",
+        src: "images/projects/crystal-dreams/cover.png",
+        alt: "Crystal Dreams storefront banner introducing the pillow brand",
+        label: "Crystal Dreams Storefront",
+        description: "Live storefront home page and brand banner.",
+      },
+    ],
     features: [
       {
         title: "Shopping and orders",
@@ -138,6 +147,7 @@ const projectEntries: Project[] = [
     ],
     stack: ["Next.js", "React", "TypeScript", "Supabase", "Drizzle ORM", "PostgreSQL"],
     github: "https://github.com/fourls444/crystaldreams",
+    live: "https://crystaldreams.vercel.app/",
   },
   {
     slug: "together-space",
