@@ -623,6 +623,16 @@ button {
   color: var(--text);
 }
 
+.nav-links a.is-active {
+  color: var(--text);
+}
+
+.nav-links a.is-active::after {
+  height: 2px;
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
 .nav-links a:hover::after {
   transform: scaleX(1);
   transform-origin: left;
@@ -711,6 +721,7 @@ button {
 
 .about-section {
   overflow: hidden;
+  background: linear-gradient(180deg, oklch(0.105 0.02 258 / 0.22), transparent 58%);
 }
 
 .about-heading {
@@ -885,7 +896,7 @@ button {
 }
 
 .tech-section {
-  background: linear-gradient(180deg, oklch(0.965 0.012 245 / 0.014), transparent 35%);
+  background: linear-gradient(180deg, oklch(0.65 0.19 258 / 0.065), transparent 48%);
 }
 
 .tech-section .section-heading,
@@ -1012,7 +1023,7 @@ button {
 }
 
 .projects-section {
-  background: linear-gradient(180deg, oklch(0.965 0.012 245 / 0.014), transparent 40%);
+  background: linear-gradient(180deg, oklch(0.72 0.14 244 / 0.06), transparent 48%);
 }
 
 .project-section-header {
@@ -1050,11 +1061,26 @@ button {
   flex: 0 0 min(560px, calc((100% - 18px) / 2));
   scroll-snap-align: start;
 }
+
 .project-card {
   overflow: visible;
   border: 1px solid var(--line);
   background: var(--surface);
   box-shadow: 0 24px 64px oklch(0.05 0.025 258 / 0.22);
+  transition: transform 240ms var(--ease), border-color 240ms ease, box-shadow 240ms ease;
+}
+
+@media (hover: hover) {
+  .project-card:hover {
+    border-color: var(--line-strong);
+    box-shadow: 0 30px 72px oklch(0.05 0.025 258 / 0.3);
+    transform: translateY(-5px);
+  }
+
+  .project-card:hover .project-media-slide img {
+    filter: saturate(1.08);
+    transform: scale(1.02);
+  }
 }
 
 .project-card.is-project-target { animation: project-card-focus 520ms var(--ease) both; }
@@ -1565,6 +1591,7 @@ button {
 
 .contact-section {
   padding-bottom: clamp(80px, 10vw, 120px);
+  background: linear-gradient(180deg, oklch(0.86 0.09 233 / 0.045), transparent 50%);
 }
 
 .contact-card {
@@ -2020,27 +2047,6 @@ button {
     align-items: end;
   }
 
-  .project-carousel-controls button {
-    width: 50px;
-    height: 50px;
-  }
-
-  .project-carousel-controls button:first-child {
-    left: -10px;
-  }
-
-  .project-carousel-controls button:last-child {
-    right: -10px;
-  }
-
-  .project-media-toolbar {
-    max-width: calc(100% - 128px);
-  }
-
-  .project-media-picker select {
-    width: min(190px, 36vw);
-  }
-
   .project-card-grid--scroll {
     display: flex;
   }
@@ -2100,18 +2106,6 @@ button {
   .project-media-dialog-details p {
     max-width: 52ch;
     margin-top: 5px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .project-card-grid--scroll {
-    scroll-behavior: auto;
-  }
-
-  .project-media-dialog,
-  .project-carousel-controls button,
-  .project-carousel-controls svg {
-    transition: none;
   }
 }
 
@@ -2423,7 +2417,7 @@ button {
 
 .project-carousel-dock {
   display: grid;
-  grid-template-columns: repeat(2, auto);
+  grid-template-columns: repeat(2, minmax(112px, auto));
   width: fit-content;
   max-width: 100%;
   align-items: center;
@@ -2433,6 +2427,47 @@ button {
   border: 1px solid var(--line-strong);
   background: var(--bg-deep);
   box-shadow: 0 18px 46px oklch(0.04 0.025 258 / 0.34);
+}
+
+.project-carousel-meter {
+  display: grid;
+  grid-column: 1 / -1;
+  min-width: 244px;
+  gap: 8px;
+  padding-inline: 6px;
+}
+
+.project-carousel-status {
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
+.project-carousel-status--mobile {
+  display: none;
+}
+
+.project-carousel-status [data-projects-current] {
+  color: var(--ice);
+}
+
+.project-carousel-progress {
+  display: block;
+  width: 100%;
+  height: 2px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.project-carousel-progress > span {
+  display: block;
+  width: 0%;
+  height: 100%;
+  background: var(--ice);
+  transition: width 320ms var(--ease);
 }
 
 .project-carousel-dock button {
@@ -2489,8 +2524,9 @@ button {
   }
 
   .project-carousel-dock {
-    grid-template-columns: repeat(2, 48px);
-    width: fit-content;
+    display: grid;
+    grid-template-columns: repeat(2, 48px) minmax(86px, 1fr);
+    width: min(100%, 340px);
     gap: 10px;
   }
 
@@ -2508,9 +2544,31 @@ button {
     clip: rect(0 0 0 0);
     white-space: nowrap;
   }
+
+  .project-carousel-meter {
+    grid-column: auto;
+    min-width: 0;
+    padding-inline: 2px;
+  }
+
+  .project-carousel-status--desktop {
+    display: none;
+  }
+
+  .project-carousel-status--mobile {
+    display: block;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .project-card-grid--scroll {
+    scroll-behavior: auto;
+  }
+
+  .project-media-dialog {
+    transition: none;
+  }
+
   *,
   *::before,
   *::after {
