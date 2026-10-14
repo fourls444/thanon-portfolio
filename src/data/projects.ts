@@ -2,6 +2,7 @@ export type ProjectMedia = {
   type: "image" | "video";
   src: string;
   alt: string;
+  builtByMe?: boolean;
   fullSrc?: string;
   label?: string;
   description?: string;
@@ -20,6 +21,7 @@ export type Project = {
   category: string;
   projectType: "Web" | "Mobile" | "LINE Development";
   description: string;
+  contributions?: ProjectContribution[];
   features: Array<{
     title: string;
     description: string;
@@ -30,6 +32,13 @@ export type Project = {
   github?: string;
   live?: string;
   previews?: ProjectPreview[];
+};
+
+export type ProjectContribution = {
+  title: string;
+  description: string;
+  media?: ProjectMedia;
+  mediaCaption?: string;
 };
 
 export type ProjectPreview = {
@@ -43,11 +52,13 @@ const internshipImage = (
   label: string,
   description: string,
   section: string,
+  builtByMe = false,
 ): ProjectMedia => ({
   type: "image",
   src: `images/projects/internship/generated-v2/${path}.webp`,
   fullSrc: `images/projects/internship/generated-v2/${path}.webp`,
   alt: `${label}, sample Internship Project screen`,
+  builtByMe,
   label,
   description,
   section,
@@ -76,19 +87,19 @@ const internshipMedia: ProjectMedia[] = [
   internshipImage("public-services/public-projects", "Public Website · Public Projects", "Project list with filters and short details.", "Projects"),
   internshipImage("public-services/e-service-index", "Public Website · E-Service Index", "List of online services in one place.", "E-Service"),
   internshipImage("public-services/e-service-form", "Public Website · E-Service Form", "Step-by-step online service form.", "E-Service"),
-  internshipImage("public-services/meetings", "Public Website · Meetings", "List of upcoming meetings and activities.", "Activities"),
-  internshipImage("public-services/news", "Public Website · News", "News page with search and categories.", "News"),
+  internshipImage("public-services/meetings", "Public Website · Meetings", "List of upcoming meetings and activities.", "Activities", true),
+  internshipImage("public-services/news", "Public Website · News", "News page with search and categories.", "News", true),
   internshipImage("public-services/other-services", "Public Website · Other Services", "Extra services grouped by type.", "Public Services"),
   internshipImage("member-portal/login", "Member Portal · Sign In", "Sign-in page using sample account details.", "Member Portal"),
   internshipImage("member-portal/member-home", "Member Portal · Dashboard", "Member home page with important updates.", "Member Home"),
   internshipImage("member-portal/profile", "Member Portal · Profile", "Member profile using sample personal data.", "Profile"),
   internshipImage("member-portal/member-services", "Member Portal · Services", "Quick links to common member services.", "Services"),
   internshipImage("member-portal/member-meetings", "Member Portal · Appointments", "Appointment list with clear status labels.", "Appointments"),
-  internshipImage("member-portal/learning-hub", "Member Portal · Learning Hub", "Articles, videos, and learning materials.", "Learning"),
-  internshipImage("member-portal/courses", "Member Portal · Courses", "Course list with filters and progress.", "Learning"),
-  internshipImage("member-portal/careers", "Member Portal · Careers", "Job search page with sample listings.", "Careers"),
+  internshipImage("member-portal/learning-hub", "Member Portal · Learning Hub", "Articles, videos, and learning materials.", "Learning", true),
+  internshipImage("member-portal/courses", "Member Portal · Courses", "Course list with filters and progress.", "Learning", true),
+  internshipImage("member-portal/careers", "Member Portal · Careers", "Job search page with sample listings.", "Careers", true),
   internshipImage("member-portal/tools", "Member Portal · Tools", "Useful tools for members.", "Tools"),
-  internshipImage("member-portal/store", "Member Portal · Store", "Store page with sample products and prices.", "Store"),
+  internshipImage("member-portal/store", "Member Portal · Store", "Store page with sample products and prices.", "Store", true),
   internshipImage("backoffice-core/admin-login", "Back Office · Sign In", "Sign-in page for staff.", "Access"),
   internshipImage("backoffice-core/module-dashboard", "Back Office · Module Dashboard", "Main page for choosing a work area.", "Dashboard"),
   internshipImage("backoffice-core/registration-dashboard", "Back Office · Registration Dashboard", "Summary of registrations and their status.", "Registration"),
@@ -114,6 +125,12 @@ const internshipMedia: ProjectMedia[] = [
   internshipImage("operations/billing-dashboard", "Back Office · Billing Dashboard", "Summary of sample payments.", "Billing"),
   internshipImage("operations/transactions", "Back Office · Transactions", "Searchable list of sample payments.", "Billing"),
 ];
+
+const getInternshipMedia = (path: string): ProjectMedia => {
+  const media = internshipMedia.find((item) => item.src.endsWith(path));
+  if (!media) throw new Error(`Missing Internship Project media: ${path}`);
+  return media;
+};
 
 const projectEntries: Project[] = [
   {
@@ -350,6 +367,34 @@ const projectEntries: Project[] = [
       "A web system built during my internship. It includes a public website, member portal, back-office tools, and an API connected to PostgreSQL.",
     confidentialityNote:
       "The real project is private under an NDA. These previews were remade with new names, images, and sample data, so no private information is shown.",
+    contributions: [
+      {
+        title: "Public and pharmacist-facing website",
+        description:
+          "I developed news pages, search and filtering interfaces, API-connected views, and responsive layouts for public visitors and pharmacists using Next.js, React, and TypeScript.",
+        media: getInternshipMedia("public-services/news.webp"),
+        mediaCaption:
+          "I developed this searchable, category-filtered news listing and connected it to API data.",
+      },
+      {
+        title: "News CMS",
+        description:
+          "I built workflows to add, edit, delete, and reorder news, with a rich-text editor, content preview, and scheduled publishing.",
+        media: getInternshipMedia("services-news-cms/news-list.webp"),
+        mediaCaption:
+          "I developed this searchable news management list, including content actions, status filters, and publishing dates.",
+      },
+      {
+        title: "Backend API collaboration",
+        description:
+          "I contributed to Backend API development with Node.js and Fastify, worked with PostgreSQL through Drizzle ORM, and stored images in Supabase Storage.",
+      },
+      {
+        title: "Team workflow and Agentic AI",
+        description:
+          "I used Git to collaborate with the team and used Agentic AI to support planning, development, and code review.",
+      },
+    ],
     features: [
       {
         title: "Public information website",

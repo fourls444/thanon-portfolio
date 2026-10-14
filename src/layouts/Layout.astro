@@ -9,7 +9,7 @@ type Props = {
 
 const {
   title = "Portfolio Thanon",
-  description = "Portfolio of Thanon, a Computer Science student and software developer focused on modern web experiences.",
+  description = "Thanon Macharoen, a recent Computer Science graduate from Rangsit University. Explore web, backend, mobile, and LINE chatbot projects.",
 } = Astro.props;
 
 const baseUrl = import.meta.env.BASE_URL.endsWith("/")
@@ -17,7 +17,7 @@ const baseUrl = import.meta.env.BASE_URL.endsWith("/")
   : `${import.meta.env.BASE_URL}/`;
 const faviconHref = `${baseUrl}favicon.svg`;
 const siteOrigin = Astro.site ?? new URL("https://fourls444.github.io");
-const canonicalUrl = new URL(baseUrl, siteOrigin).toString();
+const canonicalUrl = new URL(Astro.url.pathname, siteOrigin).toString();
 const socialImageUrl = new URL(`${baseUrl}og-cover.jpg`, siteOrigin).toString();
 ---
 

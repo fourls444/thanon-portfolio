@@ -10,7 +10,7 @@ export const profile = {
   location: "Bangkok, Thailand",
   degree: "Bachelor of Science in Computer Science",
   university: "Rangsit University",
-  expectedGraduation: "2026",
+  gpa: "3.78",
 } as const;
 
 export const getAge = (dateOfBirth: string, today = new Date()) => {

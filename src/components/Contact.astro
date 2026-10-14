@@ -80,11 +80,13 @@ const contactLinks = [
     </div>
   </div>
   <div class="shell contact-bottom">
+    <p role="status" data-copy-status></p>
     <a class="back-to-top reveal" data-motion="fade-up" data-motion-delay="0.42" href="#top">Back to top <span aria-hidden="true">↑</span></a>
   </div>
 </section>
 
 <script>
+  const copyStatus = document.querySelector<HTMLElement>("[data-copy-status]");
   document.querySelectorAll<HTMLButtonElement>("[data-copy-button]").forEach((button) => {
     button.addEventListener("click", async (e) => {
       e.preventDefault();
@@ -118,6 +120,7 @@ const contactLinks = [
       }
 
       if (success) {
+        if (copyStatus) copyStatus.textContent = "Copied to clipboard.";
         button.classList.add("is-copied");
         const badge = button.querySelector<HTMLElement>(".contact-copied-badge");
         if (badge) badge.textContent = "Copied!";
@@ -125,6 +128,8 @@ const contactLinks = [
         setTimeout(() => {
           button.classList.remove("is-copied");
         }, 2200);
+      } else {
+        if (copyStatus) copyStatus.textContent = "Could not copy. Please select and copy the contact details above.";
       }
     });
   });

@@ -16,7 +16,11 @@ const imageSrc = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}icons/me.jpg`;
     <div class="section-heading about-heading reveal" data-motion="fade-up">
       <span class="section-index">01 / About Me</span>
       <h1 id="about-title">Thanon Macharoen</h1>
-      <p class="about-lede">Full-Stack Developer building web applications, backend APIs, and internal tools with Next.js, TypeScript, Node.js, PostgreSQL, and Supabase.</p>
+      <div class="about-introduction">
+        <p>Recent Computer Science graduate from Rangsit University with a GPA of <span class="about-gpa">3.78.</span></p>
+        <p>During my internship, I helped develop PharmacyOne's website, CMS<span class="about-intro-line">and backend API with Next.js, React, TypeScript, Node.js, and PostgreSQL.</span></p>
+        <p>My other projects include e-commerce, a LINE OA chatbot, and Flutter/Dart apps. <span class="about-intro-line">I also have a foundation in Python for computer vision and data analysis, and in Java OOP.</span></p>
+      </div>
     </div>
 
     <p class="availability-badge reveal" data-motion="fade-up" data-motion-delay="0.08"><span aria-hidden="true"></span>Open to opportunities</p>
@@ -88,7 +92,7 @@ const imageSrc = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}icons/me.jpg`;
             <dl class="profile-group-facts">
               <div>
                 <dt>Education</dt>
-                <dd>{profile.university}<br />{profile.degree}<br />GPAX 3.78<br />Expected Graduation: {profile.expectedGraduation}</dd>
+                <dd>{profile.university}<br />{profile.degree}<br />GPA {profile.gpa}</dd>
               </div>
             </dl>
           </section>

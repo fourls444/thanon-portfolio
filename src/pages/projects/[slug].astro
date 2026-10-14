@@ -21,6 +21,7 @@ const groupedMedia = (project.media ?? []).reduce<Record<string, ProjectMedia[]>
 }, {});
 const mediaGroups = Object.entries(groupedMedia);
 const hasSingleMediaGroup = mediaGroups.length === 1;
+const hasBuiltByMeMedia = (project.media ?? []).some((media) => media.builtByMe);
 const heroMedia = project.media?.[0];
 const projectTechIcons = new Map<string, string>([
   ...techGroups.flatMap((group) => group.items.map((item) => [item.name, item.icon] as [string, string])),
@@ -39,7 +40,7 @@ const stackIconSrc = (technology: string) => {
 };
 ---
 
-<Layout title={project.title}>
+<Layout title={`${project.title} | Thanon Macharoen`} description={project.description}>
   <Navbar />
   <main class="project-detail" id="main-content" tabindex="-1">
     <section class="project-detail-hero shell">
@@ -84,6 +85,44 @@ const stackIconSrc = (technology: string) => {
       )}
     </section>
 
+    {project.contributions && project.contributions.length > 0 && (
+      <section class="case-study-section work-section shell" aria-labelledby="work-title">
+        <div class="case-study-heading case-study-heading--with-note">
+          <h2 id="work-title">What I Worked On</h2>
+          <p>These are the areas I was responsible for. Features below describe the wider system.</p>
+        </div>
+        <div class="work-contribution-list">
+          {project.contributions.map((contribution, contributionIndex) => (
+            <article class:list={["work-contribution", !contribution.media && "work-contribution--text-only"]}>
+              <span class="work-contribution-index">{String(contributionIndex + 1).padStart(2, "0")}</span>
+              <div class="work-contribution-copy">
+                <h3>{contribution.title}</h3>
+                <p>{contribution.description}</p>
+              </div>
+              {contribution.media && (
+                <figure class="work-contribution-media">
+                  <button
+                    type="button"
+                    class="case-study-screen-open"
+                    data-screen-open
+                    data-full-src={mediaSrc(contribution.media.fullSrc ?? contribution.media.src)}
+                    data-full-alt={contribution.media.alt}
+                    data-label={contribution.media.label ?? contribution.title}
+                    data-description={contribution.mediaCaption ?? contribution.description}
+                    aria-haspopup="dialog"
+                  >
+                    <img src={mediaSrc(contribution.media.src)} alt={contribution.media.alt} width="900" height="560" loading="lazy" decoding="async" />
+                    <span>Open preview</span>
+                  </button>
+                  {contribution.mediaCaption && <figcaption>{contribution.mediaCaption}</figcaption>}
+                </figure>
+              )}
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+
     <section class="case-study-section shell" aria-labelledby="features-title">
       <div class="case-study-heading"><h2 id="features-title">Features</h2></div>
       <ol class="feature-list">
@@ -95,7 +134,10 @@ const stackIconSrc = (technology: string) => {
 
     {(project.media?.length ?? 0) > 1 && Object.keys(groupedMedia).length > 0 && (
       <section class="case-study-section case-study-screens shell" aria-labelledby="screens-title">
-        <div class="case-study-heading"><h2 id="screens-title">Media</h2></div>
+        <div class:list={["case-study-heading", hasBuiltByMeMedia && "case-study-heading--media"]}>
+          <h2 id="screens-title">Media</h2>
+          {hasBuiltByMeMedia && <p><span aria-hidden="true">★</span> Built by me marks screens I implemented from layout to working interactions.</p>}
+        </div>
         <div class:list={["case-study-groups", hasSingleMediaGroup && "case-study-groups--direct"]}>
           {hasSingleMediaGroup ? (
             <div class="case-study-screen-grid case-study-screen-grid--direct">
@@ -110,7 +152,7 @@ const stackIconSrc = (technology: string) => {
                       <span>Open preview</span>
                     </button>
                   ) : <img src={mediaSrc(media.src)} alt={media.alt} width="900" height="560" loading="lazy" decoding="async" />}
-                  {(media.label || media.description) && <figcaption><strong>{media.label}</strong>{media.description && <span>{media.description}</span>}</figcaption>}
+                  {(media.label || media.description || media.builtByMe) && <figcaption>{media.builtByMe && <span class="case-study-work-badge"><span aria-hidden="true">★</span> Built by me</span>}<strong>{media.label}</strong>{media.description && <span>{media.description}</span>}</figcaption>}
                 </figure>
               ))}
             </div>
@@ -139,7 +181,7 @@ const stackIconSrc = (technology: string) => {
                         <span>Open preview</span>
                       </button>
                     ) : <img src={mediaSrc(media.src)} alt={media.alt} width="900" height="560" loading="lazy" decoding="async" />}
-                    {(media.label || media.description) && <figcaption><strong>{media.label}</strong>{media.description && <span>{media.description}</span>}</figcaption>}
+                    {(media.label || media.description || media.builtByMe) && <figcaption>{media.builtByMe && <span class="case-study-work-badge"><span aria-hidden="true">★</span> Built by me</span>}<strong>{media.label}</strong>{media.description && <span>{media.description}</span>}</figcaption>}
                   </figure>
                 ))}
               </div>
