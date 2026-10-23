@@ -27,7 +27,7 @@ const links = [
       <span></span><span></span>
     </button>
 
-    <div class="nav-links" id="primary-menu" data-menu>
+    <div class="nav-links" id="primary-menu" data-menu data-lenis-prevent>
       {links.map((link) => <a href={link.href} data-section-link={link.href.split("#")[1]}>{link.label}</a>)}
     </div>
   </nav>
@@ -37,6 +37,8 @@ const links = [
   const header = document.querySelector<HTMLElement>("[data-header]");
   const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
   const menu = document.querySelector<HTMLElement>("[data-menu]");
+
+  if (toggle && menu) document.documentElement.classList.add("js");
 
   const setMenuLabelState = (state: "open" | "close") => {
     if (!toggle) return;

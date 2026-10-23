@@ -4,10 +4,13 @@ export type ProjectMedia = {
   alt: string;
   builtByMe?: boolean;
   fullSrc?: string;
+  previewSrc?: string;
+  poster?: string;
   label?: string;
   description?: string;
   section?: string;
   group?:
+    | "Frontend"
     | "Public Website"
     | "Member Portal"
     | "Back Office"
@@ -21,7 +24,6 @@ export type Project = {
   category: string;
   projectType: "Web" | "Mobile" | "LINE Development";
   description: string;
-  contributions?: ProjectContribution[];
   features: Array<{
     title: string;
     description: string;
@@ -34,13 +36,6 @@ export type Project = {
   previews?: ProjectPreview[];
 };
 
-export type ProjectContribution = {
-  title: string;
-  description: string;
-  media?: ProjectMedia;
-  mediaCaption?: string;
-};
-
 export type ProjectPreview = {
   src: string;
   alt: string;
@@ -48,89 +43,33 @@ export type ProjectPreview = {
 };
 
 const internshipImage = (
-  path: string,
+  name: string,
   label: string,
   description: string,
-  section: string,
-  builtByMe = false,
 ): ProjectMedia => ({
   type: "image",
-  src: `images/projects/internship/generated-v2/${path}.webp`,
-  fullSrc: `images/projects/internship/generated-v2/${path}.webp`,
-  alt: `${label}, sample Internship Project screen`,
-  builtByMe,
+  src: `images/projects/internship/contributions/${name}.png`,
+  fullSrc: `images/projects/internship/contributions/${name}.png`,
+  alt: `${label}, Internship Project preview with confidential content blurred`,
   label,
   description,
-  section,
-  group: path.startsWith("member-portal/")
-    ? "Member Portal"
-    : path.startsWith("public-")
-      ? "Public Website"
-      : "Back Office",
+  group: label.startsWith("Back Office") ? "Back Office" : "Frontend",
 });
 
 const internshipMedia: ProjectMedia[] = [
-  {
-    type: "image",
-    src: "images/projects/internship/generated-v2/public-information/home.webp",
-    fullSrc: "images/projects/internship/generated-v2/public-information/home.webp",
-    alt: "Sample Internship Project public website home page",
-    label: "Public Website · Home",
-    description: "Home page with services, activities, and news.",
-    section: "Home",
-    group: "Public Website",
-  },
-  internshipImage("public-information/about-overview", "Public Website · About Overview", "Short introduction to the sample organization.", "About"),
-  internshipImage("public-information/department", "Public Website · Departments", "List of departments and their services.", "About"),
-  internshipImage("public-information/contact", "Public Website · Contact", "Contact details and a simple message form.", "Contact"),
-  internshipImage("public-services/service-index", "Public Website · Service Index", "List of public services with search.", "Public Services"),
-  internshipImage("public-services/public-projects", "Public Website · Public Projects", "Project list with filters and short details.", "Projects"),
-  internshipImage("public-services/e-service-index", "Public Website · E-Service Index", "List of online services in one place.", "E-Service"),
-  internshipImage("public-services/e-service-form", "Public Website · E-Service Form", "Step-by-step online service form.", "E-Service"),
-  internshipImage("public-services/meetings", "Public Website · Meetings", "List of upcoming meetings and activities.", "Activities", true),
-  internshipImage("public-services/news", "Public Website · News", "News page with search and categories.", "News", true),
-  internshipImage("public-services/other-services", "Public Website · Other Services", "Extra services grouped by type.", "Public Services"),
-  internshipImage("member-portal/login", "Member Portal · Sign In", "Sign-in page using sample account details.", "Member Portal"),
-  internshipImage("member-portal/member-home", "Member Portal · Dashboard", "Member home page with important updates.", "Member Home"),
-  internshipImage("member-portal/profile", "Member Portal · Profile", "Member profile using sample personal data.", "Profile"),
-  internshipImage("member-portal/member-services", "Member Portal · Services", "Quick links to common member services.", "Services"),
-  internshipImage("member-portal/member-meetings", "Member Portal · Appointments", "Appointment list with clear status labels.", "Appointments"),
-  internshipImage("member-portal/learning-hub", "Member Portal · Learning Hub", "Articles, videos, and learning materials.", "Learning", true),
-  internshipImage("member-portal/courses", "Member Portal · Courses", "Course list with filters and progress.", "Learning", true),
-  internshipImage("member-portal/careers", "Member Portal · Careers", "Job search page with sample listings.", "Careers", true),
-  internshipImage("member-portal/tools", "Member Portal · Tools", "Useful tools for members.", "Tools"),
-  internshipImage("member-portal/store", "Member Portal · Store", "Store page with sample products and prices.", "Store", true),
-  internshipImage("backoffice-core/admin-login", "Back Office · Sign In", "Sign-in page for staff.", "Access"),
-  internshipImage("backoffice-core/module-dashboard", "Back Office · Module Dashboard", "Main page for choosing a work area.", "Dashboard"),
-  internshipImage("backoffice-core/registration-dashboard", "Back Office · Registration Dashboard", "Summary of registrations and their status.", "Registration"),
-  internshipImage("backoffice-core/registration-list", "Back Office · Registration List", "Searchable list of sample registrations.", "Registration"),
-  internshipImage("backoffice-core/settings", "Back Office · Settings", "Basic system settings.", "Settings"),
-  internshipImage("backoffice-core/users", "Back Office · Users", "User list with roles and account status.", "Users"),
-  internshipImage("backoffice-core/permissions", "Back Office · Permissions", "Page for setting access by role.", "Permissions"),
-  internshipImage("council-website-cms/cms-dashboard", "Back Office · Website Dashboard", "Overview of website content.", "Website CMS"),
-  internshipImage("council-website-cms/website-settings", "Back Office · Website Settings", "Settings for the sample website.", "Website CMS"),
-  internshipImage("council-website-cms/homepage-manager", "Back Office · Homepage Manager", "Page for managing home page content.", "Homepage"),
-  internshipImage("council-website-cms/agency-manager", "Back Office · Department Manager", "Page for managing department information.", "Departments"),
-  internshipImage("council-website-cms/about-overview", "Back Office · About Overview", "Page for editing the About overview.", "About"),
-  internshipImage("services-news-cms/service-overview", "Back Office · Service Overview", "Main page for managing services.", "Services"),
-  internshipImage("services-news-cms/public-project-list", "Back Office · Public Projects", "List of sample public projects.", "Projects"),
-  internshipImage("services-news-cms/e-service-manager", "Back Office · E-Service Manager", "Page for managing online services.", "E-Service"),
-  internshipImage("services-news-cms/other-service-manager", "Back Office · Other Services", "Page for managing extra services.", "Services"),
-  internshipImage("services-news-cms/news-list", "Back Office · News", "Page for managing news items.", "News"),
-  internshipImage("operations/pharmacist-dashboard", "Back Office · Professional Dashboard", "Summary page for a sample service area.", "Professional Service"),
-  internshipImage("operations/pharmacist-homepage", "Back Office · Professional Homepage", "Page for managing service home content.", "Professional Service"),
-  internshipImage("operations/product-manager", "Back Office · Product Manager", "Page for managing sample products.", "Products"),
-  internshipImage("operations/e-service-dashboard", "Back Office · E-Service Dashboard", "Summary of online service activity.", "E-Service"),
-  internshipImage("operations/service-catalog", "Back Office · Service Catalogue", "List of available online services.", "E-Service"),
-  internshipImage("operations/billing-dashboard", "Back Office · Billing Dashboard", "Summary of sample payments.", "Billing"),
-  internshipImage("operations/transactions", "Back Office · Transactions", "Searchable list of sample payments.", "Billing"),
+  internshipImage("news", "Public Website · News", "I developed the news listing and detail pages, category filters, pagination, and API connection."),
+  internshipImage("meetings", "Public Website · Meetings", "I implemented meeting pages and pagination, and improved meeting details and banners."),
+  internshipImage("contact", "Public Website · Contact", "I built the contact page and form, and updated the shared footer."),
+  internshipImage("learning", "Member Portal · Learning", "I developed the learning page, category sections, statistics, and supporting components."),
+  internshipImage("courses", "Member Portal · Courses", "I implemented the course listing, course cards, search, and filters."),
+  internshipImage("careers", "Member Portal · Careers", "I developed the job listing, filtering, sorting, pagination, and responsive cards."),
+  internshipImage("store", "Member Portal · Store", "I implemented the product listing, search, categories, and API-connected store components."),
+  internshipImage("news-cms", "Back Office · News", "I developed and improved news management, including search, filters, publishing status, and pagination."),
+  internshipImage("news-editor", "Back Office · News Editor", "I built and improved the add/edit forms, rich-text editing, images, and content preview."),
+  internshipImage("website-settings", "Back Office · Website Settings", "I improved the website settings form and connected public site details to the API."),
+  internshipImage("policy-cms", "Back Office · Policies", "I implemented policy management with add, edit, delete, and drag-and-drop ordering."),
+  internshipImage("policy-projects", "Back Office · Policy Projects", "I implemented project management within each policy, including status, PDF uploads, and reordering."),
 ];
-
-const getInternshipMedia = (path: string): ProjectMedia => {
-  const media = internshipMedia.find((item) => item.src.endsWith(path));
-  if (!media) throw new Error(`Missing Internship Project media: ${path}`);
-  return media;
-};
 
 const projectEntries: Project[] = [
   {
@@ -257,8 +196,107 @@ const projectEntries: Project[] = [
     media: [
       {
         type: "image",
-        src: "https://raw.githubusercontent.com/fourls444/togetherspace/master/public/images/logo.jpg",
-        alt: "TogetherSpace project preview",
+        src: "images/projects/together-space/dashboard.png",
+        fullSrc: "images/projects/together-space/dashboard.png",
+        alt: "TogetherSpace · Shared Rooms",
+        label: "Shared Rooms",
+        description: "View shared rooms for friends, couples, and families.",
+      },
+      {
+        type: "image",
+        src: "images/projects/together-space/room-home.png",
+        fullSrc: "images/projects/together-space/room-home.png",
+        alt: "TogetherSpace · Room Home",
+        label: "Room Home",
+        description: "Open room features and see a summary of the shared space. The room code is blurred.",
+      },
+      {
+        type: "image",
+        src: "images/projects/together-space/create-room.png",
+        fullSrc: "images/projects/together-space/create-room.png",
+        alt: "TogetherSpace · Create a Room",
+        label: "Create a Room",
+        description: "Choose a name, room type, and optional room image.",
+      },
+      {
+        type: "image",
+        src: "images/projects/together-space/join-room.png",
+        fullSrc: "images/projects/together-space/join-room.png",
+        alt: "TogetherSpace · Join a Room",
+        label: "Join a Room",
+        description: "Enter a room or invitation code to join a shared space.",
+      },
+      {
+        type: "image",
+        src: "images/projects/together-space/board.png",
+        fullSrc: "images/projects/together-space/board.png",
+        alt: "TogetherSpace · Room Board",
+        label: "Room Board",
+        description: "Share notes, checklists, and polls to plan together.",
+      },
+      {
+        type: "image",
+        src: "images/projects/together-space/calendar.png",
+        fullSrc: "images/projects/together-space/calendar.png",
+        alt: "TogetherSpace · Shared Calendar",
+        label: "Shared Calendar",
+        description: "View shared dates and activities in a monthly calendar.",
+      },
+      {
+        type: "image",
+        src: "images/projects/together-space/album.png",
+        fullSrc: "images/projects/together-space/album.png",
+        alt: "TogetherSpace · Photo Album",
+        label: "Photo Album",
+        description: "Upload and organize photos. An empty room is shown to protect personal photos.",
+      },
+      {
+        type: "image",
+        src: "images/projects/together-space/map.png",
+        fullSrc: "images/projects/together-space/map.png",
+        alt: "TogetherSpace · Shared Map",
+        label: "Shared Map",
+        description: "Explore the globe or map and save places together. No private locations are shown.",
+      },
+      {
+        type: "image",
+        src: "images/projects/together-space/finance.png",
+        fullSrc: "images/projects/together-space/finance.png",
+        alt: "TogetherSpace · Shared Expenses",
+        label: "Shared Expenses",
+        description: "Track shared costs and funds. This room has no expense records.",
+      },
+      {
+        type: "image",
+        src: "images/projects/together-space/chat.png",
+        fullSrc: "images/projects/together-space/chat.png",
+        alt: "TogetherSpace · Room Chat",
+        label: "Room Chat",
+        description: "Chat with members of a room. An empty conversation is shown.",
+      },
+      {
+        type: "image",
+        src: "images/projects/together-space/members.png",
+        fullSrc: "images/projects/together-space/members.png",
+        alt: "TogetherSpace · Room Members",
+        label: "Room Members",
+        description: "View members and their roles using a sample account.",
+      },
+      {
+        type: "image",
+        src: "images/projects/together-space/settings.png",
+        fullSrc: "images/projects/together-space/settings.png",
+        alt: "TogetherSpace · Room Settings",
+        label: "Room Settings",
+        description: "Manage room details, room profiles, invitations, and appearance.",
+      },
+      {
+        type: "image",
+        src: "images/projects/together-space/login.png",
+        fullSrc: "images/projects/together-space/login.png",
+        alt: "TogetherSpace · Sign In",
+        label: "Sign In",
+        description: "Sign in to open your shared rooms.",
       },
     ],
     stack: ["Next.js", "React", "TypeScript", "Supabase", "Drizzle ORM"],
@@ -304,6 +342,148 @@ const projectEntries: Project[] = [
     ],
     stack: ["Flutter", "Dart", "REST API", "CRUD"],
     github: "https://github.com/fourls444/flutter_pokedex",
+  },
+  {
+    slug: "university-logo-recognition",
+    title: "University Logo Recognition",
+    year: 2024,
+    category: "Academic Project",
+    projectType: "Web",
+    description:
+      "Started as a coursework project and developed further into a more complete Python app for identifying Thai university logos, with image upload, cropping, ranked suggestions, and answer review.",
+    features: [
+      {
+        title: "Image search",
+        description: "Upload a color or grayscale logo and search with the full image or a selected crop.",
+      },
+      {
+        title: "Ranked results",
+        description: "View up to five university suggestions with model scores and an uncertainty notice when results need checking.",
+      },
+      {
+        title: "Reviewed corrections",
+        description: "Submit a corrected answer for an administrator to review before using it in future training.",
+      },
+      {
+        title: "Training report",
+        description: "View training charts, dataset counts, and validation results in the Streamlit app.",
+      },
+    ],
+    media: [
+      {
+        type: "image",
+        src: "images/projects/university-logo-recognition/02-color-results.png",
+        fullSrc: "images/projects/university-logo-recognition/02-color-results.png",
+        alt: "University Logo Recognition showing a Rangsit University logo and ranked university suggestions",
+        label: "Logo Search Results",
+        description: "Ranked suggestions with model scores. Results require review and are not guaranteed to be correct.",
+      },
+      {
+        type: "image",
+        src: "images/projects/university-logo-recognition/01-image-preview.png",
+        fullSrc: "images/projects/university-logo-recognition/01-image-preview.png",
+        alt: "Uploaded Rangsit University logo preview before searching",
+        label: "Image Upload",
+        description: "Preview an uploaded image before searching.",
+      },
+      {
+        type: "image",
+        src: "images/projects/university-logo-recognition/03-crop-modal.png",
+        fullSrc: "images/projects/university-logo-recognition/03-crop-modal.png",
+        alt: "Crop tool selecting the Rangsit University logo within an image",
+        label: "Crop Image",
+        description: "Select the logo area to use for searching.",
+      },
+      {
+        type: "image",
+        src: "images/projects/university-logo-recognition/07-grayscale-results.png",
+        fullSrc: "images/projects/university-logo-recognition/07-grayscale-results.png",
+        alt: "University suggestions from a grayscale Rangsit University logo image",
+        label: "Grayscale Search",
+        description: "Search using a grayscale image and review the suggestions.",
+      },
+      {
+        type: "image",
+        src: "images/projects/university-logo-recognition/04-correction.png",
+        fullSrc: "images/projects/university-logo-recognition/04-correction.png",
+        alt: "Form for submitting a corrected university answer",
+        label: "Answer Correction",
+        description: "Submit a correction for review before future training.",
+      },
+      {
+        type: "image",
+        src: "images/projects/university-logo-recognition/05-admin-access.png",
+        fullSrc: "images/projects/university-logo-recognition/05-admin-access.png",
+        alt: "Administrator sign-in for reviewing corrections",
+        label: "Admin Access",
+        description: "Protect correction review with administrator access.",
+      },
+      {
+        type: "image",
+        src: "images/projects/university-logo-recognition/06-training-report.png",
+        fullSrc: "images/projects/university-logo-recognition/06-training-report.png",
+        alt: "Training report with validation results, dataset counts, and a chart",
+        label: "Training Report",
+        description: "Review model training and validation results.",
+      },
+    ],
+    stack: ["Python", "Pandas", "Jupyter Notebook", "TensorFlow", "Streamlit"],
+    github: "https://github.com/fourls444/university-logo-recognition",
+  },
+  {
+    slug: "thai-health-analytics",
+    title: "Thai Health Analytics",
+    year: 2024,
+    category: "Personal Project",
+    projectType: "Web",
+    description:
+      "A health data dashboard extended from coursework into a more complete project. Choose a year or region, compare areas, and explore data through simple charts and tables.",
+    features: [
+      {
+        title: "Health data overview",
+        description: "Choose a year and region to view a summary of the data.",
+      },
+      {
+        title: "Regional comparison",
+        description: "Compare provinces and regions using bar charts.",
+      },
+      {
+        title: "Trend charts",
+        description: "Use line charts to see how the data changes over time.",
+      },
+      {
+        title: "Data quality checks",
+        description: "Check for missing or repeated data and download tables as CSV files.",
+      },
+    ],
+    media: [
+      {
+        type: "image",
+        src: "images/projects/thai-health-analytics/cover.png",
+        fullSrc: "images/projects/thai-health-analytics/overview.png",
+        alt: "Thai Health Analytics dashboard with year and region filters, summary figures, and charts",
+        label: "Dashboard Overview",
+        description: "Choose a year or region and explore the data with charts.",
+      },
+      {
+        type: "image",
+        src: "images/projects/thai-health-analytics/trends.png",
+        fullSrc: "images/projects/thai-health-analytics/trends.png",
+        alt: "Thai Health Analytics showing a line chart of daily data",
+        label: "Data Trends",
+        description: "Choose a category to view how the data changes over time.",
+      },
+      {
+        type: "image",
+        src: "images/projects/thai-health-analytics/data-quality.png",
+        fullSrc: "images/projects/thai-health-analytics/data-quality.png",
+        alt: "Thai Health Analytics showing data counts and a table of basic checks",
+        label: "Basic Data Checks",
+        description: "View basic checks for missing or repeated data and download a CSV file.",
+      },
+    ],
+    stack: ["Python", "Pandas", "Jupyter Notebook"],
+    github: "https://github.com/fourls444/thai-health-analytics",
   },
   {
     slug: "line-developer",
@@ -364,57 +544,25 @@ const projectEntries: Project[] = [
     category: "Co-operative Education",
     projectType: "Web",
     description:
-      "A web system built during my internship. It includes a public website, member portal, back-office tools, and an API connected to PostgreSQL.",
+      "My contributions to a team internship project, including public and member-facing pages, news management, website settings, policy tools, and related backend API work.",
     confidentialityNote:
-      "The real project is private under an NDA. These previews were remade with new names, images, and sample data, so no private information is shown.",
-    contributions: [
-      {
-        title: "Public and pharmacist-facing website",
-        description:
-          "I developed news pages, search and filtering interfaces, API-connected views, and responsive layouts for public visitors and pharmacists using Next.js, React, and TypeScript.",
-        media: getInternshipMedia("public-services/news.webp"),
-        mediaCaption:
-          "I developed this searchable, category-filtered news listing and connected it to API data.",
-      },
-      {
-        title: "News CMS",
-        description:
-          "I built workflows to add, edit, delete, and reorder news, with a rich-text editor, content preview, and scheduled publishing.",
-        media: getInternshipMedia("services-news-cms/news-list.webp"),
-        mediaCaption:
-          "I developed this searchable news management list, including content actions, status filters, and publishing dates.",
-      },
-      {
-        title: "Backend API collaboration",
-        description:
-          "I contributed to Backend API development with Node.js and Fastify, worked with PostgreSQL through Drizzle ORM, and stored images in Supabase Storage.",
-      },
-      {
-        title: "Team workflow and Agentic AI",
-        description:
-          "I used Git to collaborate with the team and used Agentic AI to support planning, development, and code review.",
-      },
-    ],
+      "Some content is blurred for privacy, including organization names, logos, identifying images, and policy and project details. Descriptions summarize the pages and features I developed or improved within the team project.",
     features: [
       {
-        title: "Public information website",
-        description: "Shows services, projects, activities, news, and contact details.",
+        title: "Public and member pages",
+        description: "Developed and improved news, meetings, contact, learning, courses, careers, and store pages, including search, filters, and pagination where applicable.",
       },
       {
-        title: "Member portal",
-        description: "Lets members view profiles, appointments, services, and learning materials.",
+        title: "News management",
+        description: "Developed and improved news management and add/edit forms with rich-text editing, images, content previews, and publishing controls.",
       },
       {
-        title: "Backoffice tools",
-        description: "Lets staff manage content, users, services, and payments.",
+        title: "Website settings",
+        description: "Improved the website settings form and connected public website details to the API.",
       },
       {
-        title: "Shared backend API",
-        description: "Connects each website to shared data in PostgreSQL.",
-      },
-      {
-        title: "Roles and permissions",
-        description: "Controls what each staff role can view and manage.",
+        title: "Policies and projects",
+        description: "Implemented policy and project management with add, edit, delete, reordering, project status, and PDF uploads.",
       },
     ],
     media: internshipMedia,
@@ -432,9 +580,20 @@ const projectEntries: Project[] = [
   },
 ];
 
-const featuredOrder = ["internship-project", "crystal-dreams", "together-space", "flutter-pokedex"];
+const featuredOrder = ["internship-project", "crystal-dreams", "together-space", "flutter-pokedex", "university-logo-recognition", "thai-health-analytics", "line-developer"];
 
-export const projects = [...projectEntries].sort((a, b) => {
+export const projects = projectEntries.map((project) => ({
+  ...project,
+  media: project.media?.map((media) => {
+    if (/^https?:\/\//i.test(media.src)) return media;
+    return {
+      ...media,
+      ...(media.type === "image"
+        ? { previewSrc: media.src.replace(/\.(png|jpe?g|webp)$/i, ".preview.webp") }
+        : { poster: media.src.replace(/\.(mp4|webm)$/i, ".poster.webp") }),
+    };
+  }),
+})).sort((a, b) => {
   if (a.year !== b.year) return b.year - a.year;
   return featuredOrder.indexOf(a.slug) - featuredOrder.indexOf(b.slug);
 });

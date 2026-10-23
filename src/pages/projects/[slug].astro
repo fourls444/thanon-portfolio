@@ -2,7 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/Navbar.astro";
 import { projects, type Project, type ProjectMedia } from "../../data/projects";
-import { techGroups } from "../../data/tech";
+import { projectIconPath } from "../../data/project-icons";
 
 export function getStaticPaths() {
   return projects.map((project, index) => ({ params: { slug: project.slug }, props: { project, index } }));
@@ -23,24 +23,13 @@ const mediaGroups = Object.entries(groupedMedia);
 const hasSingleMediaGroup = mediaGroups.length === 1;
 const hasBuiltByMeMedia = (project.media ?? []).some((media) => media.builtByMe);
 const heroMedia = project.media?.[0];
-const projectTechIcons = new Map<string, string>([
-  ...techGroups.flatMap((group) => group.items.map((item) => [item.name, item.icon] as [string, string])),
-  ["Fastify", "/icons/fastify.svg"],
-  ["REST API", "/icons/api.svg"],
-  ["CRUD", "/icons/database.svg"],
-  ["LIFF", "/icons/line.webp"],
-  ["LINE Bot Designer", "/icons/line.webp"],
-  ["LINE Messaging API", "/icons/line.webp"],
-  ["LINE Developers", "/icons/line.webp"],
-  ["LINE OA", "/icons/line.webp"],
-]);
 const stackIconSrc = (technology: string) => {
-  const icon = projectTechIcons.get(technology) ?? "/icons/api.svg";
+  const icon = projectIconPath(technology);
   return `${baseUrl}${icon.replace(/^\/+/, "")}`;
 };
 ---
 
-<Layout title={`${project.title} | Thanon Macharoen`} description={project.description}>
+<Layout title={project.title} description={project.description}>
   <Navbar />
   <main class="project-detail" id="main-content" tabindex="-1">
     <section class="project-detail-hero shell">
@@ -77,60 +66,23 @@ const stackIconSrc = (technology: string) => {
       </div>
       {project.confidentialityNote && <aside class="project-confidentiality"><strong>Privacy note</strong><p>{project.confidentialityNote}</p></aside>}
       {heroMedia && (
-        <div class:list={["project-detail-cover", heroMedia.fullSrc && "project-detail-cover--top", heroMedia.src.includes("logo.jpg") && "project-detail-cover--logo"]}>
+        <div class:list={["project-detail-cover", heroMedia.type === "video" && "project-detail-cover--video", heroMedia.fullSrc && "project-detail-cover--top", heroMedia.src.includes("logo.jpg") && "project-detail-cover--logo"]}>
           {heroMedia.type === "video" ? (
-            <video src={mediaSrc(heroMedia.src)} aria-label={heroMedia.alt} controls muted playsinline preload="metadata">Your browser does not support the video tag.</video>
-          ) : <img src={mediaSrc(heroMedia.src)} alt={heroMedia.alt} width="1440" height="900" decoding="async" />}
+            <video src={mediaSrc(heroMedia.src)} poster={heroMedia.poster && mediaSrc(heroMedia.poster)} aria-label={heroMedia.alt} controls muted playsinline preload="none">Your browser does not support the video tag.</video>
+          ) : <img src={mediaSrc(heroMedia.previewSrc ?? heroMedia.src)} alt={heroMedia.alt} width="1440" height="900" decoding="async" />}
         </div>
       )}
     </section>
 
-    {project.contributions && project.contributions.length > 0 && (
-      <section class="case-study-section work-section shell" aria-labelledby="work-title">
-        <div class="case-study-heading case-study-heading--with-note">
-          <h2 id="work-title">What I Worked On</h2>
-          <p>These are the areas I was responsible for. Features below describe the wider system.</p>
-        </div>
-        <div class="work-contribution-list">
-          {project.contributions.map((contribution, contributionIndex) => (
-            <article class:list={["work-contribution", !contribution.media && "work-contribution--text-only"]}>
-              <span class="work-contribution-index">{String(contributionIndex + 1).padStart(2, "0")}</span>
-              <div class="work-contribution-copy">
-                <h3>{contribution.title}</h3>
-                <p>{contribution.description}</p>
-              </div>
-              {contribution.media && (
-                <figure class="work-contribution-media">
-                  <button
-                    type="button"
-                    class="case-study-screen-open"
-                    data-screen-open
-                    data-full-src={mediaSrc(contribution.media.fullSrc ?? contribution.media.src)}
-                    data-full-alt={contribution.media.alt}
-                    data-label={contribution.media.label ?? contribution.title}
-                    data-description={contribution.mediaCaption ?? contribution.description}
-                    aria-haspopup="dialog"
-                  >
-                    <img src={mediaSrc(contribution.media.src)} alt={contribution.media.alt} width="900" height="560" loading="lazy" decoding="async" />
-                    <span>Open preview</span>
-                  </button>
-                  {contribution.mediaCaption && <figcaption>{contribution.mediaCaption}</figcaption>}
-                </figure>
-              )}
-            </article>
-          ))}
-        </div>
-      </section>
-    )}
 
-    <section class="case-study-section shell" aria-labelledby="features-title">
+    {project.features.length > 0 && <section class="case-study-section shell" aria-labelledby="features-title">
       <div class="case-study-heading"><h2 id="features-title">Features</h2></div>
       <ol class="feature-list">
         {project.features.map((feature, featureIndex) => (
           <li><span>{String(featureIndex + 1).padStart(2, "0")}</span><div><h3>{feature.title}</h3><p>{feature.description}</p></div></li>
         ))}
       </ol>
-    </section>
+    </section>}
 
     {(project.media?.length ?? 0) > 1 && Object.keys(groupedMedia).length > 0 && (
       <section class="case-study-section case-study-screens shell" aria-labelledby="screens-title">
@@ -144,14 +96,14 @@ const stackIconSrc = (technology: string) => {
               {mediaGroups[0][1].map((media) => (
                 <figure class:list={["case-study-screen", media.type === "video" && "case-study-screen--video"]}>
                   {media.type === "video" ? (
-                    <video src={mediaSrc(media.src)} aria-label={media.alt} controls muted playsinline preload="metadata">Your browser does not support the video tag.</video>
+                    <video src={mediaSrc(media.src)} poster={media.poster && mediaSrc(media.poster)} aria-label={media.alt} controls muted playsinline preload="none">Your browser does not support the video tag.</video>
                   ) : media.fullSrc ? (
                     <button type="button" class="case-study-screen-open" data-screen-open data-full-src={mediaSrc(media.fullSrc)}
                       data-full-alt={media.alt} data-label={media.label ?? project.title} data-description={media.description ?? ""} aria-haspopup="dialog">
-                      <img src={mediaSrc(media.src)} alt={media.alt} width="900" height="560" loading="lazy" decoding="async" />
+                      <img src={mediaSrc(media.previewSrc ?? media.src)} alt={media.alt} width="900" height="560" loading="lazy" decoding="async" />
                       <span>Open preview</span>
                     </button>
-                  ) : <img src={mediaSrc(media.src)} alt={media.alt} width="900" height="560" loading="lazy" decoding="async" />}
+                  ) : <img src={mediaSrc(media.previewSrc ?? media.src)} alt={media.alt} width="900" height="560" loading="lazy" decoding="async" />}
                   {(media.label || media.description || media.builtByMe) && <figcaption>{media.builtByMe && <span class="case-study-work-badge"><span aria-hidden="true">★</span> Built by me</span>}<strong>{media.label}</strong>{media.description && <span>{media.description}</span>}</figcaption>}
                 </figure>
               ))}
@@ -159,7 +111,7 @@ const stackIconSrc = (technology: string) => {
           ) : mediaGroups.map(([group, mediaItems]) => (
             <details
               class="case-study-group"
-              open={(project.slug === "internship-project" && group === "Public Website") || (project.slug === "crystal-dreams" && group === "Storefront")}
+              open={(project.slug === "internship-project" && group === "Frontend") || (project.slug === "crystal-dreams" && group === "Storefront")}
             >
               <summary>
                 <span class="case-study-group-name"><span>{group}</span><small>{mediaItems.length} {mediaItems.length === 1 ? "preview" : "previews"}</small></span>
@@ -173,14 +125,14 @@ const stackIconSrc = (technology: string) => {
                 {mediaItems.map((media) => (
                   <figure class:list={["case-study-screen", media.type === "video" && "case-study-screen--video"]}>
                     {media.type === "video" ? (
-                      <video src={mediaSrc(media.src)} aria-label={media.alt} controls muted playsinline preload="metadata">Your browser does not support the video tag.</video>
+                      <video src={mediaSrc(media.src)} poster={media.poster && mediaSrc(media.poster)} aria-label={media.alt} controls muted playsinline preload="none">Your browser does not support the video tag.</video>
                     ) : media.fullSrc ? (
                       <button type="button" class="case-study-screen-open" data-screen-open data-full-src={mediaSrc(media.fullSrc)}
                         data-full-alt={media.alt} data-label={media.label ?? project.title} data-description={media.description ?? ""} aria-haspopup="dialog">
-                        <img src={mediaSrc(media.src)} alt={media.alt} width="900" height="560" loading="lazy" decoding="async" />
+                        <img src={mediaSrc(media.previewSrc ?? media.src)} alt={media.alt} width="900" height="560" loading="lazy" decoding="async" />
                         <span>Open preview</span>
                       </button>
-                    ) : <img src={mediaSrc(media.src)} alt={media.alt} width="900" height="560" loading="lazy" decoding="async" />}
+                    ) : <img src={mediaSrc(media.previewSrc ?? media.src)} alt={media.alt} width="900" height="560" loading="lazy" decoding="async" />}
                     {(media.label || media.description || media.builtByMe) && <figcaption>{media.builtByMe && <span class="case-study-work-badge"><span aria-hidden="true">★</span> Built by me</span>}<strong>{media.label}</strong>{media.description && <span>{media.description}</span>}</figcaption>}
                   </figure>
                 ))}
@@ -209,7 +161,7 @@ const stackIconSrc = (technology: string) => {
         <div class="project-media-dialog-copy"><span>Media preview</span><h3 id="screen-dialog-title" data-dialog-title></h3><p data-dialog-description></p></div>
         <button type="button" class="project-media-dialog-close" data-dialog-close aria-label="Close full screen preview">×</button>
       </header>
-      <div class="project-media-dialog-viewport"><img data-dialog-image alt="" /></div>
+      <div class="project-media-dialog-viewport" data-lenis-prevent><img data-dialog-image alt="" /></div>
     </div>
   </dialog>
 </Layout>

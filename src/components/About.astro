@@ -18,7 +18,7 @@ const imageSrc = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}icons/me.jpg`;
       <h1 id="about-title">Thanon Macharoen</h1>
       <div class="about-introduction">
         <p>Recent Computer Science graduate from Rangsit University with a GPA of <span class="about-gpa">3.78.</span></p>
-        <p>During my internship, I helped develop PharmacyOne's website, CMS<span class="about-intro-line">and backend API with Next.js, React, TypeScript, Node.js, and PostgreSQL.</span></p>
+        <p>During my internship, I helped develop PharmacyOne's website, CMS, <span class="about-intro-line">and backend API with Next.js, React, TypeScript, Node.js, and PostgreSQL.</span></p>
         <p>My other projects include e-commerce, a LINE OA chatbot, and Flutter/Dart apps. <span class="about-intro-line">I also have a foundation in Python for computer vision and data analysis, and in Java OOP.</span></p>
       </div>
     </div>
@@ -62,7 +62,7 @@ const imageSrc = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}icons/me.jpg`;
               </div>
               <div>
                 <dt>Age</dt>
-                <dd>{age} years old</dd>
+                <dd><span data-profile-age data-date-of-birth={profile.dateOfBirth}>{age}</span> years old</dd>
               </div>
             </dl>
           </section>
@@ -101,3 +101,18 @@ const imageSrc = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}icons/me.jpg`;
     </div>
   </div>
 </section>
+
+<script>
+  import { getAge } from "../data/profile";
+
+  const updateAge = () => {
+    document.querySelectorAll<HTMLElement>("[data-profile-age]").forEach((element) => {
+      if (element.dataset.dateOfBirth) element.textContent = String(getAge(element.dataset.dateOfBirth));
+    });
+  };
+  updateAge();
+  window.addEventListener("pageshow", updateAge);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) updateAge();
+  });
+</script>
